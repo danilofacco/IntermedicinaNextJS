@@ -1,0 +1,55 @@
+import React from 'react';
+import Image from 'next/image'
+import { useRouter } from 'next/router'
+import { Container,Left,Right } from './styles';
+import {ContratarStore} from '../../store/contratar'
+
+interface ButtonProps{
+  title:string;
+  subtitle:string;
+  price:string;
+  oldPrice:string;
+  link:string;
+  description:string; 
+  featured?:boolean;
+  id:string;
+}
+
+const ButtonContract: React.FC<ButtonProps> = ({ id,title,subtitle,price,oldPrice,link,description,featured=false, children , ...rest }) => {
+  const router = useRouter()
+  function SelecionarContrato(id,title,price){
+
+    ContratarStore.update(s => {
+      s.contratoSelecionado = id;
+      s.contratoSelecionadoTitulo = title;
+      s.precoContrato = price;
+    })
+
+    router.push('/contratar/inicio')
+ }
+ 
+  return (
+    <Container  onClick={()=>SelecionarContrato(id,title,price)} {...rest}> 
+      <Left> 
+        <div className="two">
+          {children}
+          <span className="title"> {title}</span>
+        </div>
+
+        <span className="subtitle"> {subtitle}</span>
+        <span className="description"> {description}</span> 
+      </Left>
+      
+      <Right>
+       {featured ? <div className="recomendado"><Image src='/assets/recomendado.svg' height={21} width={102}/></div> :""}
+        <span className="rs">R$</span>
+        <div className="price"><span className="before">{price}</span><span className="after">,00/mês</span></div>
+        <span className="oldprice">R$ {oldPrice}</span>
+        <a href="#">ASSINAR</a>
+      </Right>
+      
+    </Container>
+  );
+};
+
+export default ButtonContract;
