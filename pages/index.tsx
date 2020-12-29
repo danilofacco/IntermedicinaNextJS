@@ -1,11 +1,12 @@
-import Head from 'next/head' 
 import React from 'react'
-import Footer from '../components/Footer'
+import Head from 'next/head'
+import Link from 'next/link'
 import Image from 'next/image'
+import Footer from '../components/Footer'
 import {Main, Divider, ButtonGreen, CenteredText} from '../styles/Home'
 import { FiArrowRight } from 'react-icons/fi';
 import AOutlineButton from '../components/AOutlineButton'
-import Link from 'next/Link'
+
 
 export default function Home() {
   return (
