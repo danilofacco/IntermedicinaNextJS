@@ -4,7 +4,7 @@ import Router from 'next/router';
 import { withRouter } from 'next/router'
 
 import { Container } from './styles';
-import { CenteredText } from '../../pages/contratar/_styles';
+import { CenteredText } from '../../styles/_styles';
 
 interface iHeader{
   page:number;

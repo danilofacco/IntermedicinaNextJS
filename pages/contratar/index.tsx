@@ -4,12 +4,12 @@ import ButtonContract from '../../components/ButtonContract'
 import Footer from '../../components/Footer'
 import HeaderVoltarAzul from '../../components/HeaderVoltarAzul'
 import TitleWithLogo from '../../components/TitleWithLogo'
-import {CenteredText, Container,Information} from './_styles'
+import {CenteredText, Container,Information} from '../../styles/_styles'
 import Image from 'next/image'
 
 import Carousel from 'react-elastic-carousel'
 
-export default function Contratar() {
+const Index: React.FC = () => {
 
   const settings = {
     dots: true,
@@ -121,3 +121,5 @@ OS SERVIÇOS E BENEFÍCIOS INTERMEDIADOS PELA PLATAFORMA INTERMEDICINA NÃO EST�
     </>
   )
 }
+
+export default Index

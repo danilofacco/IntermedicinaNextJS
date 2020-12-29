@@ -6,7 +6,7 @@ import Footer from '../../components/Footer'
 import HeaderVoltarAzul from '../../components/HeaderVoltarAzul'
 import TitleWithLogo from '../../components/TitleWithLogo'
 import InputMaskCartao from '../../components/Input/inputMaskCartao'
-import {CenteredText, Container,Information, ContratoSelecionadoAlt, BoxAssinatura,Separator, TextoInformativoAbaixo} from './_styles'
+import {CenteredText, Container,Information, ContratoSelecionadoAlt, BoxAssinatura,Separator, TextoInformativoAbaixo} from '../../styles/_styles'
 import Image from 'next/image' 
 import { Form } from '@unform/web';
 import Input from '../../components/Input';
@@ -22,7 +22,7 @@ import { Column, Row } from '../../components/LinhasColunas';
 import Select from '../../components/Input/select';
 
 
-export default function Pagamento() {
+const Pagamento : React.FC = () => {
 
   function Flag(opcao){
    const bandeira =  ContratarStore.useState(s => s.cartao.bandeira)
@@ -212,3 +212,5 @@ export default function Pagamento() {
     </> )
     
     }
+
+    export default Pagamento

@@ -4,7 +4,7 @@ import * as Yup from 'yup';
 import HeaderContratar from '../../components/HeaderContratar'
 import Footer from '../../components/Footer'
 import HeaderVoltarAzul from '../../components/HeaderVoltarAzul' 
-import {CenteredText, Container,Information, ContratoSelecionado, BoxAssinatura} from './_styles'
+import {CenteredText, Container,Information, ContratoSelecionado, BoxAssinatura} from '../../styles/_styles'
 import Image from 'next/image' 
 import { Form } from '@unform/web';
 import Input from '../../components/Input';
@@ -22,7 +22,7 @@ interface SignInFormData {
   email:string;
 }
 
-const Contratar: React.FC = () => {
+const Inicio: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
   const router = useRouter()
 
@@ -118,4 +118,4 @@ const Contratar: React.FC = () => {
  
     </>   );
 };
-export default Contratar;
+export default Inicio

@@ -4,7 +4,7 @@ import React, { useRef, useCallback } from 'react';
 import HeaderContratar from '../../components/HeaderContratar'
 import HeaderVoltarAzul from '../../components/HeaderVoltarAzul' 
 import { SpinnerCircularFixed } from 'spinners-react';
-import {CenteredText, Container,Information, ContratoSelecionado, BoxAssinatura, BoxConcluido} from './_styles'
+import {CenteredText, Container,Information, ContratoSelecionado, BoxAssinatura, BoxConcluido} from '../../styles/_styles'
 import Image from 'next/image' 
 
 import { ImWhatsapp as Whatsapp } from 'react-icons/im';

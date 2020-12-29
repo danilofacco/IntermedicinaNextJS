@@ -4,7 +4,7 @@ import * as Yup from 'yup';
 import HeaderContratar from '../../components/HeaderContratar'
 import Footer from '../../components/Footer'
 import HeaderVoltarAzul from '../../components/HeaderVoltarAzul' 
-import {CenteredText, Container,Information,TextoLegenda, ContratoSelecionadoAlt, BoxAssinatura,Separator, AnexoButton, Chips, ErrorText, BlueButton, SendCode, CodigoEnviado, TermoDeUso} from './_styles'
+import {CenteredText, Container,Information,TextoLegenda, ContratoSelecionadoAlt, BoxAssinatura,Separator, AnexoButton, Chips, ErrorText, BlueButton, SendCode, CodigoEnviado, TermoDeUso} from '../../styles/_styles'
 import Image from 'next/image' 
 import { Form } from '@unform/web';
 import Input from '../../components/Input';
