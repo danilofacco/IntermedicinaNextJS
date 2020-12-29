@@ -5,8 +5,8 @@ export function checkAge(datanasc){
     if ( datanasc != null &&  datanasc != undefined &&  datanasc.length == 10){
       var array_date =  datanasc.split('/')
       var birthDate = new Date(array_date[1] + "-" + array_date[0] + "-" + array_date[2])
-      if(!birthDate){
-        //if(birthDate == "Invalid Date")
+      if(birthDate.toString()== "Invalid Date"){
+        
         alert("Data de nascimento inválida!") 
         ContratarStore.update(s=>{
             s.datanasc = ""

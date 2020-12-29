@@ -1,5 +1,5 @@
  
-import React, { useCallback, useEffect, useRef ,useState} from 'react';
+import React, { useCallback, ChangeEvent, useEffect, useRef ,useState} from 'react';
 import * as Yup from 'yup';
 import HeaderContratar from '../../components/HeaderContratar'
 import Footer from '../../components/Footer'
@@ -26,6 +26,7 @@ import {checkAge} from '../../utils/checkAge'
 import {CPFValidation} from '../../utils/CPFValidation'
 import {sendSMS} from '../../utils/sendSMS'
 import {sendEmailCV} from '../../utils/sendEmailCV'
+import { uploadFile } from '../../utils/uploadFile';
 
 
   interface SignInFormData {
@@ -62,6 +63,17 @@ import {sendEmailCV} from '../../utils/sendEmailCV'
     function onChangeCPF(){
       CPFValidation(formRef.current.getFieldValue("cpf"))
     }
+
+    const handlePreview = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      if (!file) {
+       alert("Selecione um arquivo")
+      }
+      uploadFile(e) 
+       
+    }, []);
+
+   
 
     useEffect(()=>{
       formRef.current.setFieldValue("datanasc",ContratarStoreRead.datanasc)
@@ -215,6 +227,9 @@ import {sendEmailCV} from '../../utils/sendEmailCV'
 
               <Row> 
               <Column mr={4}>
+
+              <input  type="file"  onInput={handlePreview}/>
+              
               <AnexoButton>
                 <Image src="/assets/file.svg" width={12} height={12}/>
                 <span>ANEXAR COMPROVANTE</span>
