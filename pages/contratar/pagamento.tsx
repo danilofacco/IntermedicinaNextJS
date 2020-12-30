@@ -84,7 +84,7 @@ const Pagamento : React.FC = () => {
 
     return (
       <>
-    <HeaderVoltarAzul/> 
+    <HeaderVoltarAzul voltar="/contratar/cadastro"/> 
     <HeaderContratar page={3}/>
     <Container> 
       <BoxAssinatura>

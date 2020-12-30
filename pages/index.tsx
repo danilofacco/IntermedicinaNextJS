@@ -7,7 +7,6 @@ import {Main, Divider, ButtonGreen, CenteredText} from '../styles/Home'
 import { FiArrowRight } from 'react-icons/fi';
 import AOutlineButton from '../components/AOutlineButton'
 
-
 export default function Home() {
   return (
     <div>

@@ -17,7 +17,7 @@ const Concluido: React.FC = () => {
 
     return (
       <>
-    <HeaderVoltarAzul/> 
+    <HeaderVoltarAzul voltar="/contratar/pagamento"/> 
     <HeaderContratar page={4}/>
     <BoxConcluido>
       <Image src="/assets/check_branco_verde.svg" width={32} height={32}/>

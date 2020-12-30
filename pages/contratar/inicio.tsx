@@ -78,7 +78,7 @@ const Inicio: React.FC = () => {
 
     return (
       <>
-    <HeaderVoltarAzul/> 
+    <HeaderVoltarAzul voltar="/contratar"/> 
     <HeaderContratar page={1}/>
     <Container> 
     

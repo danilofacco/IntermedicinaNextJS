@@ -7,6 +7,9 @@ interface iContratar {
   contratoSelecionadoTitulo:string;
   cv:number;
 
+  fileNameUploadIdentificacao:Array<any>;
+  fileNameUploadResidencia:Array<any>;
+
   nome:string,
   cpf:string,
   datanasc:string,
@@ -67,5 +70,7 @@ export const ContratarStore = new Store<iContratar>({
       ibge:'',
       codmunicipio:'',
     },
-    bairros:[]
+    bairros:[],
+    fileNameUploadIdentificacao:[],
+    fileNameUploadResidencia:[],
 });

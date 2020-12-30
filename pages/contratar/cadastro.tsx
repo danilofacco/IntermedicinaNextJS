@@ -9,6 +9,7 @@ import Image from 'next/image'
 import { Form } from '@unform/web';
 import Input from '../../components/Input';
 import InputMaskDate from '../../components/Input/inputMaskDate'
+import File from '../../components/Input/file'
 import {Row, Column} from '../../components/LinhasColunas'
 
 import {ContratarStore} from '../../store/contratar' 
@@ -26,7 +27,10 @@ import {checkAge} from '../../utils/checkAge'
 import {CPFValidation} from '../../utils/CPFValidation'
 import {sendSMS} from '../../utils/sendSMS'
 import {sendEmailCV} from '../../utils/sendEmailCV'
-import { uploadFile } from '../../utils/uploadFile';
+import { uploadFile } from '../../utils/uploadFile'
+import { checkIfFileExists } from '../../utils/checkIfFileExists' 
+import { removeFile } from '../../utils/removeFile'
+import { SpinnerCircularFixed } from 'spinners-react';
 
 
   interface SignInFormData {
@@ -40,9 +44,14 @@ import { uploadFile } from '../../utils/uploadFile';
     const formRef = useRef<FormHandles>(null);
     const router = useRouter()
 
-    const ContratarStoreRead = ContratarStore.useState(s => s);
+    var ContratarStoreRead = ContratarStore.useState(s => s)
     const [sendMessage, setSendMessage] = useState("")
     const [sendMessageStrong,setSendMessageStrong] = useState("")
+    const [loadingUploadIdentificacao,setLoadingUploadIdentificacao] = useState(false)
+
+    const [loadingUploadResidencia,setLoadingUploadResidencia] = useState(false)
+    const [fileNameUploadIdentificacao, setFileNameUploadIdentificacao] = useState([])
+    const [fileNameUploadResidencia, setFileNameUploadResidencia] = useState([])
 
     function HandleOnSendSMS(){
        sendSMS(ContratarStoreRead.tel,ContratarStoreRead.cv)
@@ -64,16 +73,118 @@ import { uploadFile } from '../../utils/uploadFile';
       CPFValidation(formRef.current.getFieldValue("cpf"))
     }
 
-    const handlePreview = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-      const file = e.target.files?.[0];
-      if (!file) {
-       alert("Selecione um arquivo")
+    function reduceName(varString){
+      if (varString.length > 26){
+        return `${varString.substr(0,22)}...`
       }
-      uploadFile(e) 
-       
-    }, []);
-
+      else{
+        return `${varString}` 
+      }
+    }
    
+    //* UPLOAD IDENTIFICACAO - INICIO
+    function handleClickIdentificacao(){
+      const uploadButton = formRef.current.getFieldRef("uploadIdentificacao")//*
+      uploadButton.click()
+    }
+
+    function removeFileIdentificacao(filename){
+      var newArr=[]
+      ContratarStoreRead.fileNameUploadIdentificacao.map(s => {
+        if ( s != filename) { 
+          newArr.push(s) 
+        }
+      })
+    
+      ContratarStore.update(s => {
+        s.fileNameUploadIdentificacao = newArr
+      })
+      removeFile(filename) 
+    }
+
+    const handleUploadIdentificacao = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      if (!file) {}
+      else{
+        setLoadingUploadIdentificacao(true) //*
+        uploadFile(e).then(result => {
+          setLoadingUploadIdentificacao(false) //*
+            var newArr=[]
+            ContratarStoreRead.fileNameUploadIdentificacao.map(s => newArr.push(s))
+            if(result != undefined && result != "" ){
+              newArr.push(result)
+            }
+            ContratarStore.update(s => {
+              s.fileNameUploadIdentificacao = newArr
+            })
+
+          checkIfFileExists(result).then(result => {
+              if (result == false){
+                ContratarStore.update(s => {
+                  s.fileNameUploadIdentificacao = []
+                })
+                alert("Erro ao fazer envio do arquivo, tente novamente.")
+              }
+          })
+        })
+      }
+    }, [ContratarStoreRead.fileNameUploadIdentificacao]);
+
+   //* UPLOAD IDENTIFICACAO - FIM
+
+
+
+    //* UPLOAD RESIDENCIA - INICIO
+    function handleClickResidencia(){
+      const uploadButton = formRef.current.getFieldRef("uploadResidencia")//*
+      uploadButton.click()
+    }
+
+    function removeFileResidencia(filename){
+      var newArr=[]
+      ContratarStoreRead.fileNameUploadResidencia.map(s => {
+        if ( s != filename) { 
+          newArr.push(s) 
+        }
+      })
+    
+      ContratarStore.update(s => {
+        s.fileNameUploadResidencia= newArr
+      })
+      removeFile(filename) 
+    }
+
+    const handleUploadResidencia = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      if (!file) {}
+      else{
+        setLoadingUploadResidencia(true) //*
+        uploadFile(e).then(result => {
+          setLoadingUploadResidencia(false) //*
+            var newArr=[]
+            ContratarStoreRead.fileNameUploadResidencia.map(s => newArr.push(s))
+            if(result != undefined && result != "" ){
+              newArr.push(result)
+            }
+            ContratarStore.update(s => {
+              s.fileNameUploadResidencia = newArr
+            })
+
+          checkIfFileExists(result).then(result => {
+              if (result == false){
+                ContratarStore.update(s => {
+                  s.fileNameUploadResidencia= []
+                })
+                alert("Erro ao fazer envio do arquivo, tente novamente.")
+              }
+          })
+        })
+      }
+    }, [ContratarStoreRead.fileNameUploadResidencia]);
+
+   //* UPLOAD RESIDENCIA - FIM
+
+
 
     useEffect(()=>{
       formRef.current.setFieldValue("datanasc",ContratarStoreRead.datanasc)
@@ -158,7 +269,7 @@ import { uploadFile } from '../../utils/uploadFile';
 
     return (
       <>
-    <HeaderVoltarAzul/> 
+    <HeaderVoltarAzul voltar="/contratar/inicio"/> 
     <HeaderContratar page={2}/>
     <Container> 
       <BoxAssinatura>
@@ -228,17 +339,28 @@ import { uploadFile } from '../../utils/uploadFile';
               <Row> 
               <Column mr={4}>
 
-              <input  type="file"  onInput={handlePreview}/>
+              <File name="uploadIdentificacao" onInput={handleUploadIdentificacao}/>
+              { !loadingUploadIdentificacao 
+              ? 
+                <AnexoButton onClick={handleClickIdentificacao}>
+                  <Image src="/assets/file.svg" width={12} height={12}/>
+                  <span>ANEXAR COMPROVANTE</span>
+                </AnexoButton> 
+              : 
+                <AnexoButton >
+                  <SpinnerCircularFixed size={24} thickness={140} speed={150} color="#FFF" secondaryColor="rgba(255, 255, 255, 0.15)" />
+                  <span>ENVIANDO ARQUIVO...</span>
+                </AnexoButton>
+              }
               
-              <AnexoButton>
-                <Image src="/assets/file.svg" width={12} height={12}/>
-                <span>ANEXAR COMPROVANTE</span>
-              </AnexoButton>
               </Column>
 
-              <Column ml={4}>
-                <Chips> <span>134213124-IMG.jpg</span> <Image src="/assets/remove.svg" width={12} height={12}/></Chips> 
-              </Column>  
+                <Column ml={4}>
+
+                { ContratarStoreRead.fileNameUploadIdentificacao && ContratarStoreRead.fileNameUploadIdentificacao.map( filename => 
+                  <Chips key={filename}> <span>{reduceName(filename)}</span> <Image onClick={()=>{removeFileIdentificacao(filename)}} src="/assets/remove.svg" width={12} height={12}/></Chips> 
+                )}
+                </Column>  
               </Row>
 
                <Row mb={16} mt={16}><Separator><div></div></Separator></Row>
@@ -289,15 +411,25 @@ import { uploadFile } from '../../utils/uploadFile';
 
               <Row> 
               <Column mr={4}>
-              <AnexoButton>
-                <Image src="/assets/file.svg" width={12} height={12}/>
-                <span>ANEXAR COMPROVANTE</span>
-              </AnexoButton>
+              <File name="uploadResidencia" onInput={handleUploadResidencia}/>
+              { !loadingUploadResidencia
+              ? 
+                <AnexoButton onClick={handleClickResidencia}>
+                  <Image src="/assets/file.svg" width={12} height={12}/>
+                  <span>ANEXAR COMPROVANTE</span>
+                </AnexoButton> 
+              : 
+                <AnexoButton >
+                  <SpinnerCircularFixed size={24} thickness={140} speed={150} color="#FFF" secondaryColor="rgba(255, 255, 255, 0.15)" />
+                  <span>ENVIANDO ARQUIVO...</span>
+                </AnexoButton>
+              }
               </Column>
 
               <Column ml={4}>
-                <Chips> <span>1345213213124-IMG.jpg</span> <Image src="/assets/remove.svg" width={12} height={12}/></Chips> 
-              </Column>               
+              { ContratarStoreRead.fileNameUploadResidencia && ContratarStoreRead.fileNameUploadResidencia.map( filename => 
+                  <Chips key={filename}> <span>{reduceName(filename)}</span> <Image onClick={()=>{removeFileResidencia(filename)}} src="/assets/remove.svg" width={12} height={12}/></Chips> 
+                )} </Column>               
               </Row>
               <ErrorText>*É necessário anexar ao menos um arquivo</ErrorText>
 

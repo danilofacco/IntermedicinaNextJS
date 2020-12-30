@@ -4,11 +4,21 @@ import { useRouter } from 'next/router'
 import { HeaderStyled } from './styles'; 
 import { FiChevronLeft } from 'react-icons/fi';
 
-const HeaderVoltarAzul: React.FC = ({ children, ...rest }) => {
+interface iHeaderProps{
+  voltar?:string;
+}
+
+const HeaderVoltarAzul: React.FC<iHeaderProps> = ({ voltar="",children, ...rest }) => {
   const router = useRouter()
+  function handleClick(){
+    !voltar ?
+      router.back()
+    : 
+    router.push(voltar)
+  }
   return (
     <HeaderStyled {...rest}>
-        <a href="#" onClick={() => router.back()} ><FiChevronLeft size={18}/> VOLTAR</a> 
+        <a href="#" onClick={handleClick} ><FiChevronLeft size={18}/> VOLTAR</a> 
         {children}
     </HeaderStyled>
   );

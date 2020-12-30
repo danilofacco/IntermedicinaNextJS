@@ -22,7 +22,7 @@ const ConcluidoPicPay: React.FC = () => {
   const {contratoSelecionadoTitulo} = ContratarStore.useState(s => s);
     return (
       <>
-    <HeaderVoltarAzul/> 
+    <HeaderVoltarAzul voltar="/contratar/pagamento"/> 
     <HeaderContratar page={4} cor="azul"/>
     <BoxConcluido style={{background:"#138FCE"}}>
     <SpinnerCircularFixed size={32} thickness={140} speed={150} color="#fff" secondaryColor="rgba(255, 255, 255, 0.15)" />

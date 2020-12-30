@@ -23,7 +23,7 @@ const ConcluidoEnergia: React.FC = () => {
 
     return (
       <>
-    <HeaderVoltarAzul/> 
+    <HeaderVoltarAzul voltar="/contratar/pagamento"/> 
     <HeaderContratar page={4} cor="azul"/>
     <BoxConcluido style={{background:"#138FCE"}}>
       <Image src="/assets/check_branco_azul.svg" width={32} height={32}/>
