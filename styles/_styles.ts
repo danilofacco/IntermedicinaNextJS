@@ -131,6 +131,19 @@ box-shadow:0px 0px 0px 1px #DADADA inset;
 background: rgba(229, 229, 229, 0.2); 
 border-radius: 5px;
 
+.picpayInformation{
+    margin:8px;
+    font-size: 12px;
+    line-height: 15px;
+    color: #979797;
+
+    strong{
+        font-size: 12px;
+        line-height: 15px;
+        text-transform: uppercase; 
+        color: #34AF23;
+    }
+}
     .informe{
         display:flex;
         flex-direction:column;

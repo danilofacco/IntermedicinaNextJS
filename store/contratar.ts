@@ -6,15 +6,16 @@ interface iContratar {
   precoContrato:number;
   contratoSelecionadoTitulo:string;
   cv:number;
+  metodo:string;
 
   fileNameUploadIdentificacao:Array<any>;
   fileNameUploadResidencia:Array<any>;
 
-  nome:string,
-  cpf:string,
-  datanasc:string,
-  tel:string,
-  email:string,
+  nome:string;
+  cpf:string;
+  datanasc:string;
+  tel:string;
+  email:string;
 
   cartao:{
     bandeira:string;
@@ -73,4 +74,5 @@ export const ContratarStore = new Store<iContratar>({
     bairros:[],
     fileNameUploadIdentificacao:[],
     fileNameUploadResidencia:[],
+    metodo:"cartao"
 });
