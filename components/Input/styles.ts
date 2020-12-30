@@ -8,7 +8,17 @@ interface ContainerProps {
   small:boolean;
   isDisabled:boolean;
 }
-
+export const ContainerInvisible = styled.div`
+ .error{
+    flex:1;
+    margin-top:6px;
+    font-weight: 400;
+    text-align:left;  
+    font-size: 10px;
+    line-height: 12px; 
+    color: #E2202C; 
+  }
+  `
 export const ExternalContainer = styled.div `
 width: 100%;
 margin-top:16px;  

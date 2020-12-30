@@ -31,6 +31,7 @@ import { uploadFile } from '../../utils/uploadFile'
 import { checkIfFileExists } from '../../utils/checkIfFileExists' 
 import { removeFile } from '../../utils/removeFile'
 import { SpinnerCircularFixed } from 'spinners-react';
+import InvisibleCheck from '../../components/Input/InvisibleCheck';
 
 
   interface SignInFormData {
@@ -48,7 +49,6 @@ import { SpinnerCircularFixed } from 'spinners-react';
     const [sendMessage, setSendMessage] = useState("")
     const [sendMessageStrong,setSendMessageStrong] = useState("")
     const [loadingUploadIdentificacao,setLoadingUploadIdentificacao] = useState(false)
-
     const [loadingUploadResidencia,setLoadingUploadResidencia] = useState(false)
     const [fileNameUploadIdentificacao, setFileNameUploadIdentificacao] = useState([])
     const [fileNameUploadResidencia, setFileNameUploadResidencia] = useState([])
@@ -99,6 +99,8 @@ import { SpinnerCircularFixed } from 'spinners-react';
       ContratarStore.update(s => {
         s.fileNameUploadIdentificacao = newArr
       })
+
+      formRef.current.setFieldValue("anexoIdentificacao",String(newArr))
       removeFile(filename) 
     }
 
@@ -117,12 +119,15 @@ import { SpinnerCircularFixed } from 'spinners-react';
             ContratarStore.update(s => {
               s.fileNameUploadIdentificacao = newArr
             })
+            formRef.current.setFieldValue("anexoIdentificacao",String(newArr))
 
           checkIfFileExists(result).then(result => {
               if (result == false){
                 ContratarStore.update(s => {
                   s.fileNameUploadIdentificacao = []
                 })
+
+                formRef.current.setFieldValue("anexoIdentificacao","")
                 alert("Erro ao fazer envio do arquivo, tente novamente.")
               }
           })
@@ -151,6 +156,7 @@ import { SpinnerCircularFixed } from 'spinners-react';
       ContratarStore.update(s => {
         s.fileNameUploadResidencia= newArr
       })
+      formRef.current.setFieldValue("anexoResidencia",String(newArr))
       removeFile(filename) 
     }
 
@@ -169,12 +175,15 @@ import { SpinnerCircularFixed } from 'spinners-react';
             ContratarStore.update(s => {
               s.fileNameUploadResidencia = newArr
             })
+            formRef.current.setFieldValue("anexoResidencia",String(newArr))
 
           checkIfFileExists(result).then(result => {
               if (result == false){
                 ContratarStore.update(s => {
                   s.fileNameUploadResidencia= []
                 })
+
+                formRef.current.setFieldValue("anexoResidencia","")
                 alert("Erro ao fazer envio do arquivo, tente novamente.")
               }
           })
@@ -233,6 +242,8 @@ import { SpinnerCircularFixed } from 'spinners-react';
               .email('*Digite  um e-mail válido'),
             nome: Yup.string().required('*É necessário preechimento'),
             celular: Yup.string().required('*É necessário preechimento'),
+            anexoResidencia: Yup.string().required("*É necessario anexar ao menos um arquivo."),
+            anexoIdentificacao: Yup.string().required("*É necessario anexar ao menos um arquivo.")
           });
   
           await schema.validate(data, {
@@ -363,6 +374,8 @@ import { SpinnerCircularFixed } from 'spinners-react';
                 </Column>  
               </Row>
 
+              <InvisibleCheck  name="anexoIdentificacao"></InvisibleCheck> 
+
                <Row mb={16} mt={16}><Separator><div></div></Separator></Row>
  
                 
@@ -429,9 +442,10 @@ import { SpinnerCircularFixed } from 'spinners-react';
               <Column ml={4}>
               { ContratarStoreRead.fileNameUploadResidencia && ContratarStoreRead.fileNameUploadResidencia.map( filename => 
                   <Chips key={filename}> <span>{reduceName(filename)}</span> <Image onClick={()=>{removeFileResidencia(filename)}} src="/assets/remove.svg" width={12} height={12}/></Chips> 
-                )} </Column>               
+                )}</Column>               
               </Row>
-              <ErrorText>*É necessário anexar ao menos um arquivo</ErrorText>
+
+              <InvisibleCheck  name="anexoResidencia"></InvisibleCheck> 
 
 
               <Row mb={16} mt={16}><Separator><div></div></Separator></Row>

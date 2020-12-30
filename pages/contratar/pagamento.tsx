@@ -1,16 +1,20 @@
 import Head from 'next/head' 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { ChangeEvent, useCallback, useEffect, useRef, useState } from 'react';
 import * as Yup from 'yup';
 import HeaderContratar from '../../components/HeaderContratar'
 import Footer from '../../components/Footer'
 import HeaderVoltarAzul from '../../components/HeaderVoltarAzul'
 import TitleWithLogo from '../../components/TitleWithLogo'
 import InputMaskCartao from '../../components/Input/inputMaskCartao'
-import {CenteredText, Container,Information, ContratoSelecionadoAlt, BoxAssinatura,Separator, TextoInformativoAbaixo} from '../../styles/_styles'
+import {CenteredText, Container,Information, ContratoSelecionadoAlt, BoxAssinatura,Separator, TextoInformativoAbaixo, SendCode, BlueButton, TextoLegenda, AnexoButton, Chips} from '../../styles/_styles'
 import Image from 'next/image' 
 import { Form } from '@unform/web';
 import Input from '../../components/Input';
 import {ContratarStore} from '../../store/contratar'
+
+import InputMaskCPF from '../../components/Input/inputMaskCPF'
+
+import File from '../../components/Input/file'
 
 import {BsFillPersonFill as PersonIcon} from 'react-icons/bs'
 import {HiOutlineMail as EmailIcon} from 'react-icons/hi'
@@ -20,10 +24,16 @@ import {BiPhone as PhoneIcon} from 'react-icons/bi'
 import getValidationErrors from '../../utils/getValidationErrors';
 import { Column, Row } from '../../components/LinhasColunas';
 import Select from '../../components/Input/select';
+import { CPFValidation } from '../../utils/CPFValidation';
+import { checkIfFileExists } from '../../utils/checkIfFileExists';
+import { removeFile } from '../../utils/removeFile';
+import { uploadFile } from '../../utils/uploadFile';
+import { SpinnerCircularFixed } from 'spinners-react';
 
 
 const Pagamento : React.FC = () => {
 
+  const formRef = useRef(null);
   const [metodo,setMetodo] = useState("cartao");
   const ContratarStoreRead = ContratarStore.useState(s => s)
 
@@ -31,6 +41,7 @@ const Pagamento : React.FC = () => {
     ContratarStore.update(s=>{
       s.metodo = metodo
     })
+    formRef.current.setFieldValue("metodo",metodo)
   },[metodo])
 
   function Flag(opcao){ 
@@ -47,6 +58,15 @@ const Pagamento : React.FC = () => {
     setMetodo(m) 
   }
 
+  function onChangeCPF(){
+    CPFValidation(formRef.current.getFieldValue("cpf"))
+  }
+  
+  function mesmoTitular(resposta){
+    resposta ?  formRef.current.setFieldValue("nomeTitularEnergia",ContratarStoreRead.nome): formRef.current.setFieldValue("nomeTitularEnergia","")
+    resposta ?  formRef.current.setFieldValue("cpfTitularEnergia",ContratarStoreRead.cpf): formRef.current.setFieldValue("cpfitularEnergia","")    
+  }
+
   function SelectFlag(opcao){
     ContratarStore.update(s =>{
       s.cartao.bandeira=opcao;
@@ -54,13 +74,79 @@ const Pagamento : React.FC = () => {
 
   }
 
+  function reduceName(varString){
+    if (varString.length > 26){
+      return `${varString.substr(0,22)}...`
+    }
+    else{
+      return `${varString}` 
+    }
+  }
+ 
+
+
+    //* UPLOAD TALÃO - INICIO
+
+
+    const [loadingUploadTalao,setLoadingUploadTalao] = useState(false)
+    const [fileNameUploadTalao, setFileNameUploadTalao] = useState([])
+
+
+    function handleClickTalao(){
+      const uploadButton = formRef.current.getFieldRef("uploadTalao")//*
+      uploadButton.click()
+    }
+
+    function removeFileTalao(filename){
+      var newArr=[]
+      ContratarStoreRead.fileNameUploadTalao.map(s => {
+        if ( s != filename) { 
+          newArr.push(s) 
+        }
+      })
+    
+      ContratarStore.update(s => {
+        s.fileNameUploadTalao= newArr
+      })
+      removeFile(filename) 
+    }
+
+    const handleUploadTalao = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      if (!file) {}
+      else{
+        setLoadingUploadTalao(true) //*
+        uploadFile(e).then(result => {
+          setLoadingUploadTalao(false) //*
+            var newArr=[]
+            ContratarStoreRead.fileNameUploadTalao.map(s => newArr.push(s))
+            if(result != undefined && result != "" ){
+              newArr.push(result)
+            }
+            ContratarStore.update(s => {
+              s.fileNameUploadTalao = newArr
+            })
+
+          checkIfFileExists(result).then(result => {
+              if (result == false){
+                ContratarStore.update(s => {
+                  s.fileNameUploadTalao= []
+                })
+                alert("Erro ao fazer envio do arquivo, tente novamente.")
+              }
+          })
+        })
+      }
+    }, [ContratarStoreRead.fileNameUploadTalao]);
+
+   //* UPLOAD TALÃO - FIM
+
   interface SignInFormData {
     email: string;
     nome: string;
     celular: string;
   }
 
-  const formRef = useRef(null);
   async function handleSubmit(data) {
     async (data: SignInFormData) => {
       try {
@@ -211,21 +297,12 @@ const Pagamento : React.FC = () => {
                 </Row>
 
               <button  className="button"  type="submit"><span><strong>Iniciar</strong> Assinatura</span> <Image src="/assets/arrowRight.svg" width={19} height={13}/></button> 
-        
-        
-        <TextoInformativoAbaixo>
-          • Ao clicar no botão "INICIAR ASSINATURA", você concorda com os "Termos de Uso e Política de Privacidade" e confirma ter mais de 18 anos.
-          • A Intermedicina renovará automaticamente sua assinatura e cobrará o preço da assinatura (atualmente R$ 49,00/mês) da sua forma de pagamento mensalmente, até você cancelar.
-          • Para cancelar acesse a seção "Minha Conta" no Portal do Cliente pelo site ou aplicativo da Intermedicina.
-          • Não emitimos reembolsos nem créditos por meses parciais.
-        </TextoInformativoAbaixo>
-         
-
-        
+            
         </>
       }
 
       {
+
         ContratarStoreRead.metodo == "picpay" &&
         <>
         <div className="picpayInformation">
@@ -239,19 +316,87 @@ const Pagamento : React.FC = () => {
         </div>
 
         <button  className="button"  type="button"><span><strong>Abrir</strong> Picpay</span> <Image src="/assets/arrowRight.svg" width={19} height={13}/></button> 
-        
-        <TextoInformativoAbaixo>
-        • Ao concluir sua ASSINATURA no aplicativo picpay, você concorda com os "Termos de Uso e Política de Privacidade" e confirma ter mais de 18 anos.
-        • A Intermedicina renovará automaticamente sua assinatura e cobrará o preço da assinatura (atualmente R$ 49,00/mês) da sua forma de pagamento mensalmente, até você cancelar.
-        • Para cancelar acesse a seção "Minha Conta" no Portal do Cliente pelo site ou aplicativo da Intermedicina.
-        •Não emitimos reembolsos nem créditos por meses parciais.
-        </TextoInformativoAbaixo>
-
-
+         
         </>
       }
 
-            </Form>
+      {
+
+      ContratarStoreRead.metodo == "energia" &&
+
+     <>
+      <span className="informe">
+        O TITULAR DA CONTA DE ENERGIA<br/>
+        É O MESMO TITULAR DO CONTRATO?
+      </span>
+
+      <Row mt={8}>
+        <SendCode>
+          <BlueButton onClick={()=>mesmoTitular(true)}><span></span><strong>SIM</strong></BlueButton>
+          <BlueButton onClick={()=>mesmoTitular(false)}><span></span><strong>NÃO</strong></BlueButton>
+        </SendCode>
+       </Row>
+
+       <Row mt={8}> 
+          <Input name="nomeTitularEnergia" legend="TITULAR DA CONTA DE ENERGIA"    />
+          </Row>
+       <Row mt={8}> 
+          <InputMaskCPF name="cpfTitularEnergia"  legend="CPF DO TITULAR DA CONTA DE ENERGIA" onBlur={onChangeCPF}   />
+       </Row>
+          
+        <Row mt={8}> 
+          <Input type="number" name="numeroInstalacaoEnergia" legend="INSTALAÇÃO OU IDENTIFICAÇÃO DO TALÃO"   />  
+        </Row>
+
+
+        <Row> 
+                <TextoLegenda>
+                  <span>Cópia do <strong>talão de energia</strong>
+                  </span>
+               </TextoLegenda> 
+              </Row>
+
+              <Row> 
+              <Column mr={4}>
+
+              <File name="uploadTalao" onInput={handleUploadTalao}/>
+              { !loadingUploadTalao
+              ? 
+                <AnexoButton onClick={handleClickTalao}>
+                  <Image src="/assets/file.svg" width={12} height={12}/>
+                  <span>ANEXAR COMPROVANTE</span>
+                </AnexoButton> 
+              : 
+                <AnexoButton >
+                  <SpinnerCircularFixed size={24} thickness={140} speed={150} color="#FFF" secondaryColor="rgba(255, 255, 255, 0.15)" />
+                  <span>ENVIANDO ARQUIVO...</span>
+                </AnexoButton>
+              }
+              
+              </Column>
+
+                <Column ml={4}>
+
+                { ContratarStoreRead.fileNameUploadTalao && ContratarStoreRead.fileNameUploadTalao.map( filename => 
+                  <Chips key={filename}> <span>{reduceName(filename)}</span> <Image onClick={()=>{removeFileTalao(filename)}} src="/assets/remove.svg" width={12} height={12}/></Chips> 
+                )}
+                </Column>  
+              </Row>
+
+
+     </>
+
+}
+
+      </Form>
+
+      <TextoInformativoAbaixo>
+        • Ao concluir sua ASSINATURA no aplicativo picpay, você concorda com os "Termos de Uso e Política de Privacidade" e confirma ter mais de 18 anos.
+        • A Intermedicina renovará automaticamente sua assinatura e cobrará o preço da assinatura (atualmente R$ 49,00/mês) da sua forma de pagamento mensalmente, até você cancelar.
+        • Para cancelar acesse a seção "Minha Conta" no Portal do Cliente pelo site ou aplicativo da Intermedicina.
+        • Não emitimos reembolsos nem créditos por meses parciais.
+        </TextoInformativoAbaixo>
+
       </BoxAssinatura> 
 
       <Footer/>

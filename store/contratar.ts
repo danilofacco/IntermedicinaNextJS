@@ -10,6 +10,7 @@ interface iContratar {
 
   fileNameUploadIdentificacao:Array<any>;
   fileNameUploadResidencia:Array<any>;
+  fileNameUploadTalao:Array<any>;
 
   nome:string;
   cpf:string;
@@ -74,5 +75,6 @@ export const ContratarStore = new Store<iContratar>({
     bairros:[],
     fileNameUploadIdentificacao:[],
     fileNameUploadResidencia:[],
+    fileNameUploadTalao:[],
     metodo:"cartao"
 });
