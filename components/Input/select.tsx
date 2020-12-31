@@ -25,7 +25,7 @@ const Select: React.FC<Props> = ({ name, small=false, disabled=false, legend,ico
   const [isFocused, setIsFocused] = useState(false);
   const [isFilled, setIsFilled] = useState(false);
   
-  const { fieldName, defaultValue, error, registerField } = useField(name);
+  const { fieldName, defaultValue, error, clearError, registerField } = useField(name);
 
   const handleInputFocus = useCallback(() => {
     setIsFocused(true);
@@ -51,7 +51,7 @@ const Select: React.FC<Props> = ({ name, small=false, disabled=false, legend,ico
       {Icon && <Icon size={20} />}      
       {!!legend && <legend>{legend}</legend> }
       <select 
-        onFocus={handleInputFocus}
+        onFocus={clearError}
         onBlur={handleInputBlur}
         defaultValue={defaultValue}
         disabled={disabled}

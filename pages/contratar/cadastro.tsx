@@ -52,29 +52,16 @@ import InvisibleCheck from '../../components/Input/InvisibleCheck';
     const [loadingUploadResidencia,setLoadingUploadResidencia] = useState(false)
     const [fileNameUploadIdentificacao, setFileNameUploadIdentificacao] = useState([])
     const [fileNameUploadResidencia, setFileNameUploadResidencia] = useState([])
-
-
-
-  
-  useEffect(()=>{
-    //localStorage.setItem('Intermedicina@ContratarStore', JSON.stringify(ContratarStoreRead));
-  },[ContratarStoreRead])
-
-
-  useEffect(()=>{
-    var Store = JSON.parse(localStorage.getItem('Intermedicina@ContratarStore'))
-    Store ? ContratarStore.update(s => Store) : null
-  },[])
-
-
+    const [cvRandom, setCvRandom] = useState(Math.floor(Math.random() * (99999 - 10000 + 1) + 10000))
+      
     function HandleOnSendSMS(){
-       sendSMS(ContratarStoreRead.tel,ContratarStoreRead.cv)
+       sendSMS(ContratarStoreRead.tel,cvRandom)
        setSendMessage("Código enviado por sms para:")
        setSendMessageStrong(ContratarStoreRead.tel)
     }
 
     function HandleOnSendEmail(){
-      sendEmailCV(ContratarStoreRead.email,ContratarStoreRead.cv,ContratarStoreRead.nome)
+      sendEmailCV(ContratarStoreRead.email,cvRandom,ContratarStoreRead.nome)
       setSendMessage("Código enviado por e-mail para:")
       setSendMessageStrong(ContratarStoreRead.email)
    }
@@ -232,9 +219,6 @@ import InvisibleCheck from '../../components/Input/InvisibleCheck';
     },[ContratarStoreRead.endereco])
 
     
-
- 
-
     async function OnChangeCEP() {
       var regex = new RegExp('_', 'g');
       var cep = formRef.current.getFieldValue('cep')
@@ -254,8 +238,14 @@ import InvisibleCheck from '../../components/Input/InvisibleCheck';
               .email('*Digite  um e-mail válido'),
             nome: Yup.string().required('*É necessário preechimento'),
             celular: Yup.string().required('*É necessário preechimento'),
-            datanasc: Yup.string().required('*É necessário preechimento'),
-            cpf: Yup.string().required('*É necessário preechimento'),
+            //datanasc: Yup.string().required('*É necessário preechimento'),
+            datanasc: Yup.string().test("len", "Data de Nascimento Inválida.", (val) => {
+              return checkAge(val);
+            }),
+            cpf: Yup.string().test("len", "CPF Inválido.", (val) => {
+              return CPFValidation(val);
+            })
+              .required('*É necessário preechimento'),
             estadocivil: Yup.string().required('*É necessário preechimento'),
             genero: Yup.string().required('*É necessário preechimento'),
             cep: Yup.string().required('*É necessário preechimento'),
@@ -266,7 +256,12 @@ import InvisibleCheck from '../../components/Input/InvisibleCheck';
 
             estado: Yup.string().required('*É necessário preechimento'),
 
-            validacao: Yup.string().required('*Código de verificação inválido'),
+            cv: Yup.string().test("len", "Código de verificação inválido.", (val) => {
+              console.log("val:"+ cvRandom)
+              return Number(val) == cvRandom;
+            })
+              .required('*É necessário preechimento'),
+ 
             politicaprivacidade: Yup.string().required('*É necessário aceitar os termos de uso e política de privacidade'),
 
             anexoResidencia: Yup.string().required("*É necessário anexar ao menos um arquivo."),
@@ -276,29 +271,18 @@ import InvisibleCheck from '../../components/Input/InvisibleCheck';
           await schema.validate(data, {
             abortEarly: false,
           });
-  
-          //await signIn({ email: data.email, password: data.password });
-  
+
           router.push('/contratar/pagamento');
   
-        //  addToast({
-          //  type: 'success',
-            //title: 'Autenticado com sucesso!',
-          //});
+
+          
+  
         } catch (err) {
           if (err instanceof Yup.ValidationError) {
             const errors = getValidationErrors(err);
-  
             formRef.current?.setErrors(errors);
-  
             return;
           }
-  
-         // addToast({
-          //  type: 'error',
-          //  title: 'Erro na autenticação',
-          //  description: 'Ocorreu um erro ao fazer login, cheque as credenciais.',
-         // });
         }
       },
       [ ],
@@ -338,11 +322,11 @@ import InvisibleCheck from '../../components/Input/InvisibleCheck';
 
               <Row>
                 <Column mr={4} >
-                  <InputMaskDate name="datanasc" onBlur={onChangeDateNasc} legend="DATA DE NASCIMENTO" small />
+                  <InputMaskDate name="datanasc" legend="DATA DE NASCIMENTO" small />
                 </Column> 
 
                 <Column  ml={4}>
-                  <InputMaskCPF name="cpf"  legend="CPF" onBlur={onChangeCPF}  small   /> 
+                  <InputMaskCPF name="cpf"  legend="CPF"   small   /> 
                 </Column> 
               </Row>
 
@@ -502,8 +486,7 @@ import InvisibleCheck from '../../components/Input/InvisibleCheck';
                 <CenteredText>
                   <Column size={60}>
                     <Input name="cv" small legend="Código de Validação" /> 
-                  </Column>
-                  <InvisibleCheck  name="validacao"></InvisibleCheck> 
+                  </Column> 
 
                 </CenteredText>
               </Row>

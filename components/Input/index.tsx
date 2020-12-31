@@ -25,7 +25,7 @@ const Input: React.FC<Props> = ({ name, small=false, disabled=false, legend,icon
   const [isFocused, setIsFocused] = useState(false);
   const [isFilled, setIsFilled] = useState(false);
   
-  const { fieldName, defaultValue, error, registerField } = useField(name);
+  const { fieldName, defaultValue, error, clearError, registerField } = useField(name);
 
   const handleInputFocus = useCallback(() => {
     setIsFocused(true);
@@ -51,7 +51,7 @@ const Input: React.FC<Props> = ({ name, small=false, disabled=false, legend,icon
       {Icon && <Icon size={20} />}      
       {!!legend && <legend>{legend}</legend> }
       <input 
-        onFocus={handleInputFocus}
+        onFocus={clearError}
         onBlur={handleInputBlur}
         //onChange={handleInputBlur}
         defaultValue={defaultValue}

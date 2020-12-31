@@ -24,6 +24,8 @@ pplink: "https://khkfhakfhdaskjhfaksfda.com"
         method: "POST",
         url: `${process.env.NEXT_PUBLIC_API_URL}contratar/cadastro.php`, 
         data:JSON.parse(JSON.stringify(dados))
-      })
+      }).then(
+          response=> {return response}
+      )
 }
     

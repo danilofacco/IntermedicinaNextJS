@@ -1,7 +1,7 @@
 import axios from 'axios' 
 export function sendEmailCV(ClientEmail,code,Nome){ 
     const data = {
-        cv : (code*3)+9,
+        cv : code,
         email : ClientEmail,
         nome : Nome
     }

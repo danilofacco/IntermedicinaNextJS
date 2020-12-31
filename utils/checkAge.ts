@@ -11,6 +11,7 @@ export function checkAge(datanasc){
         ContratarStore.update(s=>{
             s.datanasc = ""
         })
+        return false
       }
       var age = today.getFullYear() - birthDate.getFullYear()
       var m = today.getMonth() - birthDate.getMonth()
@@ -23,13 +24,16 @@ export function checkAge(datanasc){
         ContratarStore.update(s=>{
             s.datanasc = ""
         })
+        return false
       
       }
       if (age > 120){
         ContratarStore.update(s=>{
             s.datanasc = ""
         })
+        return false
       }
     }
+    return true
     }
   

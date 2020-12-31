@@ -18,6 +18,7 @@ interface ButtonProps{
 
 const ButtonContract: React.FC<ButtonProps> = ({ code,id,title,subtitle,price,oldPrice,link,description,featured=false, children , ...rest }) => {
   const router = useRouter()
+  const ContratarStoreRead = ContratarStore.useState( s => s )
 
   function SelecionarContrato(id,title,price,code,link){
 
@@ -28,6 +29,7 @@ const ButtonContract: React.FC<ButtonProps> = ({ code,id,title,subtitle,price,ol
       s.contratoSelecionadoTitulo = title;
       s.precoContrato = price;
     })
+ 
 
     router.push('/contratar/inicio')
  }

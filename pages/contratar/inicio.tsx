@@ -28,20 +28,11 @@ const Inicio: React.FC = () => {
   const router = useRouter()
 
   const ContratarStoreRead = ContratarStore.useState(s => s);
+ 
 
-  
-  useEffect(()=>{
-    localStorage.setItem('Intermedicina@ContratarStore', JSON.stringify(ContratarStoreRead));
-  },[ContratarStoreRead])
+ 
 
-  useEffect(()=>{
-    var Store = JSON.parse(localStorage.getItem('Intermedicina@ContratarStore'))
-    Store ? ContratarStore.update(s => {
-      s.nome = Store.nome
-      s.tel = Store.tel
-      s.email = Store.email
-    }) : null
-  },[])
+ 
 
   //const { signIn } = useAuth();
   //const { addToast } = useToast();
@@ -85,7 +76,7 @@ const Inicio: React.FC = () => {
           pplink: ContratarStoreRead.LinkPoliticaDePrivacidade
         }
          
-        inicioCadastro(dados)
+        console.log(inicioCadastro(dados))
         router.push('/contratar/cadastro');
 
        

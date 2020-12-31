@@ -2,7 +2,7 @@ import axios from 'axios'
 export function sendSMS(tel,code){ 
 
     const data = {
-        cv : (code*3)+9,
+        cv : code,
         celular : tel
     }
 

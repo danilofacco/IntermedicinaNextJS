@@ -54,7 +54,7 @@ export const ContratarStore = new Store<iContratar>({
     precoContrato:0,
     etapa:"",
     contratoSelecionadoTitulo:"",
-    cv:Math.floor(Math.random() * (99999 - 10000 + 1) + 10000),
+    cv:0,
     nome:"",
     cpf:"",
     datanasc:"",
