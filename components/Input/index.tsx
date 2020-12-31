@@ -53,6 +53,7 @@ const Input: React.FC<Props> = ({ name, small=false, disabled=false, legend,icon
       <input 
         onFocus={handleInputFocus}
         onBlur={handleInputBlur}
+        //onChange={handleInputBlur}
         defaultValue={defaultValue}
         disabled={disabled}
         ref={inputRef}

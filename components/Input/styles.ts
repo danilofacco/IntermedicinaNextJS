@@ -39,6 +39,19 @@ export const Container = styled.fieldset<ContainerProps>`
   background: #FFFFFF; 
 
   border: 1px solid #138FCE;
+
+  ${props =>
+    props.isErrored &&
+    css`border: 1px solid #E2202C ;`}
+
+    ${props =>
+    props.isFocused &&
+    css`border: 1px solid #138FCE; `}
+
+    ${props =>
+    props.isFilled &&
+    css` border: 1px solid #138FCE;`}
+
   box-sizing: border-box;
   border-radius: 5px; 
   width: 100%; 
@@ -62,16 +75,34 @@ select{
     line-height: 17px;  
     color: #138FCE;
     outline:0px;
+
+    ${props =>
+    props.isErrored &&
+    css`color:#E2202C ;
+    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' fill='%23E2202C'><polygon points='0,0 100,0 50,50'/></svg>") no-repeat;
+    background-size: 8px;
+    background-position: calc(100% - 5px) center;
+    background-repeat: no-repeat;`}
+
+    ${props =>
+    props.isFocused &&
+    css`color: #138FCE; 
+    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' fill='%23138FCE'><polygon points='0,0 100,0 50,50'/></svg>") no-repeat;
+    background-size: 8px;
+    background-position: calc(100% - 5px) center;
+    background-repeat: no-repeat;`}
+
+    ${props =>
+    props.isFilled &&
+    css`color: #138FCE;`}
 }
 
   ${props =>
     props.small &&
     css`
-       padding:8px ;  
+    padding:8px ;  
     `}
  
- 
-
   display: flex;
   align-items: center;
 
@@ -81,38 +112,24 @@ select{
     font-size: 10px;
     line-height: 10px;
     color:#138FCE; 
+
+    ${props =>
+    props.isErrored &&
+    css`color:#E2202C ;`}
+
+    ${props =>
+    props.isFocused &&
+    css`color: #138FCE; `}
+
+    ${props =>
+    props.isFilled &&
+    css` color: #138FCE;`}
+
   }
 
   & + div {
     margin-top: 16px;
   }
-
-  ${props =>
-    props.isErrored &&
-    css`
-    border: 1px solid #E2202C;
-    legend, input, select, input::placeholder ,:-ms-input-placeholder ,::-ms-input-placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
-      color:#E2202C;
-    } 
-    `}
-
-  ${props =>
-    props.isFocused &&
-    css`
-      color: #138FCE;
-      border: 1px solid #138FCE; 
-    `}
-
-  ${props =>
-    props.isFilled &&
-    css`
-      border: 1px solid #138FCE; 
-      color: #138FCE;
-      legend, input, input::placeholder{
-      color:#138FCE;
-    } 
-    `}
-
 
     ${props =>
     props.isDisabled &&
@@ -131,6 +148,7 @@ select{
       ::placeholder ,:-ms-input-placeholder ,::-ms-input-placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
         color: #838383 !important;
         opacity: 1; /* Firefox */
+        
       }
 
     `}
@@ -142,6 +160,17 @@ select{
     }
     &:-webkit-autofill {
       -webkit-text-fill-color: #138FCE !important;
+      ${props =>
+    props.isErrored &&
+    css`color:#E2202C ;`}
+
+    ${props =>
+    props.isFocused &&
+    css`color: #138FCE; `}
+
+    ${props =>
+    props.isFilled &&
+    css` color: #138FCE;`}
     } 
  
     &::placeholder {
@@ -151,6 +180,18 @@ select{
     line-height: 17px;  
     color: #138FCE;
     outline:0px;
+
+    ${props =>
+    props.isErrored &&
+    css`color:#E2202C ;`}
+
+    ${props =>
+    props.isFocused &&
+    css`color: #138FCE; `}
+
+    ${props =>
+    props.isFilled &&
+    css` color: #138FCE;`}
     }
   }
 

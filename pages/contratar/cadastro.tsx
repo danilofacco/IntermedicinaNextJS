@@ -259,7 +259,7 @@ import InvisibleCheck from '../../components/Input/InvisibleCheck';
             estadocivil: Yup.string().required('*É necessário preechimento'),
             genero: Yup.string().required('*É necessário preechimento'),
             cep: Yup.string().required('*É necessário preechimento'),
-            rua: Yup.string().required('*É@ necessário preechimento'),
+            rua: Yup.string().required('*É necessário preechimento'),
             numero: Yup.string().required('*É necessário preechimento'),
             bairro: Yup.string().required('*É necessário preechimento'),
             cidade: Yup.string().required('*É necessário preechimento'),
@@ -269,8 +269,8 @@ import InvisibleCheck from '../../components/Input/InvisibleCheck';
             validacao: Yup.string().required('*Código de verificação inválido'),
             politicaprivacidade: Yup.string().required('*É necessário aceitar os termos de uso e política de privacidade'),
 
-            anexoResidencia: Yup.string().required("*É necessario anexar ao menos um arquivo."),
-            anexoIdentificacao: Yup.string().required("*É necessario anexar ao menos um arquivo.")
+            anexoResidencia: Yup.string().required("*É necessário anexar ao menos um arquivo."),
+            anexoIdentificacao: Yup.string().required("*É necessário anexar ao menos um arquivo.")
           });
   
           await schema.validate(data, {
