@@ -2,7 +2,7 @@
 import {ContratarStore} from '../store/contratar'
 import axios from 'axios'
 export function getBairrosByIBGE(ibge){
-    var url = "https://www.intermedicina.com.br/api/loadbairros.php?ibge="+ibge
+    var url = `${process.env.NEXT_PUBLIC_API_URL}contratar/getBairros.php?ibge=${ibge}`
         axios.request({
           method: "GET",
           url: url

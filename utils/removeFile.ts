@@ -7,7 +7,7 @@ export async function removeFile(file){
     return new Promise((resolve, reject) => {
      axios.request({
         method: "POST",
-        url: "https://api.intermedicina.com.br/removeFile.php",
+        url: `${process.env.NEXT_PUBLIC_API_URL}uploads/remove.php`,
         data:JSON.parse(JSON.stringify(data))
       }).then(response => {
         resolve(response.data)

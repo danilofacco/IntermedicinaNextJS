@@ -23,7 +23,7 @@ export function CPFValidation(cpf) {
 
     axios.request({
       method: "POST",
-      url: "https://www.intermedicina.com.br/api/check_cpf.php",
+      url: `${process.env.NEXT_PUBLIC_API_URL}contratar/checkCPF.php`,
       data:JSON.parse(JSON.stringify({"cpf":cpf}))
     })
 

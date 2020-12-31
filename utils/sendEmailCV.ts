@@ -9,7 +9,7 @@ export function sendEmailCV(ClientEmail,code,Nome){
 
     axios.request({
         method: "POST",
-        url: "https://www.intermedicina.com.br/api/enviarEmailCV.php",
+        url: `${process.env.NEXT_PUBLIC_API_URL}contratar/enviarEmailCV.php`,
         data:JSON.parse(JSON.stringify(data))
       })
 }

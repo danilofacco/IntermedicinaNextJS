@@ -21,7 +21,7 @@ export async function uploadFile(event){
         const submitData = JSON.stringify(File)
         axios.request({
           method: "POST",
-          url: "https://api.intermedicina.com.br/uploadFile.php", 
+          url: `${process.env.NEXT_PUBLIC_API_URL}uploads/upload.php`,
           data:JSON.parse(submitData)
         })
         .then(response => {

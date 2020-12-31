@@ -9,7 +9,7 @@ export function sendSMS(tel,code){
 
     axios.request({
         method: "POST",
-        url: "https://www.intermedicina.com.br/api/enviarSms.php",
+        url: `${process.env.NEXT_PUBLIC_API_URL}contratar/enviarSMS.php`, 
         data:JSON.parse(JSON.stringify(data))
       })
 }

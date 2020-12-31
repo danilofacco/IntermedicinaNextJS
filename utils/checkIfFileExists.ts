@@ -7,7 +7,7 @@ export async function checkIfFileExists(file){
     return new Promise((resolve, reject) => {
      axios.request({
         method: "POST",
-        url: "https://api.intermedicina.com.br/checkIfFileExists.php",
+        url: `${process.env.NEXT_PUBLIC_API_URL}uploads/check.php`,
         data:JSON.parse(JSON.stringify(data))
       }).then(response => {
         resolve(response.data)
