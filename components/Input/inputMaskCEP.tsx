@@ -52,7 +52,7 @@ const Input: React.FC<Props> = ({ name, small=false, disabled=false, legend,icon
       {Icon && <Icon size={20} />}      
       {!!legend && <legend>{legend}</legend> }
       <InputMask
-        mask="99999-999" maskPlaceholder="_"  
+        mask="99999-999" maskplaceholder="_"  
         onFocus={handleInputFocus}
         onBlur={handleInputBlur}
         defaultValue={defaultValue}

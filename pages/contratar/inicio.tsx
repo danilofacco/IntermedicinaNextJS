@@ -1,5 +1,5 @@
  
-import React, { useRef, useCallback } from 'react';
+import React, { useRef, useCallback, useEffect } from 'react';
 import * as Yup from 'yup';
 import HeaderContratar from '../../components/HeaderContratar'
 import Footer from '../../components/Footer'
@@ -15,6 +15,7 @@ import {ContratarStore} from '../../store/contratar'
 import {FormHandles} from '@unform/core'  
 import getValidationErrors from '../../utils/getValidationErrors'; 
 import { useRouter } from 'next/router';
+import { inicioCadastro } from '../../utils/inicioCadastro';
 
 interface SignInFormData {
   nome: string;
@@ -26,7 +27,21 @@ const Inicio: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
   const router = useRouter()
 
-  const {contratoSelecionadoTitulo} = ContratarStore.useState(s => s);
+  const ContratarStoreRead = ContratarStore.useState(s => s);
+
+  
+  useEffect(()=>{
+    localStorage.setItem('Intermedicina@ContratarStore', JSON.stringify(ContratarStoreRead));
+  },[ContratarStoreRead])
+
+  useEffect(()=>{
+    var Store = JSON.parse(localStorage.getItem('Intermedicina@ContratarStore'))
+    Store ? ContratarStore.update(s => {
+      s.nome = Store.nome
+      s.tel = Store.tel
+      s.email = Store.email
+    }) : null
+  },[])
 
   //const { signIn } = useAuth();
   //const { addToast } = useToast();
@@ -43,11 +58,11 @@ const Inicio: React.FC = () => {
             .email('*Digite  um e-mail válido'),
           nome: Yup.string().required('*É necessário preechimento'),
           celular: Yup.string()
-          .test("len", "Número de celular inválido.", (val) => {
-            const val_length_without_dashes = val.replace(/-|_/g, "").length;
-            return val_length_without_dashes === 13;
-          })
-          .required('*É necessário preechimento')
+            .test("len", "Número de celular inválido.", (val) => {
+              const val_length_without_dashes = val.replace(/-|_/g, "").length;
+              return val_length_without_dashes === 13;
+            })
+            .required('*É necessário preechimento')
           ,
 
         });
@@ -61,7 +76,16 @@ const Inicio: React.FC = () => {
             s.tel = data.celular
             s.email = data.email
           });
-
+        
+        var dados = {
+          codtipo: ContratarStoreRead.CodigoTipoContrato,
+          nome: data.nome,
+          tel: data.celular,
+          email: data.email,
+          pplink: ContratarStoreRead.LinkPoliticaDePrivacidade
+        }
+         
+        inicioCadastro(dados)
         router.push('/contratar/cadastro');
 
        
@@ -94,7 +118,7 @@ const Inicio: React.FC = () => {
               <Image src="/assets/logo_icon.svg" width={25} height={30} />
             </div>
             <Image src="/assets/estrelas.svg" width={56} height={12} />
-            <span className="title">Intermedicina <strong>{contratoSelecionadoTitulo}</strong> <Image src="/assets/check.svg" width={15} height={15} /> </span>
+            <span className="title">Intermedicina <strong>{ContratarStoreRead.contratoSelecionadoTitulo}</strong> <Image src="/assets/check.svg" width={15} height={15} /> </span>
             <span className="subtitle">Sua família com acesso <br/>aos melhores especialistas! </span> 
           </div>
         </ContratoSelecionado>

@@ -13,14 +13,18 @@ interface ButtonProps{
   description:string; 
   featured?:boolean;
   id:string;
+  code:number;
 }
 
-const ButtonContract: React.FC<ButtonProps> = ({ id,title,subtitle,price,oldPrice,link,description,featured=false, children , ...rest }) => {
+const ButtonContract: React.FC<ButtonProps> = ({ code,id,title,subtitle,price,oldPrice,link,description,featured=false, children , ...rest }) => {
   const router = useRouter()
-  function SelecionarContrato(id,title,price){
+
+  function SelecionarContrato(id,title,price,code,link){
 
     ContratarStore.update(s => {
       s.contratoSelecionado = id;
+      s.CodigoTipoContrato = code;
+      s.LinkPoliticaDePrivacidade = link;
       s.contratoSelecionadoTitulo = title;
       s.precoContrato = price;
     })
@@ -29,7 +33,7 @@ const ButtonContract: React.FC<ButtonProps> = ({ id,title,subtitle,price,oldPric
  }
  
   return (
-    <Container  onClick={()=>SelecionarContrato(id,title,price)} {...rest}> 
+    <Container  onClick={()=>SelecionarContrato(id,title,price,code,link)} {...rest}> 
       <Left> 
         <div className="two">
           {children}

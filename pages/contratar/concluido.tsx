@@ -1,11 +1,12 @@
  
-import React, { useRef, useCallback } from 'react'
+import React, { useRef, useCallback, useEffect } from 'react'
 import HeaderContratar from '../../components/HeaderContratar'
 import HeaderVoltarAzul from '../../components/HeaderVoltarAzul' 
 import {CenteredText, Container,Information, ContratoSelecionado, BoxAssinatura, BoxConcluido} from '../../styles/_styles'
 import Image from 'next/image' 
 
 import { ImWhatsapp as Whatsapp } from 'react-icons/im'
+import { ContratarStore } from '../../store/contratar'
 
 
 interface SignInFormData {
@@ -15,6 +16,11 @@ interface SignInFormData {
 
 const Concluido: React.FC = () => {
 
+  useEffect(()=>{
+    var Store = JSON.parse(localStorage.getItem('Intermedicina@ContratarStore'))
+    Store ? ContratarStore.update(s => Store) : null
+  },[])
+  
     return (
       <>
     <HeaderVoltarAzul voltar="/contratar/pagamento"/> 

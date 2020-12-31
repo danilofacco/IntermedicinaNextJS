@@ -1,78 +1,73 @@
 import Head from 'next/head' 
 import React, { ChangeEvent, useCallback, useEffect, useRef, useState } from 'react';
 import * as Yup from 'yup';
-import HeaderContratar from '../../components/HeaderContratar'
-import Footer from '../../components/Footer'
-import HeaderVoltarAzul from '../../components/HeaderVoltarAzul'
-import TitleWithLogo from '../../components/TitleWithLogo'
-import InputMaskCartao from '../../components/Input/inputMaskCartao'
-import {CenteredText, Container,Information, ContratoSelecionadoAlt, BoxAssinatura,Separator, TextoInformativoAbaixo, SendCode, BlueButton, TextoLegenda, AnexoButton, Chips} from '../../styles/_styles'
+import HeaderContratar from '../../../components/HeaderContratar'
+import Footer from '../../../components/Footer'
+import HeaderVoltarAzul from '../../../components/HeaderVoltarAzul'
+import TitleWithLogo from '../../../components/TitleWithLogo'
+import InputMaskCartao from '../../../components/Input/inputMaskCartao'
+import {CenteredText, Container,Information, ContratoSelecionadoAlt, BoxAssinatura,Separator, TextoInformativoAbaixo, SendCode, BlueButton, TextoLegenda, AnexoButton, Chips} from '../../../styles/_styles'
 import Image from 'next/image' 
 import { Form } from '@unform/web';
-import Input from '../../components/Input';
-import {ContratarStore} from '../../store/contratar'
+import Input from '../../../components/Input';
+import {ContratarStore} from '../../../store/contratar'
 
-import InputMaskCPF from '../../components/Input/inputMaskCPF'
+import InputMaskCPF from '../../../components/Input/inputMaskCPF'
 
-import File from '../../components/Input/file'
+import File from '../../../components/Input/file'
 
 import {BsFillPersonFill as PersonIcon} from 'react-icons/bs'
 import {HiOutlineMail as EmailIcon} from 'react-icons/hi'
 import {BiPhone as PhoneIcon} from 'react-icons/bi'
 
 
-import getValidationErrors from '../../utils/getValidationErrors';
-import { Column, Row } from '../../components/LinhasColunas';
-import Select from '../../components/Input/select';
-import { CPFValidation } from '../../utils/CPFValidation';
-import { checkIfFileExists } from '../../utils/checkIfFileExists';
-import { removeFile } from '../../utils/removeFile';
-import { uploadFile } from '../../utils/uploadFile';
+import getValidationErrors from '../../../utils/getValidationErrors';
+import { Column, Row } from '../../../components/LinhasColunas';
+import Select from '../../../components/Input/select';
+import { CPFValidation } from '../../../utils/CPFValidation';
+import { checkIfFileExists } from '../../../utils/checkIfFileExists';
+import { removeFile } from '../../../utils/removeFile';
+import { uploadFile } from '../../../utils/uploadFile';
 import { SpinnerCircularFixed } from 'spinners-react';
+import { useRouter } from 'next/router';
 
 
 const Pagamento : React.FC = () => {
 
   const formRef = useRef(null);
+
+  const router = useRouter()
   const [metodo,setMetodo] = useState("cartao");
   const ContratarStoreRead = ContratarStore.useState(s => s)
 
   useEffect(()=>{
+    var Store = JSON.parse(localStorage.getItem('Intermedicina@ContratarStore'))
+    Store ? ContratarStore.update(s => Store) : null
+  },[])
+  
+
+  useEffect(()=>{
     ContratarStore.update(s=>{
       s.metodo = metodo
-    })
-    formRef.current.setFieldValue("metodo",metodo)
+    }) 
   },[metodo])
 
-  function Flag(opcao){ 
-   if (ContratarStoreRead.cartao.bandeira == opcao || ContratarStoreRead.cartao.bandeira == "" ){
-    return `${opcao}_act.svg`
-   }
-    else{
-      return `${opcao}_ina.svg`
-    }
-  }
 
   function ChangeMetodo(){
     var m = formRef.current.getFieldValue("metodo")
     setMetodo(m) 
+    router.push(`/contratar/pagamento/${m}`)
   }
 
   function onChangeCPF(){
-    CPFValidation(formRef.current.getFieldValue("cpf"))
+    !CPFValidation(formRef.current.getFieldValue("cpfTitularEnergia")) ? formRef.current.clearField("cpfTitularEnergia") : null
   }
   
   function mesmoTitular(resposta){
     resposta ?  formRef.current.setFieldValue("nomeTitularEnergia",ContratarStoreRead.nome): formRef.current.setFieldValue("nomeTitularEnergia","")
-    resposta ?  formRef.current.setFieldValue("cpfTitularEnergia",ContratarStoreRead.cpf): formRef.current.setFieldValue("cpfitularEnergia","")    
+    resposta ?  formRef.current.setFieldValue("cpfTitularEnergia",ContratarStoreRead.cpf): formRef.current.setFieldValue("cpfTitularEnergia","")    
   }
 
-  function SelectFlag(opcao){
-    ContratarStore.update(s =>{
-      s.cartao.bandeira=opcao;
-    })
-
-  }
 
   function reduceName(varString){
     if (varString.length > 26){
@@ -82,15 +77,9 @@ const Pagamento : React.FC = () => {
       return `${varString}` 
     }
   }
- 
-
-
     //* UPLOAD TALÃO - INICIO
-
-
     const [loadingUploadTalao,setLoadingUploadTalao] = useState(false)
     const [fileNameUploadTalao, setFileNameUploadTalao] = useState([])
-
 
     function handleClickTalao(){
       const uploadButton = formRef.current.getFieldRef("uploadTalao")//*
@@ -213,118 +202,13 @@ const Pagamento : React.FC = () => {
         <Form ref={formRef} onSubmit={handleSubmit}>  
 
         <Row pl={80} pr={80}> 
-        <Select name="metodo" onChange={ChangeMetodo}   legend="" small> 
-                  <option value="cartao">CARTAO DE CRÉDITO</option>
-                  <option value="picpay">PICPAY</option>
-                  <option value="energia">CONTA DE ENERGIA</option>
+        <Select name="metodo" defaultValue="energia"  onChange={ChangeMetodo}   legend="" small>
+                <option value="cartao">CARTAO DE CRÉDITO</option>
+                <option value="picpay">PICPAY</option>
+                <option  value="energia">CONTA DE ENERGIA</option>
         </Select>
         </Row> 
         
-      {
-        ContratarStoreRead.metodo == "cartao" &&
-        <>
-          <span className="informe">SELECIONE A BANDEIRA</span>
-
-        <Row mt={8}>
-    
-         
-          <Column><Image onClick={()=>SelectFlag("visa")} height={35} width={57} src={`/assets/buttons/${Flag('visa')}`}/></Column>
-
-          <Column><Image onClick={()=>SelectFlag("master")}  height={35} width={57} src={`/assets/buttons/${Flag('master')}`}/></Column>
-
-          <Column><Image onClick={()=>SelectFlag("elo")} height={35} width={57} src={`/assets/buttons/${Flag('elo')}`}/></Column>
-
-          <Column><Image onClick={()=>SelectFlag("diner")} height={35} width={57} src={`/assets/buttons/${Flag('diner')}`}/></Column>
-
-          <Column><Image onClick={()=>SelectFlag("amex")} height={35} width={57} src={`/assets/buttons/${Flag('amex')}`}/></Column>
-
-        </Row>
-
-              <Input name="nome" legend="NOME IMPRESSO NO CARTÃO" />
-              <InputMaskCartao name="numeroDoCartao"   legend="NÚMERO DO CARTÃO" /> 
-
-              <Row>
-              <Column mr={4} >
-                  <span className="informe_left">DATA DE VALIDADE DO CARTÃO</span>
-                </Column>  
-                <Column  ml={4} mr={4}>
-                </Column> 
-
-                <Column  ml={4}>
-                  <span className="informe_left">CÓDIGO DE SEGURANÇA</span>
-                  </Column>
-              </Row>
-          
-              <Row>
-                <Column mr={4}  >
-                <Select name="mes"  legend="" >
-                  <option>MÊS</option>
-                  <option>1</option>
-                  <option>2</option>
-                  <option>3</option> 
-                  <option>4</option> 
-                  <option>5</option> 
-                  <option>6</option> 
-                  <option>7</option> 
-                  <option>8</option> 
-                  <option>9</option> 
-                  <option>10</option> 
-                  <option>11</option> 
-                  <option>12</option> 
-                </Select>
-
-                </Column> 
-
-                <Column  ml={4} mr={4}>
-                <Select name="mes"  legend="" > 
-                  <option>ANO</option>
-                  <option>2021</option>
-                  <option>2022</option> 
-                  <option>2023</option> 
-                  <option>2024</option> 
-                  <option>2025</option> 
-                  <option>2026</option> 
-                  <option>2027</option> 
-                  <option>2028</option> 
-                  <option>2029</option> 
-                  <option>2030</option>  
-                </Select> 
-                </Column> 
-
-                <Column  ml={4}>
-                  <Input name="cvv"  placeholder="CVV"     /> 
-                </Column>
-                </Row>
-
-              <button  className="button"  type="submit"><span><strong>Iniciar</strong> Assinatura</span> <Image src="/assets/arrowRight.svg" width={19} height={13}/></button> 
-            
-        </>
-      }
-
-      {
-
-        ContratarStoreRead.metodo == "picpay" &&
-        <>
-        <div className="picpayInformation">
-        <span>
-        <strong>INFORMAÇÃO IMPORTANTE:</strong><br/>
-          Vamos finalizar a sua assinatura <br/>
-          dentro do aplicativo PicPay.<br/>
-          Clique no botão para abrir o PicPay<br/>
-          e siga as orientações.<br/>
-        </span>
-        </div>
-
-        <button  className="button"  type="button"><span><strong>Abrir</strong> Picpay</span> <Image src="/assets/arrowRight.svg" width={19} height={13}/></button> 
-         
-        </>
-      }
-
-      {
-
-      ContratarStoreRead.metodo == "energia" &&
-
-     <>
       <span className="informe">
         O TITULAR DA CONTA DE ENERGIA<br/>
         É O MESMO TITULAR DO CONTRATO?
@@ -332,8 +216,8 @@ const Pagamento : React.FC = () => {
 
       <Row mt={8}>
         <SendCode>
-          <BlueButton onClick={()=>mesmoTitular(true)}><span></span><strong>SIM</strong></BlueButton>
-          <BlueButton onClick={()=>mesmoTitular(false)}><span></span><strong>NÃO</strong></BlueButton>
+          <BlueButton onClick={()=>mesmoTitular(true)}><span></span><strong> SIM </strong></BlueButton>
+          <BlueButton onClick={()=>mesmoTitular(false)}><span></span><strong> NÃO </strong></BlueButton>
         </SendCode>
        </Row>
 
@@ -383,10 +267,7 @@ const Pagamento : React.FC = () => {
                 </Column>  
               </Row>
 
-
-     </>
-
-}
+ 
 
       </Form>
 

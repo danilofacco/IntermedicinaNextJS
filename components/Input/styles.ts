@@ -91,7 +91,7 @@ select{
     props.isErrored &&
     css`
     border: 1px solid #E2202C;
-    legend, input,select, input::placeholder ,:-ms-input-placeholder ,::-ms-input-placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+    legend, input, select, input::placeholder ,:-ms-input-placeholder ,::-ms-input-placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
       color:#E2202C;
     } 
     `}

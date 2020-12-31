@@ -1,5 +1,5 @@
  
-import React, { useRef, useCallback } from 'react';
+import React, { useRef, useCallback, useEffect } from 'react';
 
 import HeaderContratar from '../../components/HeaderContratar'
 import HeaderVoltarAzul from '../../components/HeaderVoltarAzul' 
@@ -20,6 +20,12 @@ interface SignInFormData {
 const ConcluidoPicPay: React.FC = () => {
 
   const {contratoSelecionadoTitulo} = ContratarStore.useState(s => s);
+  
+  useEffect(()=>{
+    var Store = JSON.parse(localStorage.getItem('Intermedicina@ContratarStore'))
+    Store ? ContratarStore.update(s => Store) : null
+  },[])
+
     return (
       <>
     <HeaderVoltarAzul voltar="/contratar/pagamento"/> 

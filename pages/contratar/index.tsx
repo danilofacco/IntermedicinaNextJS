@@ -1,5 +1,5 @@
 import Head from 'next/head' 
-import React from 'react' 
+import React, { useEffect } from 'react' 
 import ButtonContract from '../../components/ButtonContract'
 import Footer from '../../components/Footer'
 import HeaderVoltarAzul from '../../components/HeaderVoltarAzul'
@@ -8,6 +8,7 @@ import {CenteredText, Container,Information} from '../../styles/_styles'
 import Image from 'next/image'
 
 import Carousel from 'react-elastic-carousel'
+import { ContratarStore } from '../../store/contratar'
 
 const Index: React.FC = () => {
 
@@ -19,6 +20,11 @@ const Index: React.FC = () => {
     slidesToScroll: 1,
 
   };
+
+  useEffect(()=>{
+    var Store = JSON.parse(localStorage.getItem('Intermedicina@ContratarStore'))
+    Store ? ContratarStore.update(s => Store) : null
+  },[])
 
   return (
     <>
@@ -65,7 +71,8 @@ const Index: React.FC = () => {
       
  
           <ButtonContract
-          id="familia" 
+          id="familia"
+          code={4}
           title="Família"
           subtitle="TITULAR + 4 DEPENDENTES*"
           price="85"
@@ -77,7 +84,8 @@ const Index: React.FC = () => {
           featured > <Image src="/assets/family.svg" width={16} height={15} /> </ButtonContract>
 
           <ButtonContract
-          id="individual" 
+          id="individual"
+          code={7}
           title="Individual"
           subtitle="SOMENTE TITULAR"
           price="49"
@@ -90,6 +98,7 @@ const Index: React.FC = () => {
 
           <ButtonContract
           id="odontomais" 
+          code={5}
           title="OdontoMais"
           subtitle="SOMENTE TITULAR"
           price="40"

@@ -2,12 +2,17 @@ import { Store } from "pullstate";
 
 interface iContratar {
   contratoSelecionado: string;
+  CodigoTipoContrato:number,
+  LinkPoliticaDePrivacidade:string,
   etapa:string;
   precoContrato:number;
   contratoSelecionadoTitulo:string;
   cv:number;
   metodo:string;
 
+ meses:Array<any>;
+ anos:Array<any>;
+  
   fileNameUploadIdentificacao:Array<any>;
   fileNameUploadResidencia:Array<any>;
   fileNameUploadTalao:Array<any>;
@@ -44,6 +49,8 @@ interface iContratar {
 
 export const ContratarStore = new Store<iContratar>({
     contratoSelecionado: "",
+    CodigoTipoContrato:0,
+    LinkPoliticaDePrivacidade:"",
     precoContrato:0,
     etapa:"",
     contratoSelecionadoTitulo:"",
@@ -52,7 +59,7 @@ export const ContratarStore = new Store<iContratar>({
     cpf:"",
     datanasc:"",
     tel:"",
-    email:"faccodanilo@gmail.com",
+    email:"",
     cartao:{
       bandeira:"",
       numero: 0,
@@ -76,5 +83,8 @@ export const ContratarStore = new Store<iContratar>({
     fileNameUploadIdentificacao:[],
     fileNameUploadResidencia:[],
     fileNameUploadTalao:[],
-    metodo:"cartao"
+    metodo:"cartao",
+
+    meses:["01","02","03","04","05","06","06","07","08","09","10","11","12"],
+    anos:[]
 });

@@ -53,6 +53,20 @@ import InvisibleCheck from '../../components/Input/InvisibleCheck';
     const [fileNameUploadIdentificacao, setFileNameUploadIdentificacao] = useState([])
     const [fileNameUploadResidencia, setFileNameUploadResidencia] = useState([])
 
+
+
+  
+  useEffect(()=>{
+    //localStorage.setItem('Intermedicina@ContratarStore', JSON.stringify(ContratarStoreRead));
+  },[ContratarStoreRead])
+
+
+  useEffect(()=>{
+    var Store = JSON.parse(localStorage.getItem('Intermedicina@ContratarStore'))
+    Store ? ContratarStore.update(s => Store) : null
+  },[])
+
+
     function HandleOnSendSMS(){
        sendSMS(ContratarStoreRead.tel,ContratarStoreRead.cv)
        setSendMessage("Código enviado por sms para:")
@@ -193,8 +207,6 @@ import InvisibleCheck from '../../components/Input/InvisibleCheck';
 
    //* UPLOAD RESIDENCIA - FIM
 
-
-
     useEffect(()=>{
       formRef.current.setFieldValue("datanasc",ContratarStoreRead.datanasc)
     },[ContratarStoreRead.datanasc])
@@ -242,6 +254,21 @@ import InvisibleCheck from '../../components/Input/InvisibleCheck';
               .email('*Digite  um e-mail válido'),
             nome: Yup.string().required('*É necessário preechimento'),
             celular: Yup.string().required('*É necessário preechimento'),
+            datanasc: Yup.string().required('*É necessário preechimento'),
+            cpf: Yup.string().required('*É necessário preechimento'),
+            estadocivil: Yup.string().required('*É necessário preechimento'),
+            genero: Yup.string().required('*É necessário preechimento'),
+            cep: Yup.string().required('*É necessário preechimento'),
+            rua: Yup.string().required('*É@ necessário preechimento'),
+            numero: Yup.string().required('*É necessário preechimento'),
+            bairro: Yup.string().required('*É necessário preechimento'),
+            cidade: Yup.string().required('*É necessário preechimento'),
+
+            estado: Yup.string().required('*É necessário preechimento'),
+
+            validacao: Yup.string().required('*Código de verificação inválido'),
+            politicaprivacidade: Yup.string().required('*É necessário aceitar os termos de uso e política de privacidade'),
+
             anexoResidencia: Yup.string().required("*É necessario anexar ao menos um arquivo."),
             anexoIdentificacao: Yup.string().required("*É necessario anexar ao menos um arquivo.")
           });
@@ -321,8 +348,8 @@ import InvisibleCheck from '../../components/Input/InvisibleCheck';
 
               <Row>
                 <Column mr={4} size={68}>
-                  <Select name="estadocivil"  legend="ESTADO CIVIL" small>
-                  <option selected disabled>Selecione</option>
+                  <Select name="estadocivil" defaultValue="" legend="ESTADO CIVIL" small>
+                  <option value="" disabled>Selecione</option>
                   <option value="Solteiro">Solteiro</option>
                   <option value="Casado">Casado</option>
                   <option value="Divorciado">Divorciado</option>
@@ -332,8 +359,8 @@ import InvisibleCheck from '../../components/Input/InvisibleCheck';
                 </Column> 
 
                 <Column  ml={4}>
-                  <Select name="genero"  legend="GÊNERO" small> 
-                  <option selected disabled>Selecione</option>
+                  <Select name="genero" defaultValue="" legend="GÊNERO" small> 
+                  <option value="" disabled>Selecione</option>
                   <option value="M">Masculino</option>
                   <option value="F">Feminino</option>
                   </Select>
@@ -395,7 +422,7 @@ import InvisibleCheck from '../../components/Input/InvisibleCheck';
                 </Column> 
 
                 <Column  ml={4}>
-                <Select name="BAIRRO"  legend="BAIRRO" small> 
+                <Select name="bairro"  legend="BAIRRO" small> 
                 {ContratarStoreRead.bairros.map(bairro=>
                    <option value={bairro.codigo}>{bairro.nome}</option> 
                   )}
@@ -476,8 +503,11 @@ import InvisibleCheck from '../../components/Input/InvisibleCheck';
                   <Column size={60}>
                     <Input name="cv" small legend="Código de Validação" /> 
                   </Column>
+                  <InvisibleCheck  name="validacao"></InvisibleCheck> 
+
                 </CenteredText>
               </Row>
+             
 
               <TermoDeUso>
                 <span>
@@ -491,11 +521,13 @@ import InvisibleCheck from '../../components/Input/InvisibleCheck';
               <Row>  
                   <Column > 
                     <TextoLegenda> 
-                      Li e Concordo com os Termos de Uso<br/>
-                      e Política de Privacidade.
+                      <span><strong>Li</strong> e <strong>Concordo</strong> com os Termos de Uso<br/>
+                      e Política de Privacidade.</span>
                     </TextoLegenda>  
                   </Column> 
               </Row>
+              <InvisibleCheck  name="politicaprivacidade"></InvisibleCheck> 
+
 
 
               <button className="button" type="submit">Continuar<Image src="/assets/arrowRight.svg" width={19} height={13}/></button> 

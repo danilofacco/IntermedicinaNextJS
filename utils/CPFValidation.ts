@@ -6,15 +6,14 @@ export function CPFValidation(cpf) {
     if (cpf != ""  && cpf != null &&  cpf != undefined){
       var strCPF = cpf.replace(".","").replace("-","")
       if(!checkIsValid(strCPF)){
-
         ContratarStore.update(s=>{
             s.cpf = ""
         })
-
         alert("CPF Inválido")
         return false
       }else {
         CheckIfCPFExist(cpf)
+        return true
       }
     }
   } 

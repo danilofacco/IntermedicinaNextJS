@@ -1,15 +1,21 @@
  
-import React, { useRef, useCallback } from 'react'
+import React, { useRef, useCallback, useEffect } from 'react'
 import HeaderContratar from '../../components/HeaderContratar'
 import Footer from '../../components/Footer'
 import HeaderVoltarAzul from '../../components/HeaderVoltarAzul' 
 import {CenteredText, Container,Information, ContratoSelecionado, BoxAssinatura, BoxConcluido} from '../../styles/_styles'
 import Image from 'next/image' 
+import { ContratarStore } from '../../store/contratar'
 
 interface SignInFormData {
   email: string;
   password: string;
 }
+
+useEffect(()=>{
+  var Store = JSON.parse(localStorage.getItem('Intermedicina@ContratarStore'))
+  Store ? ContratarStore.update(s => Store) : null
+},[])
 
 const NaoAutorizado: React.FC = () => {
     return (
