@@ -72,12 +72,31 @@ import { dadosCadastro } from '../../utils/dadosCadastro';
     const [fileNameUploadIdentificacao, setFileNameUploadIdentificacao] = useState([])
     const [fileNameUploadResidencia, setFileNameUploadResidencia] = useState([])
     const [cvRandom, setCvRandom] = useState(Math.floor(Math.random() * (99999 - 10000 + 1) + 10000))
+    const [checkIcon, setCheckIcon] = useState("/assets/check.svg")
+    const [checkedPoliticaPrivacidade, setCheckedPoliticaPrivacidade] = useState(false)
+
+
+    useEffect(()=>{ 
+      if(checkedPoliticaPrivacidade){
+       setCheckIcon("/assets/check.svg")
+      } 
+      else{
+        setCheckIcon("/assets/check_disabled.svg") 
+      }   
+    } ,[checkedPoliticaPrivacidade])
       
     function HandleOnSendSMS(){
        sendSMS(ContratarStoreRead.tel,cvRandom)
        setSendMessage("Código enviado por sms para:")
        setSendMessageStrong(ContratarStoreRead.tel)
     }
+
+    function handleClickTermosDeUso(){
+      setCheckedPoliticaPrivacidade(!checkedPoliticaPrivacidade)
+      checkedPoliticaPrivacidade ? formRef.current.setFieldValue("politicaprivacidade","ok") : formRef.current.setFieldValue("politicaprivacidade","")
+      console.log(checkedPoliticaPrivacidade)
+    }
+
 
     function HandleOnSendEmail(){
       sendEmailCV(ContratarStoreRead.email,cvRandom,ContratarStoreRead.nome)
@@ -552,8 +571,8 @@ import { dadosCadastro } from '../../utils/dadosCadastro';
 
               <Row>  
                   <Column > 
-                    <TextoLegenda> 
-                      <span><strong>Li</strong> e <strong>Concordo</strong> com os Termos de Uso<br/>
+                    <TextoLegenda onClick={handleClickTermosDeUso}> 
+                      <span><Image  src={checkIcon} width={16} height={16}/><strong>Li</strong> e <strong>Concordo</strong> com os Termos de Uso<br/>
                       e Política de Privacidade.</span>
                     </TextoLegenda>  
                   </Column> 
