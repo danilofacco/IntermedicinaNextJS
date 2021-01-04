@@ -77,7 +77,7 @@ const Index: React.FC = () => {
           subtitle="TITULAR + 4 DEPENDENTES*"
           price="85"
           oldPrice="109,00"
-          link="link"
+          link="https://www.intermedicina.com.br/wp-json/wp/v2/pages/51087"
           description="São Médicos, Dentistas,
           Exames, Cirurgias,
           Laboratórios outros " 
@@ -90,7 +90,7 @@ const Index: React.FC = () => {
           subtitle="SOMENTE TITULAR"
           price="49"
           oldPrice="69,00"
-          link="link"
+          link="https://www.intermedicina.com.br/wp-json/wp/v2/pages/51095"
           description="São Médicos, Dentistas,
           Exames, Cirurgias,
           Laboratórios outros " 
@@ -103,7 +103,7 @@ const Index: React.FC = () => {
           subtitle="SOMENTE TITULAR"
           price="40"
           oldPrice="59,00"
-          link="link"
+          link="https://www.intermedicina.com.br/wp-json/wp/v2/pages/51090"
           description="São Médicos, Dentistas,
           Exames, Cirurgias,
           Laboratórios outros " 

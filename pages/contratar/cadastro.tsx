@@ -33,6 +33,7 @@ import { removeFile } from '../../utils/removeFile'
 import { SpinnerCircularFixed } from 'spinners-react';
 import InvisibleCheck from '../../components/Input/InvisibleCheck';
 import { dadosCadastro } from '../../utils/dadosCadastro';
+import axios from 'axios';
 
 
   interface SignInFormData {
@@ -74,30 +75,35 @@ import { dadosCadastro } from '../../utils/dadosCadastro';
     const [cvRandom, setCvRandom] = useState(Math.floor(Math.random() * (99999 - 10000 + 1) + 10000))
     const [checkIcon, setCheckIcon] = useState("/assets/check.svg")
     const [checkedPoliticaPrivacidade, setCheckedPoliticaPrivacidade] = useState(false)
+    const [textoPoliticaDePrivacidade, setTextoPoliticaDePrivacidade] = useState("Carregando ...")
+
+    useEffect(()=>{ 
+     axios.get(ContratarStoreRead.LinkPoliticaDePrivacidade).then( (response) => {
+      setTextoPoliticaDePrivacidade(response.data.content.rendered)
+    })
+    } ,[textoPoliticaDePrivacidade]) 
 
 
     useEffect(()=>{ 
       if(checkedPoliticaPrivacidade){
-       setCheckIcon("/assets/check.svg")
+       setCheckIcon("/assets/check_icon_fill.svg")
       } 
       else{
-        setCheckIcon("/assets/check_disabled.svg") 
+        setCheckIcon("/assets/check_icon_empty.svg") 
       }   
-    } ,[checkedPoliticaPrivacidade])
-      
-    function HandleOnSendSMS(){
-       sendSMS(ContratarStoreRead.tel,cvRandom)
-       setSendMessage("Código enviado por sms para:")
-       setSendMessageStrong(ContratarStoreRead.tel)
-    }
+    } ,[checkedPoliticaPrivacidade]) 
+  
 
     function handleClickTermosDeUso(){
       setCheckedPoliticaPrivacidade(!checkedPoliticaPrivacidade)
-      checkedPoliticaPrivacidade ? formRef.current.setFieldValue("politicaprivacidade","ok") : formRef.current.setFieldValue("politicaprivacidade","")
-      console.log(checkedPoliticaPrivacidade)
+      !checkedPoliticaPrivacidade ? formRef.current.setFieldValue("politicaprivacidade","ok") : formRef.current.setFieldValue("politicaprivacidade","") 
     }
 
-
+    function HandleOnSendSMS(){
+      sendSMS(ContratarStoreRead.tel,cvRandom)
+      setSendMessage("Código enviado por sms para:")
+      setSendMessageStrong(ContratarStoreRead.tel)
+   }
     function HandleOnSendEmail(){
       sendEmailCV(ContratarStoreRead.email,cvRandom,ContratarStoreRead.nome)
       setSendMessage("Código enviado por e-mail para:")
@@ -561,18 +567,17 @@ import { dadosCadastro } from '../../utils/dadosCadastro';
              
 
               <TermoDeUso>
-                <span>
-                TERMO DE USO E POLÍTICA DE PRIVACIDADE – CONTRATO INTERMEDICINA INDIVIDUAL
-                Pelo presente instrumento particular, que representa este contrato entre as seguintes partes, de um lado, INTERMEDICINA MULTI PRIVILÉGIOS LTDA. EPP, com sede na Rua das Azaléias, 275, sala 1, Jardim da Montanha, Santa Teresa-ES, CEP: 29650-000, inscrita no CNPJ sob o nº 03.742.085/0001-71, denominado doravante CONTRATADA, e de outro lado o proponente do presente contrato, denominado CONTRATANTE. Por meio destes Termos de Uso e Política de Privacidade, apresenta as condições essenciais para o uso dos serviços oferecidos pela contratada.
-                
-                Pelo presente instrumento particular, que representa este contrato entre as seguintes partes, de um lado, INTERMEDICINA MULTI PRIVILÉGIOS LTDA. EPP, com sede na Rua das Azaléias, 275, sala 1, Jardim da Montanha, Santa Teresa-ES, CEP: 29650-000, inscrita no CNPJ sob o nº 03.742.085/0001-71, denominado doravante CONTRATADA, e de outro lado o proponente do presente contrato, denominado CONTRATANTE. Por meio destes Termos de Uso e Política de Privacidade, apresenta as condições essenciais para o uso dos serviços oferecidos pela contratada.
+                <span dangerouslySetInnerHTML={{
+    __html: textoPoliticaDePrivacidade
+  }}>
+               
                 </span>
               </TermoDeUso>
 
               <Row>  
                   <Column > 
                     <TextoLegenda onClick={handleClickTermosDeUso}> 
-                      <span><Image  src={checkIcon} width={16} height={16}/><strong>Li</strong> e <strong>Concordo</strong> com os Termos de Uso<br/>
+                      <span><Image  src={checkIcon} width={16} height={16}/><strong>  Li</strong> e <strong>Concordo</strong> com os Termos de Uso<br/>
                       e Política de Privacidade.</span>
                     </TextoLegenda>  
                   </Column> 
