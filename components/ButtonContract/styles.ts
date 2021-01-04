@@ -10,12 +10,8 @@ background: rgba(229, 229, 229, 0.2);
 border: 1px solid rgba(131, 131, 131, 0.3);
 box-sizing: border-box;
 border-radius: 5px; 
-margin-top:16px;
-
-width:100%;
- 
-
-
+margin-top:16px; 
+width:100%;  
 `;
 
 
@@ -23,27 +19,28 @@ export const Left = styled.div`
 display:flex;
 flex-direction:column;
 padding:16px;
-align-items:start;
-
+align-items:space-between;
+justify-content:space-between;
+flex:1;
+height:100%;
 text-align: left;
 
 .two{
   display:flex;
   align-items:center;
+
   svg{
     color:#E2202C;
     
   }
-  .title{
-    
-      font-weight: 700;
-      font-size: 18px;
-      line-height: 22px;  
-      color: #138FCE;
-      margin-left:6px;
+  .title{ 
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 22px;  
+    color: #138FCE;
+    margin-left:6px;
   }
-  .subtitle{
-    
+  .subtitle{ 
     font-size: 11px;
     line-height: 13px;
     color: #838383;
@@ -51,8 +48,7 @@ text-align: left;
     padding:10px;
   }
 
-  .description{
-    
+  .description{ 
     font-weight: 400;
     font-size: 9px;
     line-height: 9px;  
@@ -66,13 +62,10 @@ export const Right = styled.div`
 display:flex;
 flex-direction:column;
 align-items:start; 
-padding:16px; 
-
-
+padding:16px;  
 position: relative; 
 
-.rs{ 
-  
+.rs{  
   font-weight: 500;
   font-size: 11px;
   line-height: 13px;
@@ -80,28 +73,24 @@ position: relative;
   color: #138FCE;
 
 }
-.price{
- 
-.before{
-  
-  font-weight: 700;
-  font-size: 20px;
-  line-height: 24px;
-  text-align: center; 
-  color: #138FCE;
-}
+.price{ 
+  .before{ 
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 24px;
+    text-align: center; 
+    color: #138FCE;
+  }
 
-.after{
-  
-  font-weight: 500;
-  font-size: 14px;
-  line-height: 17px;
-  text-align: center; 
-  color: #138FCE;
+  .after{ 
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 17px;
+    text-align: center; 
+    color: #138FCE;
+  }
 }
-}
-.oldprice{
-  
+.oldprice{ 
   font-weight: 500;
   font-size: 11px;
   line-height: 13px;
@@ -116,10 +105,8 @@ a{
   border-radius: 1px;
   padding:6px 15px;
   font-size: 9px;
-line-height: 11px;
-/* identical to box height */
-
-text-align: center;
+  line-height: 11px;  
+  text-align: center;
 }
 
 .recomendado{
