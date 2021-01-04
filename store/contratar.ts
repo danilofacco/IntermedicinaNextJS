@@ -1,6 +1,7 @@
 import { Store } from "pullstate"; 
 
 interface iContratar {
+  idCadastro:number;
   contratoSelecionado: string;
   CodigoTipoContrato:number,
   LinkPoliticaDePrivacidade:string,
@@ -48,6 +49,7 @@ interface iContratar {
 }
 
 export const ContratarStore = new Store<iContratar>({
+    idCadastro:0,
     contratoSelecionado: "",
     CodigoTipoContrato:0,
     LinkPoliticaDePrivacidade:"",

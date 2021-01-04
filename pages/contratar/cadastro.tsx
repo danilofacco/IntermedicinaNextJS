@@ -32,12 +32,31 @@ import { checkIfFileExists } from '../../utils/checkIfFileExists'
 import { removeFile } from '../../utils/removeFile'
 import { SpinnerCircularFixed } from 'spinners-react';
 import InvisibleCheck from '../../components/Input/InvisibleCheck';
+import { dadosCadastro } from '../../utils/dadosCadastro';
 
 
   interface SignInFormData {
     email: string;
     nome: string;
     celular: string;
+
+    datanasc: string;
+    cpf: string;
+    estadocivil: string;
+    genero: string;
+    cep: string;  
+    rua: string;
+    numero: string;
+    complemento: string;
+    bairro: string;
+    cidade: string; 
+    ibge: string;
+    codmunicipio: string;
+    estado: string;
+    anexo1: string;
+    anexo2: string;   
+    MerchantOrderId: string;   
+    id: string;   
   } 
 
 
@@ -216,7 +235,7 @@ import InvisibleCheck from '../../components/Input/InvisibleCheck';
       if(ContratarStoreRead.endereco.ibge.length > 4){
         getBairrosByIBGE(ContratarStoreRead.endereco.ibge)
         }
-    },[ContratarStoreRead.endereco])
+    },[ContratarStoreRead.endereco.cep])
 
     
     async function OnChangeCEP() {
@@ -272,10 +291,40 @@ import InvisibleCheck from '../../components/Input/InvisibleCheck';
             abortEarly: false,
           });
 
-          router.push('/contratar/pagamento');
-  
 
+          await ContratarStore.update(s=> 
+            {
+              
+             
+            });
           
+          var dados = {
+            datanasc: data.datanasc,
+            cpf: data.cpf,
+            estadocivil: data.estadocivil,
+            genero: data.genero,
+            cep: data.cep,  
+            rua: data.rua,
+            numero: data.numero,
+            complemento: data.complemento,
+            bairro: data.bairro,
+            cidade: data.cidade, 
+            ibge: data.ibge,
+            codmunicipio: data.codmunicipio,
+            estado: data.estado,
+            anexo1: data.anexo1,
+            anexo2: data.anexo2,
+            MerchantOrderId: data.MerchantOrderId,   
+            id: data.id,
+          }
+           
+          dadosCadastro(dados).then(result => {
+             ContratarStore.update(s => 
+              { s.idCadastro = Number(result) 
+              });
+          })
+
+          router.push('/contratar/pagamento');
   
         } catch (err) {
           if (err instanceof Yup.ValidationError) {

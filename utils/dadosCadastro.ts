@@ -1,14 +1,26 @@
 import axios from 'axios' 
 
 interface iDados{
-    codtipo: number;
-    nome: string;
-    tel: string;
-    email: string;
-    pplink: string;   
+    datanasc: string;
+    cpf: string;
+    estadocivil: string;
+    genero: string;
+    cep: string;  
+    rua: string;
+    numero: string;
+    complemento: string;
+    bairro: string;
+    cidade: string; 
+    ibge: string;
+    codmunicipio: string;
+    estado: string;
+    anexo1: string;
+    anexo2: string;   
+    MerchantOrderId: string;   
+    id: string;    
 } 
 
-export async function inicioCadastro(dados: iDados){ 
+export async function dadosCadastro(dados: iDados){ 
 
 /* ##DADOS DE EXEMPLO
 data = {
@@ -23,7 +35,7 @@ return new Promise((resolve, reject) => {
 
     axios.request({
         method: "POST",
-        url: `${process.env.NEXT_PUBLIC_API_URL}contratar/cadastro.php`, 
+        url: `${process.env.NEXT_PUBLIC_API_URL}contratar/dados.php`, 
         data:JSON.parse(JSON.stringify(dados))
       }).then( response=> { 
               resolve(response.data)

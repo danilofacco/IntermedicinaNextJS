@@ -28,21 +28,11 @@ const Inicio: React.FC = () => {
   const router = useRouter()
 
   const ContratarStoreRead = ContratarStore.useState(s => s);
- 
-
- 
-
- 
-
-  //const { signIn } = useAuth();
-  //const { addToast } = useToast();
-  //const history = useHistory();
 
   const handleSubmit = useCallback(
     async (data: SignInFormData) => {
       try {
         formRef.current?.setErrors({});
-
         const schema = Yup.object().shape({
           email: Yup.string()
             .required('*É necessário preechimento')
@@ -76,7 +66,12 @@ const Inicio: React.FC = () => {
           pplink: ContratarStoreRead.LinkPoliticaDePrivacidade
         }
          
-        console.log(inicioCadastro(dados))
+        inicioCadastro(dados).then(result => {
+           ContratarStore.update(s => 
+            { s.idCadastro = Number(result) 
+            });
+        })
+
         router.push('/contratar/cadastro');
 
        
