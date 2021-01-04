@@ -12,10 +12,7 @@ interface SignInFormData {
   password: string;
 }
 
-useEffect(()=>{
-  var Store = JSON.parse(localStorage.getItem('Intermedicina@ContratarStore'))
-  Store ? ContratarStore.update(s => Store) : null
-},[])
+ 
 
 const NaoAutorizado: React.FC = () => {
     return (
