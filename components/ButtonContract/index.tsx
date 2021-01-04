@@ -47,7 +47,8 @@ const ButtonContract: React.FC<ButtonProps> = ({ code,id,title,subtitle,price,ol
       </Left>
       
       <Right>
-       {featured ? <div className="recomendado"><Image src='/assets/recomendado.svg' height={21} width={102}/></div> :""}
+       {featured ? <div className="recomendado">
+          O MAIS COMPLETO! </div> :""}
         <span className="rs">R$</span>
         <div className="price"><span className="before">{price}</span><span className="after">,00/mês</span></div>
         <span className="oldprice">R$ {oldPrice}</span>

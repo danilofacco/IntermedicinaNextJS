@@ -114,15 +114,47 @@ a{
   color:#fff !important ;
   background: #34AF23;
   border-radius: 1px;
-  padding:6px;
+  padding:6px 15px;
+  font-size: 9px;
+line-height: 11px;
+/* identical to box height */
+
+text-align: center;
 }
 
 .recomendado{
   position: absolute;
   z-index: 1;
-   margin-top:-30px;
-   margin-right:16px;
+   margin-top:-30px; 
+   left:2px;
+   min-width:100px;
+
+   background: #FFA000;
+  border-radius: 2px;
+  padding: 2px 4px;
+
+  font-size: 9px;
+  line-height: 11px;
+  /* identical to box height */
+
+  text-align: center;
+
+  color: #FFFFFF;
  
+}
+
+.recomendado:after {
+     content: '';
+    position: absolute;
+    left: 8px;
+    top:12px;
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-top: 10px solid #FFA000;
+    border-radius:8px; 
+
 }
 
 `;
