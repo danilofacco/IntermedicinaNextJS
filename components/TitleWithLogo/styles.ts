@@ -7,7 +7,7 @@ align-items:center;
 margin-top:32px;
 margin-bottom:16px;
 span{ 
-  font-weight: 700;
+  font-family:"Montserrat Bold";
   font-size: 21px;
   line-height: 26px; 
   letter-spacing: -0.03em; 

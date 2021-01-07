@@ -11,8 +11,7 @@ interface ContainerProps {
 export const ContainerInvisible = styled.div`
  .error{
     flex:1;
-    margin-top:6px;
-    font-weight: 400;
+    margin-top:6px; 
     text-align:left;  
     font-size: 10px;
     line-height: 12px; 
@@ -26,8 +25,7 @@ display:flex;
 flex-direction:column;
   .error{
     flex:1;
-    margin-top:6px;
-    font-weight: 400;
+    margin-top:6px; 
     text-align:left;  
     font-size: 10px;
     line-height: 12px; 
@@ -69,8 +67,7 @@ select{
   background-size: 8px;
   background-position: calc(100% - 5px) center;
   background-repeat: no-repeat;
-
-  font-weight: 400;
+ 
     font-size: 16px;
     line-height: 17px;  
     color: #138FCE;
@@ -107,8 +104,7 @@ select{
   align-items: center;
 
   legend{ 
-    padding:0 3px;
-    font-weight: 400;
+    padding:0 3px; 
     font-size: 10px;
     line-height: 10px;
     color:#138FCE; 
@@ -174,8 +170,7 @@ select{
     } 
  
     &::placeholder {
-      
-    font-weight: 400;
+       
     font-size: 16px;
     line-height: 17px;  
     color: #138FCE;

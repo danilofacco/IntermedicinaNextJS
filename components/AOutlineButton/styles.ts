@@ -5,18 +5,14 @@ export const Container = styled.a`
   border: 1px solid #138FCE;
   box-sizing: border-box;
   border-radius: 5px;
-
   padding:16px;
   transition: border-color 0.2s;
-
-  font-weight: 400;
   font-size: 14px;
   line-height: 17px;  
   text-align: center; 
   color: #138FCE;
 
   span{
-    font-weight: 400;
     font-size: 14px;
     line-height: 17px;  
     text-align: center; 

@@ -12,7 +12,7 @@ export const Container = styled.div`
     border-radius: 4px;
 
     font-size: 14px;
-    font-weight: 500;
+    font-family:"Montserrat Medium";
 
     opacity: 0;
     transition: opacity 0.4s;

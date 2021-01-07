@@ -10,8 +10,7 @@ a{
     display:flex; 
     align-items:center;
     margin:12px 0 12px 24px;
-
-    font-weight: 500;
+    font-family:"Montserrat Medium";
     font-size: 10px;
     line-height: 12px;
 

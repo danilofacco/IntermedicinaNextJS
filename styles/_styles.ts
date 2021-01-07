@@ -273,20 +273,17 @@ padding:16px;
 
 .textoCinza{
 
-    font-weight: 500;
+    font-family:"Montserrat Medium";
     font-size: 11px;
     line-height: 13px; 
     color: #838383;
-
     padding-bottom:4px;
 }
 .textoAzul{
-
-    font-weight: 400;
+ 
     font-size: 14px;
     line-height: 17px;   
-    color: #138FCE; 
-
+    color: #138FCE;  
     padding-bottom:8px;
 }
 
@@ -342,8 +339,7 @@ margin-bottom:8px;
     width:100%;
 
     .title{
-        flex:1;
-        font-weight: normal;
+        flex:1; 
         font-size: 18px;
         line-height: 22px;
         color: #FFFFFF;
@@ -354,8 +350,7 @@ margin-bottom:8px;
     }
 
 
-    .subtitle{
-        font-weight: normal;
+    .subtitle{ 
         font-size: 11px;
         line-height: 13px; 
         color: #FFFFFF;
@@ -377,8 +372,7 @@ width:100%;
 
 align-items:center;
 padding:12px 24px;
-
-font-weight: 400;
+ 
 font-size: 8px;
 line-height: 12px;
 /* or 150% */
@@ -392,8 +386,8 @@ export const TextoInformativoAbaixo = styled.span`
 width:100%;
 padding:8px 16px;
 
-font-style: normal;
-font-weight: bold;
+font-style: normal; 
+font-family:"Montserrat Bold";
 font-size: 8px;
 line-height: 13px; 
 text-transform: uppercase;
@@ -434,16 +428,14 @@ width:100%;
     
 }
 
-span{
-    font-weight: 400;
+span{ 
     font-size: 12px;
     line-height: 18px; 
     color: #838383;
 }
 
 a{
-    
-    font-weight: 500;
+    font-family:"Montserrat Medium";
     font-size: 12px;
     line-height: 18px; 
     color: #138FCE;
@@ -452,7 +444,6 @@ a{
 
 .formasdepagamento{
     
-    font-weight: 400;
     font-size: 9px;
     line-height: 11px; 
     display: flex;
@@ -482,7 +473,7 @@ a{
     margin:16px 0;
 
     span{
-        font-weight: 600;
+        font-family:"Montserrat Semi Bold";
         font-size: 12px;
         line-height: 15px;
         text-align: center;
@@ -492,7 +483,6 @@ a{
 
     a{
         
-        font-weight: 400;
         font-size: 10px;
         line-height: 12px;
         text-align: center;
@@ -503,8 +493,7 @@ a{
 }
 
 .jatenho{
-    
-        font-weight: 400;
+     
         font-size: 13px;
         line-height: 16px;
         text-align: center;
@@ -512,8 +501,7 @@ a{
         margin-bottom:20px;
 
         strong{
-            
-            font-weight: 700;
+            font-family:"Montserrat Bold";
             font-size: 13px;
             line-height: 16px;
             text-align: center;
@@ -535,9 +523,8 @@ svg{
      
 }
 
-.titulo{
-    font-style: normal;
-    font-weight: bold;
+.titulo{ 
+    font-family:"Montserrat Medium";
     font-size: 18px;
     line-height: 22px;  
     text-align: center; 
@@ -571,9 +558,7 @@ color: #FFFFFF;
 
 .texto{
 margin-top:12px;
-font-family: Raleway;
-font-style: italic;
-font-weight: normal;
+font-family: "Raleway Italic"; 
 font-size: 15px;
 line-height: 18px;
 text-align: center;
@@ -581,9 +566,7 @@ text-align: center;
 color: #FFFFFF;
 
 strong{
-    font-family: Raleway;
-    font-style: italic;
-    font-weight: bold;
+    font-family: "Raleway Bold Italic"; 
     font-size: 15px;
     line-height: 18px;
 }
@@ -598,8 +581,7 @@ button{
     box-sizing: border-box;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
     border-radius: 5px;
-
-font-weight: bold;
+    font-family:"Montserrat Bold";
 font-size: 12px;
 line-height: 15px;
 /* identical to box height */

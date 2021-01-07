@@ -13,7 +13,7 @@ export const Container = styled.button`
   height: 56px;
   width: 100%;
 
-  font-weight: 500;
+  font-family:"Montserrat Medium";
 
   margin-top: 16px;
   transition: background-color 0.2s;

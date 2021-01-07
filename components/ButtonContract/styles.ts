@@ -35,21 +35,21 @@ gap: 5px;
     
   }
   .title{ 
-    font-weight: 700;
+    font-family:"Montserrat Bold";
     font-size: 18px;
     line-height: 22px;  
     color: #138FCE;
     margin-left:6px;
   }
   .subtitle{ 
-    font-weight: 500;
+    font-family:"Montserrat Medium";
     font-size: 11px;
     line-height: 13px;
     color: #838383; 
   }
 
   .description{ 
-    font-weight: 500;
+    font-family:"Montserrat Medium";
     font-size: 11px;
     line-height: 13px; 
     color: #838383; 
@@ -66,7 +66,7 @@ padding:16px;
 position: relative;
 
 .rs{  
-  font-weight: 500;
+  font-family:"Montserrat Medium";
   font-size: 11px;
   line-height: 13px;
   text-align: center; 
@@ -75,7 +75,7 @@ position: relative;
 }
 .price{ 
   .before{ 
-    font-weight: 700;
+    font-family:"Montserrat Bold";
     font-size: 20px;
     line-height: 24px;
     text-align: center; 
@@ -83,7 +83,7 @@ position: relative;
   }
 
   .after{ 
-    font-weight: 500;
+    font-family:"Montserrat Medium";
     font-size: 14px;
     line-height: 17px;
     text-align: center; 
@@ -91,7 +91,7 @@ position: relative;
   }
 }
 .oldprice{ 
-  font-weight: 500;
+  font-family:"Montserrat Medium";
   font-size: 11px;
   line-height: 13px;
   text-align: center;
@@ -104,10 +104,10 @@ a{
   background: #34AF23;
   border-radius: 1px;
   padding:6px 15px;
-  font-weight: bold;
-font-size: 9px;
-line-height: 11px;
-text-align: center;
+  font-family:"Montserrat Extra Bold";
+  font-size: 9px;
+  line-height: 11px;
+  text-align: center;
   text-align: center;
   margin-top:5px;
 }

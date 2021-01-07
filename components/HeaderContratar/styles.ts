@@ -24,9 +24,7 @@ margin-top:16px;
       margin-bottom:3px;
     }
 
-    span{
-      
-      font-weight: 400;
+    span{ 
       font-size: 10px;
       line-height: 12px;
       display: flex;
