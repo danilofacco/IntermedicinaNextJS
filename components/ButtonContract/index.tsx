@@ -48,7 +48,7 @@ const ButtonContract: React.FC<ButtonProps> = ({ code,id,title,subtitle,price,ol
       
       <Right>
        {featured ? <div className="recomendado">
-          <strong style={{fontWeight: "bold"}}>O MAIS COMPLETO! </strong></div> :""}
+          <strong style={{fontFamily: "Montserrat Bold"}}>O MAIS COMPLETO! </strong></div> :""}
         <span className="rs">R$</span>
         <div className="price">
           <span className="before">{price}</span><span className="after">,00/mês</span>

@@ -1,3 +1,40 @@
+@font-face {
+  font-family: "Montserrat";
+  src: url("/assets/fonts/Montserrat/Montserrat-Regular.ttf");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Montserrat Bold";
+  src: url("/assets/fonts/Montserrat/Montserrat-Bold.ttf");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Raleway";
+  src: url("/assets/fonts/Raleway/Raleway-Regular.ttf");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Raleway Italic";
+  src: url("/assets/fonts/Raleway/Raleway-Italic.ttf");
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Raleway Bold Italic";
+  src: url("/assets/fonts/Raleway/Raleway-BoldItalic.ttf");
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+}
+
 html,
 
 * {
@@ -9,7 +46,7 @@ html,
   outline: 0;
 
   -webkit-font-smoothing: antialiased;
-  font: "Montserrat";
+  font-family: 'Montserrat', sans-serif;
   font-style: normal;
 }
 

@@ -69,17 +69,14 @@ align-items:center;
     align-items:flex-start; 
 
     span{
-        font-family: Raleway;
-        font-style: italic;
-        font-weight: 400;
+        font-family: "Raleway Italic"; 
         font-size: 15px;
         line-height: 18px;
         color: #838383;
         }
 
         strong{
-        font-family: Raleway; 
-        font-weight: 700;
+        font-family: "Raleway Bold Italic";  
         font-size: 15px;
         line-height: 18px;
         color: #838383;
