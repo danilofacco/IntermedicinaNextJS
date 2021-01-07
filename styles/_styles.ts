@@ -320,7 +320,8 @@ padding:16px;
 export const ContratoSelecionado = styled.div`
 display:flex;
 flex:1;
-width:100%; 
+width:100%;
+margin-bottom:8px;
 
 .left{
     width:22px;
