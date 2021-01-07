@@ -9,6 +9,7 @@ function MyApp({ Component, pageProps }) {
     <GoogleFonts href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Raleway:wght@400;700&display=swap"/>
      <Head>
         <title>Intermedicina</title>
+        <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0"/>
         <link rel="icon" href="/favicon.ico" />
         <link rel="preconnect" href="https://fonts.gstatic.com"></link>
       </Head>

@@ -24,6 +24,7 @@ justify-content:space-between;
 flex:1;
 height:100%;
 text-align: left;
+gap: 5px;
 
 .two{
   display:flex;
@@ -41,17 +42,16 @@ text-align: left;
     margin-left:6px;
   }
   .subtitle{ 
+    font-weight: 500;
     font-size: 11px;
     line-height: 13px;
-    color: #838383;
-    margin-top:4px;
-    padding:10px;
+    color: #838383; 
   }
 
   .description{ 
-    font-weight: 400;
-    font-size: 9px;
-    line-height: 9px;  
+    font-weight: 500;
+    font-size: 11px;
+    line-height: 13px; 
     color: #838383; 
   } 
 } 
@@ -63,7 +63,7 @@ display:flex;
 flex-direction:column;
 align-items:start; 
 padding:16px;  
-position: relative; 
+position: relative;
 
 .rs{  
   font-weight: 500;
@@ -104,9 +104,12 @@ a{
   background: #34AF23;
   border-radius: 1px;
   padding:6px 15px;
-  font-size: 9px;
-  line-height: 11px;  
+  font-weight: bold;
+font-size: 9px;
+line-height: 11px;
+text-align: center;
   text-align: center;
+  margin-top:5px;
 }
 
 .recomendado{

@@ -348,7 +348,7 @@ margin-bottom:8px;
         line-height: 22px;
         color: #FFFFFF;
         strong { 
-            margin-right:6px;
+            margin-right:4px;
         }
 
     }
