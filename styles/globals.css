@@ -23,7 +23,7 @@
 @font-face {
   font-family: "Raleway Italic";
   src: url("/assets/fonts/Raleway/Raleway-Italic.ttf");
-  font-style: italic;
+  font-style: normal;
   font-weight: 400;
   font-display: swap;
 }
