@@ -10,11 +10,6 @@ import AOutlineButton from '../components/AOutlineButton'
 export default function Home() {
   return (
     <div>
-      <Head>
-        <title>Intermedicina</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
       <Main >
       <CenteredText>
         <Image
