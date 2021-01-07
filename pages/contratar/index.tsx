@@ -28,7 +28,7 @@ const Index: React.FC = () => {
 
   return (
     <>
-    <HeaderVoltarAzul/>
+    <HeaderVoltarAzul voltar="/"/>
     <Container>  
       <TitleWithLogo>Assinatura</TitleWithLogo>
      

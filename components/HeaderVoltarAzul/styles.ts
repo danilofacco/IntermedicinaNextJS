@@ -9,7 +9,7 @@ background: #138FCE;
 a{
     display:flex; 
     align-items:center;
-    margin:24px 0 12px 24px;
+    margin:12px 0 12px 24px;
 
     font-weight: 500;
     font-size: 10px;
