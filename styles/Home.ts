@@ -11,8 +11,11 @@ export const ButtonGreen = styled.div`
     align-items:center; 
     padding:16px; 
 
-    .texto{  
-    font-weight: 400;
+    strong{
+        font-family:"Montserrat Bold";
+    }
+
+    .texto{   
     font-size: 14px;
     line-height: 17px; 
     color: #FFFFFF;

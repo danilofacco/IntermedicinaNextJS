@@ -405,6 +405,8 @@ text-align: center;
 justify-content:center;
 align-items:center;
 
+
+
 .carousel{
 width:100%;
 
@@ -518,6 +520,10 @@ background:#34AF23;
 align-items:center;
 flex-direction:column;
 padding-top:32px;
+
+strong{
+        font-family:"Montserrat Bold";
+    }
 
 svg{
      

@@ -5,6 +5,10 @@ display:flex;
 flex-direction:column;
 align-items:center;
 
+strong{
+        font-family:"Montserrat Bold";
+    }
+
 a{
     font-size: 11px;
     line-height: 13px;
