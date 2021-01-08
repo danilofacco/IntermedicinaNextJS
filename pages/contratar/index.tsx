@@ -30,13 +30,10 @@ const Index: React.FC = () => {
     <>
     <HeaderVoltarAzul voltar="/"/>
     <Container>  
-      <TitleWithLogo>Assinatura</TitleWithLogo>
-     
-
-      <CenteredText> 
-         
-         <div className="carousel">
-         <Carousel itemsToShow={1} showArrows={false}>
+      <TitleWithLogo>Assinatura</TitleWithLogo>  
+      <div className="flex flex-col max-w-120">  
+         <div className="carousel w-full p-0 m-0">
+         <Carousel className="w-full p-0 m-0" itemsToShow={1} showArrows={false}>
            <div>
               <span>Vamos <strong>Acompanhar, Intermediar e Facilitar</strong><br/>
               consultas com especialistas, exames e
@@ -75,7 +72,7 @@ const Index: React.FC = () => {
           code={4}
           title="Família"
           subtitle="TITULAR + 4 DEPENDENTES*"
-          price="85"
+          price="98"
           oldPrice="109,00"
           link="https://www.intermedicina.com.br/wp-json/wp/v2/pages/51087"
           description="São Médicos, Dentistas,
@@ -88,7 +85,7 @@ const Index: React.FC = () => {
           code={7}
           title="Individual"
           subtitle="SOMENTE TITULAR"
-          price="49"
+          price="59"
           oldPrice="69,00"
           link="https://www.intermedicina.com.br/wp-json/wp/v2/pages/51095"
           description="São Médicos, Dentistas,
@@ -101,7 +98,7 @@ const Index: React.FC = () => {
           code={5}
           title="OdontoMais"
           subtitle="SOMENTE TITULAR"
-          price="40"
+          price="49"
           oldPrice="59,00"
           link="https://www.intermedicina.com.br/wp-json/wp/v2/pages/51090"
           description="São Médicos, Dentistas,
@@ -110,17 +107,20 @@ const Index: React.FC = () => {
           > <Image src="/assets/odontomais.svg" width={16} height={16} /> </ButtonContract>
 
 
-          <span className="formasdepagamento">FORMAS DE PAGAMENTO</span>
+          <span className="mt-4 mb-2 text-cinza text-center text-xs bold   ">FORMAS DE PAGAMENTO</span>
           
           <Image src="/assets/pagamentos.svg" width={230} height={23}></Image>
           
-          <div className="separator"></div>
+          <div className="w-full h-0.5 bg-gray-200  mt-3 " />
           
-          <div className="empresarial"><span>Empresarial</span><a href="/">SOLICITAR PROPOSTA</a></div>
+          <div className="bg-white border rounded border-cinza border-opacity-30 flex justify-between px-4 py-3 mt-4">
+            <span className="text-xs font-semibold text-center text-cinza">Empresarial</span>
+            <a className="text-xs underline text-center text-azul" href="/">SOLICITAR PROPOSTA</a>
+          </div>
           
-          <a className ="jatenho" href="/">Ja tenho! <strong>ACESSAR</strong> </a>
+          <a className ="mt-5 text-xs text-center text-cinza" href="/">Ja tenho! <strong className ="text-xs text-center text-azul bold" >ACESSAR</strong> </a>
 
-      </CenteredText> 
+      </div> 
     </Container>
     <Footer/>
     <Information>*CARACTERIZA DEPENDENTE AQUELE QUE RESIDE JUNTO AO TITULAR.

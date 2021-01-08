@@ -17,8 +17,7 @@ interface ButtonProps{
 }
 
 const ButtonContract: React.FC<ButtonProps> = ({ code,id,title,subtitle,price,oldPrice,link,description,featured=false, children , ...rest }) => {
-  const router = useRouter()
-  const ContratarStoreRead = ContratarStore.useState( s => s )
+  const router = useRouter() 
 
   function SelecionarContrato(id,title,price,code,link){
 
@@ -35,29 +34,29 @@ const ButtonContract: React.FC<ButtonProps> = ({ code,id,title,subtitle,price,ol
  }
  
   return (
-    <Container  onClick={()=>SelecionarContrato(id,title,price,code,link)} {...rest}> 
-      <Left> 
-        <div className="two">
+    <div className="flex justify-between bg-cinza bg-opacity-5 w-full border border-cinza border-opacity-20 rounded-md mt-4"  onClick={()=>SelecionarContrato(id,title,price,code,link)} {...rest}> 
+      <div  className="flex flex-col p-4 items-between justify-between h-full text-left gap-1"> 
+        <div className="flex items-center">
           {children}
-          <span className="title"> {title}</span>
+          <span className="text-lg font-bold text-azul ml-1"> {title}</span>
         </div>
 
-        <span className="subtitle"> {subtitle}</span>
-        <span className="description"> {description}</span> 
-      </Left>
+        <span className="text-xs font-medium  text-cinza"> {subtitle}</span>
+        <span className="text-xs  font-medium text-cinza"> {description}</span> 
+      </div>
       
-      <Right>
-       {featured ? <div className="recomendado">
-          <strong style={{fontFamily: "Montserrat Bold"}}>O MAIS COMPLETO! </strong></div> :""}
-        <span className="rs">R$</span>
-        <div className="price">
-          <span className="before">{price}</span><span className="after">,00/mês</span>
+      <div className="flex flex-col items-start p-4 relative gap-0.5">
+       {featured ? <strong className="absolute z-1 -mt-7 left-0.5 bg-laranja rounded-sm px-1 py-0.5 text-center text-bold text-white text-xxs  ">
+           O MAIS COMPLETO!  </strong> :""} 
+        <span className="text-xs font-medium text-azul">R$</span>
+        <div>
+          <span className="text-xl font-bold text-azul">{price}</span><span className="text-lg font-bold text-azul">,00</span><span className="text-lg font-medium text-azul">/mês</span>
         </div>
-        <span className="oldprice">R$ {oldPrice}</span>
-        <a href="#">ASSINAR</a>
-      </Right>
+        <span className="text-xs font-medium line-through text-center text-cinza">R$ {oldPrice}</span>
+        <a className="  bg-verde rounded-sm text-xs font-bold text-center text-white px-4 py-2"  >ASSINAR</a>
+      </div>
       
-    </Container>
+    </div>
   );
 };
 

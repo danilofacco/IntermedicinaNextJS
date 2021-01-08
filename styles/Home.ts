@@ -1,15 +1,15 @@
 import styled from '@emotion/styled'; 
 
 export const ButtonGreen = styled.div` 
-    background: #34AF23;
+    //background: #34AF23;
     backdrop-filter: blur(4px); 
-    border-radius: 5px;
-    margin-top:32px;
-    margin-bottom:16px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center; 
-    padding:16px; 
+    //border-radius: 5px;
+    //margin-top:32px;
+    //margin-bottom:16px;
+    //display:flex;
+    //justify-content:space-between;
+    //align-items:center; 
+    //padding:16px; 
 
     strong{
         font-family:"Montserrat Bold";
@@ -41,8 +41,7 @@ align-items:center;
 span{  
     font-weight: 400;
     font-size: 12px;
-    line-height: 18px; 
-    color: #838383;
+    line-height: 18px;  
 }
 
 a{  
@@ -52,17 +51,16 @@ a{
     color: #138FCE;
 
 }
+
+
+
 ` 
 
 export const Main = styled.div`
-display:flex;
-flex-direction:column;
-align-items:center;
+ 
 
 .container{
-    display:flex; 
-    flex-direction:column; 
-    width:100%; 
+ 
     padding:24px;
 
     .preheader{ 
