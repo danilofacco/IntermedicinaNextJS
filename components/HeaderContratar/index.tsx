@@ -16,30 +16,31 @@ const HeaderContratar: React.FC<iHeader> = ({ page, cor, children , ...rest }) =
 
   function Page({ router }) {
     return <p>{router.pathname}</p>
-  }
+  } 
 
   return (
-    <Container  {...rest}> 
+    <Container  className="flex flex-col justify-between mt-4" {...rest}> 
       <Image src ='/assets/logo_intermedicina.svg' width={110} height={17} />
-      <div className="bloco"> 
-      <div className={`item ${page >= 1 && 'selected'}`}>
-        <div className="linha"></div>
-        <span>INÍCIO</span>
+      <div className="flex p-4"> 
+
+      <div className={`p-1 w-1/4 ${page >= 1 && 'selected'}`}>
+        <div className="linha w-full h-1 bg-quase-branco mb-1"></div>
+        <span className="flex items-center text-cinza-claro text-xs">INÍCIO</span>
       </div>
 
-      <div className={`item ${page >= 2 && 'selected'}`}>
-        <div className="linha"></div>
-        <span>CADASTRO</span>
+      <div className={`p-1 w-1/4 ${page >= 2 && 'selected'}`}>
+        <div className="linha w-full h-1 bg-quase-branco mb-1"></div>
+        <span className="flex items-center text-cinza-claro text-xs" >CADASTRO</span>
       </div>
 
-      <div className={`item ${page >= 3 && 'selected'}`}>
-        <div className="linha"></div>
-        <span>PAGAMENTO</span>
+      <div className={`p-1 w-1/4 ${page >= 3 && 'selected'}`}>
+        <div className="linha w-full h-1 bg-quase-branco mb-1"></div>
+        <span className="flex items-center text-cinza-claro text-xs" >PAGAMENTO</span>
       </div>
 
-      <div className={`item ${page >= 4 && 'selected'} ${cor && cor}`}>
-        <div className="linha"></div>
-        <span>CONCLUÍDO</span>
+      <div className={`p-1 w-1/4 ${page >= 4 && 'selected'} ${cor && cor}`}>
+        <div className="linha w-full h-1 bg-quase-branco mb-1"></div>
+        <span className="flex items-center text-cinza-claro text-xs" >CONCLUÍDO</span>
       </div>
 
       </div>  

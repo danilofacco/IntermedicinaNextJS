@@ -1,20 +1,20 @@
 import React from 'react';
 import Image from 'next/image'
-
-import { Container } from './styles';
+ 
  
 
 const TitleWithLogo: React.FC  = ({ children, ...rest }) => {
-  return (
-    <Container  {...rest}>
+  return (  
+
+    <div className="flex flex-col items-center mt-8 mb-4"  {...rest}>
       <Image
       src="/assets/logo_icon.svg"
       width={20}
       height={24}
       />
-      <span>{children}</span>
-      <div className="line"></div>
-    </Container>
+      <span className="font-bold text-cinza-escuro text-xl  ">{children}</span>
+      <div className="h-1 bg-quase-branco w-28 mt-2"></div>
+    </div>
   );
 };
 

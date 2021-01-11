@@ -122,10 +122,7 @@ color: #E2202C;`
 export const BoxAssinatura = styled.div`  
 margin-top:8px;
 margin-bottom:16px;
-display:flex;
-flex-direction: column; 
-width:100%;
-
+ 
 box-shadow:0px 0px 0px 1px #DADADA inset;
 
 background: rgba(229, 229, 229, 0.2); 
@@ -362,25 +359,7 @@ margin-bottom:8px;
     }
 
 }
-`
-
-export const Information = styled.div`
-background: #138FCE;
-display:flex;
-flex-direction:column;
-width:100%;
-
-align-items:center;
-padding:12px 24px;
- 
-font-size: 8px;
-line-height: 12px;
-/* or 150% */
-
-text-align: center;
-text-transform: capitalize;
-color: #FFFFFF;
-`
+` 
 
 export const TextoInformativoAbaixo = styled.span`
 width:100%;
