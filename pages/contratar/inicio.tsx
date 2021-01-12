@@ -3,12 +3,10 @@ import React, { useRef, useCallback, useEffect } from 'react';
 import * as Yup from 'yup';
 import HeaderContratar from '../../components/HeaderContratar'
 import Footer from '../../components/Footer'
-import HeaderVoltarAzul from '../../components/HeaderVoltarAzul' 
-import {Container, ContratoSelecionado, BoxAssinatura} from '../../styles/_styles'
+import HeaderVoltarAzul from '../../components/HeaderVoltarAzul'  
 import Image from 'next/image' 
 import { Form } from '@unform/web';
-import Input from '../../components/Input';
-import InputMaskCelular from '../../components/Input/inputMaskCelular';
+import Input from '../../components/Input'; 
 
 import {ContratarStore} from '../../store/contratar'
 
@@ -91,12 +89,12 @@ const Inicio: React.FC = () => {
     <HeaderVoltarAzul voltar="/contratar"/> 
     <HeaderContratar page={1}/>
 
-    <div className="flex mt-6 flex-col w-full items-center px-4"> 
+    <div className="flex mt-4 flex-col w-full items-center px-4 "> 
     
      
-      <span className="text-xs mb-2 font-medium text-center text-cinza">ASSINATURA SELECIONADA:</span>
+      <span className="text-xs mb-2 montserrat-medium text-center text-cinza">ASSINATURA SELECIONADA:</span>
 
-      <div className="flex flex-col w-full bg-cinza bg-opacity-5 border border-cinza border-opacity-10 rounded-md">
+      <div className="flex flex-col w-full bg-cinza bg-opacity-5 border border-cinza border-opacity-20 rounded-md">
 
         <div className=" flex w-full mb-2 bg-white">
           <div className="w-6 bg-verde rounded-l-md"></div>
@@ -104,18 +102,18 @@ const Inicio: React.FC = () => {
             <div className="absolute -ml-7 mt-2">
               <Image src="/assets/logo_icon.svg" width={25} height={30} />
             </div>
-            <Image className="ml-1" src="/assets/estrelas.svg" width={56} height={12} />
-            <span className="ml-1 text-lg">Intermedicina <strong>{ContratarStoreRead.contratoSelecionadoTitulo}</strong> <Image src="/assets/check.svg" width={15} height={15} /> </span>
-            <span className="ml-1 text-xs">Sua família com acesso <br/>aos melhores especialistas! </span> 
+            <div className=" ml-1 -mt-2 w-full " ><Image  src="/assets/estrelas.svg" width={56} height={12} /></div>
+            <span className="ml-1 -mt-1 text-lg montserrat-regular">Intermedicina <span className="montserrat-bold">{ContratarStoreRead.contratoSelecionadoTitulo}</span> <Image src="/assets/check.svg" width={15} height={15} /> </span>
+            <span className="ml-1 mt-1 text-xs montserrat-regular ">Sua família com acesso <br/>aos melhores especialistas! </span> 
           </div>
         </div>
 
-        <span className="text-xs font-semi-bold text-center w-full text-cinza">INFORME SEUS DADOS</span>
+        <span className="text-xs mt-5 montserrat-bold text-center w-full text-cinza">INFORME SEUS DADOS</span>
 
-        <Form  className="p-2" ref={formRef} onSubmit={handleSubmit}> 
+        <Form  className="p-2 -mt-4" ref={formRef} onSubmit={handleSubmit}> 
 
               <Input name="nome" placeholder="Nome" />
-              <InputMaskCelular name="celular" placeholder="Celular" />
+              <Input mask="(99)99999-9999" maskplaceholder="_"  name="celular" placeholder="Celular" />
               <Input name="email" placeholder="E-mail" />  
               <button className="bg-verde rounded-md mt-4 mb-2 flex justify-between items-center text-white w-full p-4" type="submit">Continuar<Image src="/assets/arrowRight.svg" width={19} height={13}/></button> 
 

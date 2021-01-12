@@ -6,20 +6,17 @@ import React, {
   useCallback,
 } from 'react';
 import { IconBaseProps } from 'react-icons';
-import { FiAlertCircle } from 'react-icons/fi';
-import { useField } from '@unform/core';
-
-import { Container,ExternalContainer } from './styles';
+import { FiChevronDown } from 'react-icons/fi';
+import { useField } from '@unform/core'; 
 
 interface Props extends SelectHTMLAttributes<HTMLSelectElement> {
   small?:boolean;
   name: string;
   legend?: string;
   disabled?: boolean;
-  icon?: React.ComponentType<IconBaseProps>;
 }
 
-const Select: React.FC<Props> = ({ name, small=false, disabled=false, legend,icon: Icon, children,...rest }) => {
+const Select: React.FC<Props> = ({ name, small=false, disabled=false, legend, children,...rest }) => {
   const inputRef = useRef<HTMLSelectElement>(null);
 
   const [isFocused, setIsFocused] = useState(false);
@@ -46,11 +43,12 @@ const Select: React.FC<Props> = ({ name, small=false, disabled=false, legend,ico
   }, [fieldName, registerField]);
 
   return (
-    <ExternalContainer>
-    <Container isErrored={!!error} small={small} isDisabled={disabled} isFilled={isFilled} isFocused={isFocused}>
-      {Icon && <Icon size={20} />}      
-      {!!legend && <legend>{legend}</legend> }
-      <select 
+    <div className="flex flex-col w-full mt-4 montserrat-regular text-sm">
+    <fieldset className={` flex justify-between ${small ? 'p-2' : 'p-4'} bg-white border rounded-md border-azul ${!!error && 'border-vermelho'}  ${disabled && 'border-cinza-claro'} ${isFilled && 'border-azul'} ${isFocused && 'border-azul'}`} >
+    
+      {!!legend && <legend className={`px-1 text-xxs text-azul  ${disabled && 'text-cinza-claro'} ${!!error && 'text-vermelho'}  ${isFilled && ' text-azul'} ${isFocused && ' text-azul'}`}>{legend}</legend> }
+      <select
+        className={`w-full placeholder-azul text-azul  ${disabled && 'text-cinza-claro'} ${!!error && 'placeholder-vermelho text-vermelho'}  ${isFilled && 'placeholder-azul text-azul'} ${isFocused && 'placeholder-azul text-azul'}`}
         onFocus={clearError}
         onBlur={handleInputBlur}
         defaultValue={defaultValue}
@@ -58,10 +56,10 @@ const Select: React.FC<Props> = ({ name, small=false, disabled=false, legend,ico
         ref={inputRef}
         {...rest}
       > {children} </select>
-      
-    </Container> 
-    {!!error && <span className="error">{error }</span>}
-    </ExternalContainer>
+     
+    </fieldset> 
+    {!!error && <span className={`${!!error && 'flex mt-1 text-left text-xxs text-vermelho'}`}>{error }</span>}
+   </div>
   );
 };
 

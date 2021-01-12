@@ -3,23 +3,18 @@ import React, { useCallback, ChangeEvent, useEffect, useRef ,useState} from 'rea
 import * as Yup from 'yup';
 import HeaderContratar from '../../components/HeaderContratar'
 import Footer from '../../components/Footer'
-import HeaderVoltarAzul from '../../components/HeaderVoltarAzul' 
-import {CenteredText, Container,Information,TextoLegenda, ContratoSelecionadoAlt, BoxAssinatura,Separator, AnexoButton, Chips, ErrorText, BlueButton, SendCode, CodigoEnviado, TermoDeUso} from '../../styles/_styles'
+import HeaderVoltarAzul from '../../components/HeaderVoltarAzul'  
 import Image from 'next/image' 
 import { Form } from '@unform/web';
-import Input from '../../components/Input';
-import InputMaskDate from '../../components/Input/inputMaskDate'
-import File from '../../components/Input/file'
-import {Row, Column} from '../../components/LinhasColunas'
+import Input from '../../components/Input'; 
+import File from '../../components/FileInput' 
 
 import {ContratarStore} from '../../store/contratar' 
 
 import getValidationErrors from '../../utils/getValidationErrors'
-import { FormHandles } from '@unform/core'
-import InputMaskCPF from '../../components/Input/inputMaskCPF'
-import InputMaskCEP from '../../components/Input/inputMaskCEP'
+import { FormHandles } from '@unform/core' 
 import { useRouter } from 'next/router'
-import Select from '../../components/Input/select'
+import Select from '../../components/Select'
 
 import {getAddressByCEP} from '../../utils/getAddressByCEP'
 import {getBairrosByIBGE} from '../../utils/getBairrosByIBGE'
@@ -31,7 +26,7 @@ import { uploadFile } from '../../utils/uploadFile'
 import { checkIfFileExists } from '../../utils/checkIfFileExists' 
 import { removeFile } from '../../utils/removeFile'
 import { SpinnerCircularFixed } from 'spinners-react';
-import InvisibleCheck from '../../components/Input/InvisibleCheck';
+import InvisibleCheck from '../../components/InvisibleCheck';
 import { dadosCadastro } from '../../utils/dadosCadastro';
 import axios from 'axios';
 
@@ -79,7 +74,10 @@ import axios from 'axios';
 
     useEffect(()=>{ 
      axios.get(ContratarStoreRead.LinkPoliticaDePrivacidade).then( (response) => {
-      setTextoPoliticaDePrivacidade(response.data.content.rendered)
+       if(response.data && response.data.content){
+ 
+        setTextoPoliticaDePrivacidade(response.data.content.rendered)
+       }
     })
     } ,[textoPoliticaDePrivacidade]) 
 
@@ -367,45 +365,35 @@ import axios from 'axios';
       <>
     <HeaderVoltarAzul voltar="/contratar/inicio"/> 
     <HeaderContratar page={2}/>
-    <Container> 
-      <BoxAssinatura>
+    <div className="p-4"> 
+    <div className="flex flex-col w-full bg-cinza bg-opacity-5 border border-cinza border-opacity-10 rounded-md">
 
-        <ContratoSelecionadoAlt> 
-          <div className="topo">  
-            <span className="textoCinza">ASSINATURA SELECIONADA</span>
-            <span className="textoAzul">Intermedicina <strong>{ContratarStoreRead.contratoSelecionadoTitulo}</strong> <Image src="/assets/checkverde.svg" width={15} height={15}/> </span> 
+        <div className="flex flex-col w-full p-4"> 
+          <div className="flex flex-col w-full">  
+            <span className="text-xs montserrat-medium text-cinza pb-1">ASSINATURA SELECIONADA:</span>
+            <span className="text-sm montserrat-regular text-azul pb-2">Intermedicina <strong className="montserrat-bold">{ContratarStoreRead.contratoSelecionadoTitulo}</strong> <Image src="/assets/checkverde.svg" width={15} height={15}/> </span> 
           </div>
-        </ContratoSelecionadoAlt>
+        </div> 
 
-        <Separator><div></div></Separator> 
+        <Form className="p-2 -mt-5 w-full flex flex-col" ref={formRef} onSubmit={handleSubmit}>  
+      
+        <div className="w-full h-0.5 bg-gray-200 border-white"></div>
 
-        <Form ref={formRef} onSubmit={handleSubmit}>  
+        <span className="text-xs mt-3 montserrat-bold text-center w-full justify-center text-cinza"><strong>DADOS PESSOAIS</strong></span>
 
-        <span className="informe"><strong>DADOS PESSOAIS</strong></span>
+         <Input name="nome" legend="NOME COMPLETO"  small disabled />
+          
+          <div className="flex gap-2">
+            <Input className="w-1/3" name="celular"  legend="CELULAR" small disabled  />
+            <Input className="w-2/3" name="email"  legend="EMAIL" small disabled   /> 
+          </div> 
 
-              <Input name="nome" legend="NOME COMPLETO"  small disabled />
-              <Row>
-                <Column mr={4} size={60}>
-                  <Input name="celular"  legend="CELULAR" small disabled  />
-                </Column> 
-
-                <Column  ml={4}>
-                  <Input name="email"  legend="EMAIL" small disabled   /> 
-                </Column> 
-              </Row>
-
-              <Row>
-                <Column mr={4} >
-                  <InputMaskDate name="datanasc" legend="DATA DE NASCIMENTO" small />
-                </Column> 
-
-                <Column  ml={4}>
-                  <InputMaskCPF name="cpf"  legend="CPF"   small   /> 
-                </Column> 
-              </Row>
-
-              <Row>
-                <Column mr={4} size={68}>
+           <div className="flex gap-2">     
+              <Input mask="99/99/9999" maskplaceholder="_"  name="datanasc" legend="DATA DE NASCIMENTO" small />
+              <Input mask="999.999.999-99" maskplaceholder="_"  name="cpf"  legend="CPF"   small   />
+            </div>
+              
+            <div className="flex gap-2">   
                   <Select name="estadocivil" defaultValue="" legend="ESTADO CIVIL" small>
                   <option value="" disabled>Selecione</option>
                   <option value="Solteiro">Solteiro</option>
@@ -414,186 +402,148 @@ import axios from 'axios';
                   <option value="Separado">Separado</option>
                   <option value="Viúvo">Viúvo</option>
                   </Select>
-                </Column> 
-
-                <Column  ml={4}>
+             
                   <Select name="genero" defaultValue="" legend="GÊNERO" small> 
                   <option value="" disabled>Selecione</option>
                   <option value="M">Masculino</option>
                   <option value="F">Feminino</option>
                   </Select>
-                </Column> 
-              </Row> 
 
-              <Row> 
-                <TextoLegenda>
+            </div> 
+                <div className="text-xs text-cinza montserrat-regular my-2">
                   <span>Cópia do seu <strong>documento pessoal</strong><br/>
                   pode ser RG (frete e verso) ou CNH.</span>
-               </TextoLegenda> 
-              </Row>
-
-              <Row> 
-              <Column mr={4}>
-
+               </div> 
+               
+ 
               <File name="uploadIdentificacao" onInput={handleUploadIdentificacao}/>
-              { !loadingUploadIdentificacao 
-              ? 
-                <AnexoButton onClick={handleClickIdentificacao}>
-                  <Image src="/assets/file.svg" width={12} height={12}/>
-                  <span>ANEXAR COMPROVANTE</span>
-                </AnexoButton> 
-              : 
-                <AnexoButton >
-                  <SpinnerCircularFixed size={24} thickness={140} speed={150} color="#FFF" secondaryColor="rgba(255, 255, 255, 0.15)" />
-                  <span>ENVIANDO ARQUIVO...</span>
-                </AnexoButton>
-              }
-              
-              </Column>
 
-                <Column ml={4}>
+              <a className="bg-laranja rounded-md text-xxs  w-2/4 text-white montserrat-bold px-1.5 py-2 flex items-center text-center" onClick={handleClickIdentificacao}>
+                { !loadingUploadIdentificacao
+              ? <>
+                  <Image className="pr-1 w-3 h-3"  src="/assets/file.svg" width={12} height={12}/>
+                  <span>ANEXAR COMPROVANTE</span>
+                  </>
+                  : 
+                <>
+                  <SpinnerCircularFixed className="pr-1" size={12} thickness={140} speed={150} color="#FFF" secondaryColor="rgba(255, 255, 255, 0.15)" />
+                  <span>ENVIANDO ARQUIVO...</span>
+                </>
+                }
+                </a> 
 
                 { ContratarStoreRead.fileNameUploadIdentificacao && ContratarStoreRead.fileNameUploadIdentificacao.map( filename => 
-                  <Chips key={filename}> <span>{reduceName(filename)}</span> <Image onClick={()=>{removeFileIdentificacao(filename)}} src="/assets/remove.svg" width={12} height={12}/></Chips> 
-                )}
-                </Column>  
-              </Row>
+                  <a  className="bg-cinza bg-opacity-20 rounded-md flex justify-between w-full montserrat-regular text-cinza items-center p-2 mt-2 text-xs" key={filename}> <span>{reduceName(filename)}</span> <Image onClick={()=>{removeFileIdentificacao(filename)}} src="/assets/remove.svg" width={12} height={12}/></a> 
+                )} 
+               
 
               <InvisibleCheck  name="anexoIdentificacao"></InvisibleCheck> 
 
-               <Row mb={16} mt={16}><Separator><div></div></Separator></Row>
+              
+              <div className="w-full mt-2 h-0.5 bg-gray-200 border-white"></div>
  
                 
-               <span className="informe"><strong>ENDEREÇO</strong></span>
-
-               <InputMaskCEP name="cep" onChange={OnChangeCEP} legend="CEP" small />
+               <span className="text-xs mt-3 montserrat-bold text-center w-full justify-center text-cinza"><strong>ENDEREÇO</strong></span>
+               <Input mask="99999-999" maskplaceholder="_" name="cep" onChange={OnChangeCEP} legend="CEP" small />
 
                <Input name="rua"  legend="RUA" small   />
-
-               <Row>
-                <Column mr={4} size={50}>
-                  <Input name="numero"  legend="NÚMERO" small   />
-                </Column> 
-
-                <Column  ml={4} mr={4}>
-                  <Input name="complemento"  legend="COMPLEMENTO" small   /> 
-                </Column> 
-
-                <Column  ml={4}>
+ 
+                <div className="flex gap-2">
+                <Input name="numero"  legend="NÚMERO" small   />
+                <Input name="complemento"  legend="COMPLEMENTO" small   /> 
                 <Select name="bairro"  legend="BAIRRO" small> 
                 {ContratarStoreRead.bairros.map(bairro=>
-                   <option value={bairro.codigo}>{bairro.nome}</option> 
+                   <option key={bairro.codigo} value={bairro.codigo}>{bairro.nome}</option> 
                   )}
                  
-                  </Select> 
-                </Column> 
-              </Row>
+                  </Select>
 
-              <Row>
-                <Column mr={4} >
-                  <Input name="cidade"  legend="CIDADE" small />
-                </Column> 
-  
-                <Column  ml={4}>
+                </div> 
+                
+                <div className="flex gap-2"> 
+                  <Input name="cidade"  legend="CIDADE" small /> 
                   <Input name="estado"  legend="ESTADO" small   /> 
-                </Column> 
-              </Row>
+                </div>
 
-
-              <Row> 
-                <TextoLegenda>
-                  Cópia do seu comprovante de residência,<br/>
+ 
+              <div className="text-xs text-cinza montserrat-regular my-2">
+                  Cópia do seu <strong>comprovante de residência</strong>,<br/>
                   luz, água, telefone, banco ou similares.
-               </TextoLegenda> 
-              </Row>
+               </div>  
 
-              <Row> 
-              <Column mr={4}>
+               
               <File name="uploadResidencia" onInput={handleUploadResidencia}/>
-              { !loadingUploadResidencia
-              ? 
-                <AnexoButton onClick={handleClickResidencia}>
-                  <Image src="/assets/file.svg" width={12} height={12}/>
+
+              <a className="bg-laranja rounded-md text-xxs  w-2/4 text-white montserrat-bold px-1.5 py-2 flex items-center text-center" onClick={handleClickResidencia}>
+                { !loadingUploadResidencia
+              ? <>
+                  <Image className="pr-1 w-3 h-3"  src="/assets/file.svg" width={12} height={12}/>
                   <span>ANEXAR COMPROVANTE</span>
-                </AnexoButton> 
-              : 
-                <AnexoButton >
-                  <SpinnerCircularFixed size={24} thickness={140} speed={150} color="#FFF" secondaryColor="rgba(255, 255, 255, 0.15)" />
+                  </>
+                  : 
+                <>
+                  <SpinnerCircularFixed className="pr-1" size={12} thickness={140} speed={150} color="#FFF" secondaryColor="rgba(255, 255, 255, 0.15)" />
                   <span>ENVIANDO ARQUIVO...</span>
-                </AnexoButton>
-              }
-              </Column>
+                </>
+                }
+                </a> 
 
-              <Column ml={4}>
-              { ContratarStoreRead.fileNameUploadResidencia && ContratarStoreRead.fileNameUploadResidencia.map( filename => 
-                  <Chips key={filename}> <span>{reduceName(filename)}</span> <Image onClick={()=>{removeFileResidencia(filename)}} src="/assets/remove.svg" width={12} height={12}/></Chips> 
-                )}</Column>               
-              </Row>
-
+                { ContratarStoreRead.fileNameUploadResidencia && ContratarStoreRead.fileNameUploadResidencia.map( filename => 
+                  <a  className="bg-cinza bg-opacity-20 rounded-md flex justify-between w-full montserrat-regular text-cinza items-center p-2 mt-2 text-xs" key={filename}> <span>{reduceName(filename)}</span> <Image onClick={()=>{removeFileResidencia(filename)}} src="/assets/remove.svg" width={12} height={12}/></a> 
+                )}    
               <InvisibleCheck  name="anexoResidencia"></InvisibleCheck> 
 
 
-              <Row mb={16} mt={16}><Separator><div></div></Separator></Row>
+                
+              <div className="w-full mt-2 h-0.5 bg-gray-200 border-white"></div>
 
               
-              <span className="informe"><strong>CÓDIGO ASSINATURA DIGITAL</strong><br/>Como você prefere receber o código?</span> 
-              <Row mt={8}>
-                 <SendCode>
-                <BlueButton onClick={HandleOnSendSMS}><span>POR </span><strong>SMS</strong></BlueButton>
-                <BlueButton onClick={HandleOnSendEmail}><span>POR </span><strong>E-MAIL</strong></BlueButton>
-                </SendCode>
-              </Row>
+              <span className="text-xs mt-3 montserrat-regular text-center w-full justify-center text-cinza">
+                <strong>CÓDIGO ASSINATURA DIGITAL</strong>
+                <br/>Como você prefere receber o código?
+              </span> 
 
-              <Row>
-                <CenteredText>
+              <div className="flex w-full mt-3 justify-center gap-2 text-white text-xs montserrat-regular">
+                <a className="bg-azul rounded-md flex py-1 px-4 cursor-pointer" onClick={HandleOnSendSMS}><span>POR <strong> SMS</strong></span></a>
+                <a className="bg-azul rounded-md flex py-1 px-4 cursor-pointer" onClick={HandleOnSendEmail} ><span>POR <strong> E-MAIL</strong></span></a>
+              </div> 
+
+               <div className="flex flex-col items-center">
                   { sendMessage &&
-                    <CodigoEnviado>
+                    <div className="p-2 mt-4 montserrat-regular text-center text-xs rounded-md w-3/4 bg-verde text-white">
                     {sendMessage}<br/>
                     <strong>{sendMessageStrong}</strong>
-                  </CodigoEnviado>
-                  }
-                  
-                </CenteredText>
-              </Row>
-
-              <Row>
-                <CenteredText>
-                  <Column size={60}>
+                  </div>
+                  } 
+                   <div className="w-3/4"> 
                     <Input name="cv" small legend="Código de Validação" /> 
-                  </Column> 
+                  </div>
+                </div>
 
-                </CenteredText>
-              </Row>
-             
+                 
 
-              <TermoDeUso>
-                <span dangerouslySetInnerHTML={{
-    __html: textoPoliticaDePrivacidade
-  }}>
-               
-                </span>
-              </TermoDeUso>
+              
+                <span className="bg-quase-branco rounded-md p-4 mt-4  text-cinza-escuro montserrat-regular  h-52 text-xxs overflow-y-scroll" dangerouslySetInnerHTML={{
+                    __html: textoPoliticaDePrivacidade
+                  }}> 
+                </span> 
 
-              <Row>  
-                  <Column > 
-                    <TextoLegenda onClick={handleClickTermosDeUso}> 
-                      <span><Image  src={checkIcon} width={16} height={16}/><strong>  Li</strong> e <strong>Concordo</strong> com os Termos de Uso<br/>
+                
+                    <div className="flex cursor-pointer py-2 w-full montserrat-regular text-xs text-cinza" onClick={handleClickTermosDeUso}> 
+                      <span><Image src={checkIcon} width={16} height={16}/><strong>  Li</strong> e <strong>Concordo</strong> com os Termos de Uso<br/>
                       e Política de Privacidade.</span>
-                    </TextoLegenda>  
-                  </Column> 
-              </Row>
+                    </div>  
+                
               <InvisibleCheck  name="politicaprivacidade"></InvisibleCheck> 
-
-
-
-              <button className="button" type="submit">Continuar<Image src="/assets/arrowRight.svg" width={19} height={13}/></button> 
+          <button className="mt-2 mb-2 montserrat-regular text-sm bg-verde justify-between flex items-center w-full text-white  rounded-md p-4" type="submit">Continuar<Image src="/assets/arrowRight.svg" width={19} height={13}/></button> 
+          
         </Form>
 
-      </BoxAssinatura> 
+      </div> 
 
       <Footer/>
 
-    </Container>
+    </div>
     </> )
     
     } 

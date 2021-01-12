@@ -4,10 +4,8 @@
 @tailwind utilities;
   
 @font-face {
-  font-family: "Montserrat";
+  font-family: "Montserrat Regular";
   src: url("/assets/fonts/Montserrat/Montserrat-Regular.ttf");
-  font-style: normal;
-  font-weight: 400;
   font-display: swap;
 }
 @font-face {
@@ -100,7 +98,7 @@
 } 
 
 @font-face {
-  font-family: "Raleway";
+  font-family: "Raleway Regular";
   src: url("/assets/fonts/Raleway/Raleway-Regular.ttf");
   font-style: normal;
   font-weight: 400;
@@ -194,6 +192,113 @@
   src: url("/assets/fonts/Raleway/Raleway-ThinItalic.ttf");
   font-display: swap;
 }  
+
+ 
+.montserrat-regular{ 
+  font-family: 'Montserrat Regular', sans-serif !important;
+}
+.montserrat-bold{ 
+  font-family: 'Montserrat Bold', sans-serif !important;
+}
+.montserrat-bold-italic{ 
+  font-family: 'Montserrat Bold Italic', sans-serif !important;
+}
+
+.montserrat-extra-bold{ 
+  font-family: 'Montserrat Extra Bold', sans-serif !important;
+}
+.montserrat-extra-bold-italic{ 
+  font-family: 'Montserrat Extra Bold Italic', sans-serif !important;
+}
+.montserrat-black{ 
+  font-family: 'Montserrat Black', sans-serif !important;
+}
+.montserrat-black-italic{ 
+  font-family: 'Montserrat Black Italic', sans-serif !important;
+}
+.montserrat-extra-light{ 
+  font-family: 'Montserrat Extra Light', sans-serif !important;
+}
+.montserrat-extra-light-italic{ 
+  font-family: 'Montserrat Extra Light Italic', sans-serif !important;
+}
+.montserrat-italic{ 
+  font-family: 'Montserrat Italic', sans-serif !important;
+}
+.montserrat-light{ 
+  font-family: 'Montserrat Light', sans-serif !important;
+}
+.montserrat-medium{ 
+  font-family: 'Montserrat Medium', sans-serif !important;
+}
+.montserrat-medium-italic{ 
+  font-family: 'Montserrat Medium Italic', sans-serif !important;
+}
+.montserrat-semi-bold{ 
+  font-family: 'Montserrat Semi Bold', sans-serif !important;
+}
+.montserrat-semi-bold-italic{ 
+  font-family: 'Montserrat Semi Bold Italic', sans-serif !important;
+}
+.montserrat-thin{ 
+  font-family: 'Montserrat Thin', sans-serif !important;
+}
+.montserrat-thin-italic{ 
+  font-family: 'Montserrat Thin Italic', sans-serif !important;
+}
+.raleway-regular{ 
+  font-family: 'Raleway Regular', sans-serif !important;
+}
+.raleway-bold{ 
+  font-family: 'Raleway Bold', sans-serif !important;
+}
+.raleway-bold-italic{ 
+  font-family: 'Raleway Bold Italic', sans-serif !important;
+}
+
+.raleway-extra-bold{ 
+  font-family: 'Raleway Extra Bold', sans-serif !important;
+}
+.raleway-extra-bold-italic{ 
+  font-family: 'Raleway Extra Bold Italic', sans-serif !important;
+}
+.raleway-black{ 
+  font-family: 'Raleway Black', sans-serif !important;
+}
+.raleway-black-italic{ 
+  font-family: 'Raleway Black Italic', sans-serif !important;
+}
+.raleway-extra-light{ 
+  font-family: 'Raleway Extra Light', sans-serif !important;
+}
+.raleway-extra-light-italic{ 
+  font-family: 'Raleway Extra Light Italic', sans-serif !important;
+}
+.raleway-italic{ 
+  font-family: 'Raleway Italic', sans-serif !important;
+}
+.raleway-light{ 
+  font-family: 'Raleway Light', sans-serif !important;
+}
+.raleway-medium{ 
+  font-family: 'Raleway Medium', sans-serif !important;
+}
+.raleway-medium-italic{ 
+  font-family: 'Raleway Medium Italic', sans-serif !important;
+}
+.raleway-semi-bold{ 
+  font-family: 'Raleway Semi Bold', sans-serif !important;
+}
+.raleway-semi-bold-italic{ 
+  font-family: 'Raleway Semi Bold Italic', sans-serif !important;
+}
+.raleway-thin{ 
+  font-family: 'Raleway Thin', sans-serif !important;
+}
+.raleway-thin-italic{ 
+  font-family: 'Raleway Thin Italic', sans-serif !important;
+}
+ 
 
 html, body, * {
   margin: 0;

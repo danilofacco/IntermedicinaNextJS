@@ -1,5 +1,5 @@
-import Head from 'next/head' 
-import React, { ChangeEvent, useCallback, useEffect, useRef, useState } from 'react';
+ 
+import React, {   useEffect } from 'react';
 
  
 import { useRouter } from 'next/router';

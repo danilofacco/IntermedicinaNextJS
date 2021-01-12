@@ -7,9 +7,7 @@ import React, {
 } from 'react';
 import { IconBaseProps } from 'react-icons';
 import { FiAlertCircle } from 'react-icons/fi';
-import { useField } from '@unform/core';
-
-import { Container,ExternalContainer } from './styles';
+import { useField } from '@unform/core'; 
 
 interface Props extends InputHTMLAttributes<HTMLInputElement> {
   small?:boolean;
@@ -19,13 +17,13 @@ interface Props extends InputHTMLAttributes<HTMLInputElement> {
   icon?: React.ComponentType<IconBaseProps>;
 }
 
-const Input: React.FC<Props> = ({ name, small=false, disabled=false, legend,icon: Icon, ...rest }) => {
+const File: React.FC<Props> = ({ name, small=false, disabled=false, legend,icon: Icon, ...rest }) => {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const [isFocused, setIsFocused] = useState(false);
   const [isFilled, setIsFilled] = useState(false);
   
-  const { fieldName, defaultValue, error, clearError, registerField } = useField(name);
+  const { fieldName, defaultValue, error, registerField } = useField(name);
 
   const handleInputFocus = useCallback(() => {
     setIsFocused(true);
@@ -46,24 +44,24 @@ const Input: React.FC<Props> = ({ name, small=false, disabled=false, legend,icon
   }, [fieldName, registerField]);
 
   return (
-    <ExternalContainer>
-    <Container isErrored={!!error} small={small} isDisabled={disabled} isFilled={isFilled} isFocused={isFocused}>
+    <div style={{display:"none"}}>
+    <div >
       {Icon && <Icon size={20} />}      
       {!!legend && <legend>{legend}</legend> }
-      <input 
-        onFocus={clearError}
+      <input
+        type="file"
+        onFocus={handleInputFocus}
         onBlur={handleInputBlur}
-        //onChange={handleInputBlur}
         defaultValue={defaultValue}
         disabled={disabled}
         ref={inputRef}
         {...rest}
       /> 
       
-    </Container> 
+    </div> 
     {!!error && <span className="error">{error }</span>}
-    </ExternalContainer>
+    </div>
   );
 };
 
-export default Input;
+export default File;

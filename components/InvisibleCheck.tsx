@@ -42,17 +42,17 @@ const InvisibleCheck: React.FC<Props> = ({ name, ...rest }) => {
   }, [fieldName, registerField]);
 
   return (
-    <ContainerInvisible> 
+    <div> 
       <input
         style={{display:"none"}}
         type="text" 
         ref={inputRef}
         {...rest}
       /> 
-      
-    {!!error && <span className="error">{error }</span>}
-     
-    </ContainerInvisible>
+    
+    {!!error && <span className={`${!!error && 'flex mt-1 text-left text-xxs text-vermelho'}`}>{error }</span>}
+    
+    </div>
   );
 };
 

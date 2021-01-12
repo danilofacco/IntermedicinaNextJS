@@ -1,7 +1,5 @@
 import React from 'react';
-import Image from 'next/image'
-import { useRouter } from 'next/router'
- 
+import Image from 'next/image'  
 
 interface ButtonProps{
   imagem:string;
@@ -17,8 +15,8 @@ const SliderItemMedico: React.FC<ButtonProps> = ({ imagem,cidades,nome,atuacao, 
        
        <div className="flex bottom-0 justify-between w-full px-4 absolute ">
         <div className="flex flex-col text-left ">
-            <span className="text-xs text-azul font-bold  uppercase">{nome}</span>
-            <span className="text-xs font-bold text-cinza">{atuacao}</span>
+            <span className="text-xs text-azul montserrat-bold  uppercase">{nome}</span>
+            <span className="text-xs montserrat-bold text-cinza">{atuacao}</span>
         </div>
 
         <div className="flex flex-col relative -top-6 items-start text-left">
@@ -26,7 +24,7 @@ const SliderItemMedico: React.FC<ButtonProps> = ({ imagem,cidades,nome,atuacao, 
         
             
             {cidades.map(c =>
-              <span className=" relative text-xs font-bold text-cinza uppercase">{c}</span>
+              <span className=" relative text-xs montserrat-bold text-cinza uppercase">{c}</span>
             )} 
             
         </div>

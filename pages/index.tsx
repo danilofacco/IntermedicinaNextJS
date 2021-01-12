@@ -1,5 +1,4 @@
-import React from 'react'
-import Head from 'next/head'
+import React from 'react' 
 import Link from 'next/link'
 import Image from 'next/image'
 import Footer from '../components/Footer' 
@@ -36,19 +35,19 @@ export default function Home() {
                 width={152}
                 height={24}
               />
-            <span className="text-sm text-cinza text-raleway italic" >Consultas com <strong className="text-sm text-cinza text-raleway-bold italic">Especialistas</strong></span>
+            <span className="text-sm text-cinza  raleway-italic" >Consultas com <span className="text-sm text-cinza raleway-bold-italic">Especialistas</span></span>
           </div>
 
           <Link href="/contratar"> 
             <div className="flex justify-between bg-verde text-white rounded-md mt-4 mb-4 p-4 items-center" > 
-            <div><span className="text-sm text-bold bold">Quero</span> <span className="text-sm text-regular"> fazer parte!</span></div>
+            <div><span className="text-sm montserrat-bold">Quero</span> <span className="text-sm montserrat-regular"> fazer parte!</span></div>
               <FiArrowRight size={24}/> 
             </div>
           </Link>
 
           <Link href="/login"> 
             <div className="rounded-md border-azul border p-4 text-center  ">
-              <span className="text-azul text-sm text-regular">Sou Intermedicina </span>
+              <span className="text-azul text-sm   montserrat-regular">Sou Intermedicina </span>
             </div>
           </Link>
         

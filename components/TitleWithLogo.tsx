@@ -12,7 +12,7 @@ const TitleWithLogo: React.FC  = ({ children, ...rest }) => {
       width={20}
       height={24}
       />
-      <span className="font-bold text-cinza-escuro text-xl  ">{children}</span>
+      <span className="montserrat-bold text-cinza-escuro text-xl  ">{children}</span>
       <div className="h-1 bg-quase-branco w-28 mt-2"></div>
     </div>
   );

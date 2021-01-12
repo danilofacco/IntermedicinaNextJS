@@ -3,32 +3,13 @@ import React, { ChangeEvent, useCallback, useEffect, useRef, useState } from 're
 import * as Yup from 'yup';
 import HeaderContratar from '../../../components/HeaderContratar'
 import Footer from '../../../components/Footer'
-import HeaderVoltarAzul from '../../../components/HeaderVoltarAzul'
-import TitleWithLogo from '../../../components/TitleWithLogo'
-import InputMaskCartao from '../../../components/Input/inputMaskCartao'
-import {CenteredText, Container,Information, ContratoSelecionadoAlt, BoxAssinatura,Separator, TextoInformativoAbaixo, SendCode, BlueButton, TextoLegenda, AnexoButton, Chips} from '../../../styles/_styles'
+import HeaderVoltarAzul from '../../../components/HeaderVoltarAzul'  
 import Image from 'next/image' 
-import { Form } from '@unform/web';
-import Input from '../../../components/Input';
-import {ContratarStore} from '../../../store/contratar'
+import { Form } from '@unform/web'; 
+import {ContratarStore} from '../../../store/contratar'   
+import Select from '../../../components/Select'
 
-import InputMaskCPF from '../../../components/Input/inputMaskCPF'
-
-import File from '../../../components/Input/file'
-
-import {BsFillPersonFill as PersonIcon} from 'react-icons/bs'
-import {HiOutlineMail as EmailIcon} from 'react-icons/hi'
-import {BiPhone as PhoneIcon} from 'react-icons/bi'
-
-
-import getValidationErrors from '../../../utils/getValidationErrors';
-import { Column, Row } from '../../../components/LinhasColunas';
-import Select from '../../../components/Input/select';
-import { CPFValidation } from '../../../utils/CPFValidation';
-import { checkIfFileExists } from '../../../utils/checkIfFileExists';
-import { removeFile } from '../../../utils/removeFile';
-import { uploadFile } from '../../../utils/uploadFile';
-import { SpinnerCircularFixed } from 'spinners-react';
+import getValidationErrors from '../../../utils/getValidationErrors';  
 import { useRouter } from 'next/router';
 
 
@@ -104,68 +85,66 @@ const Pagamento : React.FC = () => {
       <>
     <HeaderVoltarAzul voltar="/contratar/cadastro"/> 
     <HeaderContratar page={3}/>
-    <Container> 
-      <BoxAssinatura style={{
-        boxShadow:"0px 0px 0px 1px #34AF23 inset"}}>
+    <div className="p-4"> 
+    <div className="flex flex-col w-full bg-cinza bg-opacity-5 border border-verde rounded-md" >
 
-        <ContratoSelecionadoAlt> 
-          <div className="topo">  
-            <span className="textoCinza">ASSINATURA SELECIONADA</span>
-            <span className="textoAzul">Intermedicina <strong>Família</strong> <Image src="/assets/checkverde.svg" width={15} height={15}/> </span> 
+    <div className="flex flex-col w-full p-4"> 
+          <div className="flex flex-col w-full">  
+            <span className="text-xs montserrat-medium text-cinza pb-1">ASSINATURA SELECIONADA:</span>
+            <span className="text-sm montserrat-regular text-azul pb-2">Intermedicina <strong className="montserrat-bold">{ContratarStoreRead.contratoSelecionadoTitulo}</strong> <Image src="/assets/checkverde.svg" width={15} height={15}/> </span> 
           </div>
 
-          <div className="bottom"> 
-            <div className="esquerda">
-              <span className="textoCinza">VALOR</span>
-              <span className="textoAzul">R$40,00/mês <Image src="/assets/checkverde.svg" width={15} height={15}/> </span>
+          <div className="flex w-full justify-between items-end"> 
+            <div className="flex flex-col">
+              <span className="text-xs montserrat-medium text-cinza pb-1">VALOR</span>
+              <span className="text-sm montserrat-regular text-azul pb-2">R$ {ContratarStoreRead.precoContrato},00/mês <Image src="/assets/checkverde.svg" width={15} height={15}/> </span>
             </div>
-            <div className="direita">
+            <div className="mb-1">
               <Image src="/assets/conexao100segura.svg" width={76} height={17}/>
             </div>
           </div>
-        </ContratoSelecionadoAlt>
+    </div> 
 
-        <Separator><div></div></Separator>
+    <div className="text-center w-80 h-0.5 bg-gray-200 border-white"></div>
 
         
 
         <Form ref={formRef} onSubmit={handleSubmit}>  
 
-        <Row pl={80} pr={80}> 
-        <Select name="metodo" defaultValue="picpay" onChange={ChangeMetodo}   legend="" small>
-
-                <option value="cartao">CARTAO DE CRÉDITO</option>
-                <option  value="picpay">PICPAY</option>
-                <option value="energia">CONTA DE ENERGIA</option>
-        </Select>
-        </Row> 
+        <div className="px-14"> 
+          <Select name="metodo" className="text-cinza" defaultValue="picpay" onChange={ChangeMetodo}   legend="" small> 
+                    <option value="cartao">CARTAO DE CRÉDITO</option>
+                    <option value="picpay">PICPAY</option>
+                    <option value="energia">CONTA DE ENERGIA</option>
+          </Select>
+        </div> 
         
-        <div className="picpayInformation">
-        <span>
-        <strong>INFORMAÇÃO IMPORTANTE:</strong><br/>
-          Vamos finalizar a sua assinatura <br/>
-          dentro do aplicativo PicPay.<br/>
-          Clique no botão para abrir o PicPay<br/>
-          e siga as orientações.<br/>
-        </span>
+        <div className="p-4">
+          <div className="text-xs text-cinza montserrat-regular">
+          <strong className="text-verde montserrat-bold">INFORMAÇÃO IMPORTANTE:</strong><br/>
+            Vamos finalizar a sua assinatura <br/>
+            dentro do aplicativo PicPay.<br/>
+            Clique no botão para abrir o PicPay<br/>
+            e siga as orientações.<br/>
+          </div>
         </div>
-
-        <button  className="button"  type="button"><span><strong>Abrir</strong> Picpay</span> <Image src="/assets/arrowRight.svg" width={19} height={13}/></button> 
-        
+        <div className="mx-2">
+        <button  className="mt-4 mb-2 montserrat-regular text-sm bg-verde justify-between flex items-center w-full text-white  rounded-md p-4"  type="button"><span><strong>Abrir</strong> Picpay</span> <Image src="/assets/arrowRight.svg" width={19} height={13}/></button> 
+        </div>
       </Form>
 
-      <TextoInformativoAbaixo>
-        • Ao concluir sua ASSINATURA no aplicativo picpay, você concorda com os "Termos de Uso e Política de Privacidade" e confirma ter mais de 18 anos.
-        • A Intermedicina renovará automaticamente sua assinatura e cobrará o preço da assinatura (atualmente R$ 49,00/mês) da sua forma de pagamento mensalmente, até você cancelar.
-        • Para cancelar acesse a seção "Minha Conta" no Portal do Cliente pelo site ou aplicativo da Intermedicina.
-        • Não emitimos reembolsos nem créditos por meses parciais.
-        </TextoInformativoAbaixo>
+      <div className="text-xxs montserrat-regular p-4 leading-3 text-gray-500 uppercase">
+        • Ao concluir sua ASSINATURA no aplicativo picpay, você concorda com os "Termos de Uso e Política de Privacidade" e confirma ter mais de 18 anos.<br/>
+        • A Intermedicina renovará automaticamente sua assinatura e cobrará o preço da assinatura (atualmente R$ 49,00/mês) da sua forma de pagamento mensalmente, até você cancelar.<br/>
+        • Para cancelar acesse a seção "Minha Conta" no Portal do Cliente pelo site ou aplicativo da Intermedicina.<br/>
+        • Não emitimos reembolsos nem créditos por meses parciais.<br/>
+        </div>
 
-      </BoxAssinatura> 
+      </div> 
 
       <Footer/>
 
-    </Container>
+    </div>
     </> )
     
     }

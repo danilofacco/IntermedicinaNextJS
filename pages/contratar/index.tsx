@@ -1,4 +1,4 @@
-import Head from 'next/head' 
+  
 import React, { useEffect } from 'react' 
 import ButtonContract from '../../components/ButtonContract'
 import Footer from '../../components/Footer'
@@ -17,7 +17,6 @@ const Index: React.FC = () => {
     speed: 500,
     slidesToShow: 1,
     slidesToScroll: 1,
-
   };
 
   useEffect(()=>{
@@ -113,7 +112,7 @@ const Index: React.FC = () => {
           <div className="w-full h-0.5 bg-gray-200  mt-3 " />
           
           <div className="bg-white border rounded border-cinza border-opacity-30 flex justify-between px-4 py-3 mt-4">
-            <span className="text-xs font-semibold text-center text-cinza">Empresarial</span>
+            <span className="text-xs montserrat-semibold text-center text-cinza">Empresarial</span>
             <a className="text-xs underline text-center text-azul" href="/">SOLICITAR PROPOSTA</a>
           </div>
           

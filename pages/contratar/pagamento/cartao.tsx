@@ -3,18 +3,13 @@ import React, { ChangeEvent, useCallback, useEffect, useRef, useState } from 're
 import * as Yup from 'yup';
 import HeaderContratar from '../../../components/HeaderContratar'
 import Footer from '../../../components/Footer'
-import HeaderVoltarAzul from '../../../components/HeaderVoltarAzul' 
-import InputMaskCartao from '../../../components/Input/inputMaskCartao'
-import {Container,ContratoSelecionadoAlt, BoxAssinatura,Separator, TextoInformativoAbaixo} from '../../../styles/_styles'
+import HeaderVoltarAzul from '../../../components/HeaderVoltarAzul'   
 import Image from 'next/image' 
 import { Form } from '@unform/web';
 import Input from '../../../components/Input';
-import {ContratarStore} from '../../../store/contratar'
-   
-
-import getValidationErrors from '../../../utils/getValidationErrors';
-import { Column, Row } from '../../../components/LinhasColunas';
-import Select from '../../../components/Input/select';
+import {ContratarStore} from '../../../store/contratar' 
+import getValidationErrors from '../../../utils/getValidationErrors'; 
+import Select from '../../../components/Select';
  
 import { useRouter } from 'next/router';
 
@@ -117,115 +112,105 @@ const Pagamento : React.FC = () => {
       <>
     <HeaderVoltarAzul voltar="/contratar/cadastro"/> 
     <HeaderContratar page={3}/>
-    <Container> 
-      <BoxAssinatura style={{
-        boxShadow:"0px 0px 0px 1px #34AF23 inset"}}>
+    <div className="px-4"> 
+      <div className="flex flex-col w-full bg-cinza bg-opacity-5 border border-verde rounded-md" >
 
-        <ContratoSelecionadoAlt> 
-          <div className="topo">  
-            <span className="textoCinza">ASSINATURA SELECIONADA</span>
-            <span className="textoAzul">Intermedicina <strong>Família</strong> <Image src="/assets/checkverde.svg" width={15} height={15}/> </span> 
+      <div className="flex flex-col w-full p-4"> 
+          <div className="flex flex-col w-full">  
+            <span className="text-xs montserrat-medium text-cinza pb-1">ASSINATURA SELECIONADA:</span>
+            <span className="text-sm montserrat-regular text-azul pb-2">Intermedicina <strong className="montserrat-bold">{ContratarStoreRead.contratoSelecionadoTitulo}</strong> <Image src="/assets/checkverde.svg" width={15} height={15}/> </span> 
           </div>
 
-          <div className="bottom"> 
-            <div className="esquerda">
-              <span className="textoCinza">VALOR</span>
-              <span className="textoAzul">R$40,00/mês <Image src="/assets/checkverde.svg" width={15} height={15}/> </span>
+          <div className="flex w-full justify-between items-end"> 
+            <div className="flex flex-col">
+              <span className="text-xs montserrat-medium text-cinza pb-1">VALOR</span>
+              <span className="text-sm montserrat-regular text-azul pb-2">R$ {ContratarStoreRead.precoContrato},00/mês <Image src="/assets/checkverde.svg" width={15} height={15}/> </span>
             </div>
-            <div className="direita">
+            <div className="mb-1">
               <Image src="/assets/conexao100segura.svg" width={76} height={17}/>
             </div>
           </div>
-        </ContratoSelecionadoAlt>
 
-        <Separator><div></div></Separator>
+        </div> 
+ 
+
+        <div className="text-center w-80 h-0.5 bg-gray-200 border-white"></div>
 
         
 
         <Form ref={formRef} onSubmit={handleSubmit}>  
 
-        <Row pl={80} pr={80}> 
-        <Select name="metodo" defaultValue="cartao" onChange={ChangeMetodo}   legend="" small> 
+        <div className="px-2">
+
+        <div className="px-14"> 
+        <Select name="metodo" className="text-cinza-escuro w-full" defaultValue="cartao" onChange={ChangeMetodo}   legend="" small> 
                   <option value="cartao">CARTAO DE CRÉDITO</option>
                   <option value="picpay">PICPAY</option>
                   <option value="energia">CONTA DE ENERGIA</option>
         </Select>
-        </Row> 
+        </div> 
         
     
-          <span className="informe">SELECIONE A BANDEIRA</span>
+          <span className="text-xs flex w-full justify-center my-3 text-center montserrat-medium text-gray-500">SELECIONE A BANDEIRA</span>
 
-        <Row mt={8}>
-    
+        <div className="flex justify-between w-full "> 
          
-          <Column><Image onClick={()=>SelectFlag("visa")} height={35} width={57} src={`/assets/buttons/${Flag('visa')}`}/></Column>
+          <Image onClick={()=>SelectFlag("visa")} height={35} width={57} src={`/assets/buttons/${Flag('visa')}`}/>
 
-          <Column><Image onClick={()=>SelectFlag("master")}  height={35} width={57} src={`/assets/buttons/${Flag('master')}`}/></Column>
+          <Image onClick={()=>SelectFlag("master")}  height={35} width={57} src={`/assets/buttons/${Flag('master')}`}/>
 
-          <Column><Image onClick={()=>SelectFlag("elo")} height={35} width={57} src={`/assets/buttons/${Flag('elo')}`}/></Column>
+          <Image onClick={()=>SelectFlag("elo")} height={35} width={57} src={`/assets/buttons/${Flag('elo')}`}/>
 
-          <Column><Image onClick={()=>SelectFlag("diner")} height={35} width={57} src={`/assets/buttons/${Flag('diner')}`}/></Column>
+          <Image onClick={()=>SelectFlag("diner")} height={35} width={57} src={`/assets/buttons/${Flag('diner')}`}/>
 
-          <Column><Image onClick={()=>SelectFlag("amex")} height={35} width={57} src={`/assets/buttons/${Flag('amex')}`}/></Column>
+          <Image onClick={()=>SelectFlag("amex")} height={35} width={57} src={`/assets/buttons/${Flag('amex')}`}/>
 
-        </Row>
+        </div>
+
+       
 
               <Input name="nome" legend="NOME IMPRESSO NO CARTÃO" />
-              <InputMaskCartao name="numeroDoCartao"   legend="NÚMERO DO CARTÃO" /> 
+              <Input mask="9999 9999 9999 9999" maskplaceholder="_"  name="numeroDoCartao"   legend="NÚMERO DO CARTÃO" /> 
 
-              <Row>
-              <Column mr={4} >
-                  <span className="informe_left">DATA DE VALIDADE DO CARTÃO</span>
-                </Column>  
-                <Column  ml={4} mr={4}>
-                </Column> 
-
-                <Column  ml={4}>
-                  <span className="informe_left">CÓDIGO DE SEGURANÇA</span>
-                  </Column>
-              </Row>
+              <div className="flex justify-between mt-4 text-xxs text-cinza montserrat-medium w-full"> 
+                 <span className="w-1/3 ml-1 text-left">DATA DE VALIDADE DO CARTÃO</span>
+                <span className="w-1/3 pl-2 text-left">CÓDIGO DE SEGURANÇA</span>
+              </div>
           
-              <Row>
-                <Column mr={4}  >
-                <Select name="mes"  legend="" >
+              <div className="flex gap-2 -mt-2 justify-between w-full"> 
+                
+                <Select  name="mes"  legend="" >
                   <option>MÊS</option>
                   {ContratarStoreRead.meses.map(mes=>{
                     <option value={mes} key={mes}>{mes}</option>
                   })}  
-                </Select>
+                </Select> 
 
-                </Column> 
-
-                <Column  ml={4} mr={4}>
-                <Select name="mes"  legend="" > 
+                <Select   name="mes"  legend="" > 
                   <option>ANO</option>
                   {ContratarStoreRead.anos.map(ano=>{
                     <option value={ano} key={ano}>{ano}</option>
                   })}  
                 </Select> 
-                </Column> 
+                  <Input name="cvv"  placeholder="CVV"     />  
+                </div>
 
-                <Column  ml={4}>
-                  <Input name="cvv"  placeholder="CVV"     /> 
-                </Column>
-                </Row>
-
-              <button  className="button"  type="submit"><span><strong>Iniciar</strong> Assinatura</span> <Image src="/assets/arrowRight.svg" width={19} height={13}/></button> 
-         
+              <button  className="mt-4 mb-2 montserrat-regular text-sm bg-verde justify-between flex items-center w-full text-white  rounded-md p-4"  type="submit"><span><strong>Iniciar</strong> Assinatura</span> <Image src="/assets/arrowRight.svg" width={19} height={13}/></button> 
+         </div>
       </Form>
 
-      <TextoInformativoAbaixo>
+      <div className="text-xxs montserrat-regular p-4 leading-3 text-gray-500 uppercase">
         • Ao concluir sua ASSINATURA no aplicativo picpay, você concorda com os "Termos de Uso e Política de Privacidade" e confirma ter mais de 18 anos.
         • A Intermedicina renovará automaticamente sua assinatura e cobrará o preço da assinatura (atualmente R$ 49,00/mês) da sua forma de pagamento mensalmente, até você cancelar.
         • Para cancelar acesse a seção "Minha Conta" no Portal do Cliente pelo site ou aplicativo da Intermedicina.
         • Não emitimos reembolsos nem créditos por meses parciais.
-        </TextoInformativoAbaixo>
+        </div>
 
-      </BoxAssinatura> 
+      </div> 
 
       <Footer/>
 
-    </Container>
+    </div>
     </> )
     
     }

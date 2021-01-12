@@ -1,7 +1,6 @@
 import React from 'react';
 import { useRouter } from 'next/router'
-
-import { HeaderStyled } from './styles'; 
+ 
 import { FiChevronLeft } from 'react-icons/fi';
 
 interface iHeaderProps{
@@ -16,11 +15,11 @@ const HeaderVoltarAzul: React.FC<iHeaderProps> = ({ voltar="",children, ...rest 
     : 
     router.push(voltar)
   }
-  return (
-    <HeaderStyled {...rest}>
-        <a href="#" onClick={handleClick} ><FiChevronLeft size={18}/> VOLTAR</a> 
+  return (   
+    <div className="flex flex-col justify-center bg-azul" {...rest}>
+        <a href="#" className="flex py-3 items-center my-x ml-6 montserrat-medium text-white text-xxs" onClick={handleClick} ><FiChevronLeft className="text-white" size={18}/> VOLTAR</a> 
         {children}
-    </HeaderStyled>
+    </div>
   );
 };
 
