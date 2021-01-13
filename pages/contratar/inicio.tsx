@@ -7,6 +7,7 @@ import HeaderVoltarAzul from '../../components/HeaderVoltarAzul'
 import Image from 'next/image' 
 import { Form } from '@unform/web';
 import Input from '../../components/Input'; 
+import InputMask from '../../components/InputMask'; 
 
 import {ContratarStore} from '../../store/contratar'
 
@@ -26,6 +27,19 @@ const Inicio: React.FC = () => {
   const router = useRouter()
 
   const ContratarStoreRead = ContratarStore.useState(s => s);
+
+  useEffect(()=>{
+     var Store = JSON.parse(localStorage.getItem('Intermedicina@ContratarStore'))
+     Store && ContratarStore.update(s=> Store) 
+        formRef.current.setFieldValue("nome", ContratarStoreRead.nome) 
+        formRef.current.setFieldValue("email", ContratarStoreRead.email) 
+        formRef.current.setFieldValue("celular", ContratarStoreRead.tel)
+     },[formRef])
+
+  useEffect(()=>{ 
+    localStorage.setItem('Intermedicina@ContratarStore', JSON.stringify(ContratarStoreRead));
+  },[ContratarStoreRead])
+
 
   const handleSubmit = useCallback(
     async (data: SignInFormData) => {
@@ -110,12 +124,12 @@ const Inicio: React.FC = () => {
 
         <span className="text-xs mt-5 montserrat-bold text-center w-full text-cinza">INFORME SEUS DADOS</span>
 
-        <Form  className="p-2 -mt-4" ref={formRef} onSubmit={handleSubmit}> 
+        <Form  className="p-2 -mt-2" ref={formRef} onSubmit={handleSubmit}> 
 
               <Input name="nome" placeholder="Nome" />
-              <Input mask="(99)99999-9999" maskplaceholder="_"  name="celular" placeholder="Celular" />
+              <InputMask mask="(99)99999-9999" maskplaceholder="_"  name="celular" placeholder="Celular" />
               <Input name="email" placeholder="E-mail" />  
-              <button className="bg-verde rounded-md mt-4 mb-2 flex justify-between items-center text-white w-full p-4" type="submit">Continuar<Image src="/assets/arrowRight.svg" width={19} height={13}/></button> 
+              <button className="bg-verde rounded-md mt-2 mb-2 flex justify-between items-center text-white w-full p-4" type="submit">Continuar<Image src="/assets/arrowRight.svg" width={19} height={13}/></button> 
 
         </Form>
 

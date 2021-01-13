@@ -6,7 +6,8 @@ import Footer from '../../components/Footer'
 import HeaderVoltarAzul from '../../components/HeaderVoltarAzul'  
 import Image from 'next/image' 
 import { Form } from '@unform/web';
-import Input from '../../components/Input'; 
+import Input from '../../components/Input'
+import InputMask from  '../../components/InputMask'
 import File from '../../components/FileInput' 
 
 import {ContratarStore} from '../../store/contratar' 
@@ -71,11 +72,47 @@ import axios from 'axios';
     const [checkIcon, setCheckIcon] = useState("/assets/check.svg")
     const [checkedPoliticaPrivacidade, setCheckedPoliticaPrivacidade] = useState(false)
     const [textoPoliticaDePrivacidade, setTextoPoliticaDePrivacidade] = useState("Carregando ...")
+ 
 
+    useEffect(()=>{
+      var Store = JSON.parse(localStorage.getItem('Intermedicina@ContratarStore'))
+      Store && ContratarStore.update(s=> Store) 
+
+         formRef.current.setFieldValue("nome", Store.nome) 
+         formRef.current.setFieldValue("email", Store.email) 
+         formRef.current.setFieldValue("celular", Store.tel) 
+         formRef.current.setFieldValue("datanasc", Store.datanasc)
+         formRef.current.setFieldValue("estadocivil", Store.estadocivil)
+         formRef.current.setFieldValue("genero", Store.genero)
+         formRef.current.setFieldValue("cep", Store.endereco.cep)
+         formRef.current.setFieldValue("rua", Store.endereco.rua)
+         formRef.current.setFieldValue("numero", Store.endereco.numero)
+         formRef.current.setFieldValue("complemento", Store.endereco.complemento)
+         formRef.current.setFieldValue("bairro", Store.endereco.bairro)
+         formRef.current.setFieldValue("cidade", Store.endereco.cidade)
+         formRef.current.setFieldValue("ibge", Store.endereco.ibge)
+         formRef.current.setFieldValue("codmunicipio", Store.endereco.codmunicipio)
+         formRef.current.setFieldValue("estado", Store.endereco.estado)
+         formRef.current.setFieldValue("anexo1", Store.anexo1)
+         formRef.current.setFieldValue("anexo2", Store.anexo2)
+         formRef.current.setFieldValue("MerchantOrderId", Store.MerchantOrderId)
+         formRef.current.setFieldValue("id", Store.id) 
+ 
+         axios.get(Store.LinkPoliticaDePrivacidade).then( (response) => {
+          if(response.data && response.data.content){ 
+           setTextoPoliticaDePrivacidade(response.data.content.rendered)
+          }
+       })
+
+  
+
+
+      },[formRef])
+ 
+    //Load Politica de Privacidade
     useEffect(()=>{ 
      axios.get(ContratarStoreRead.LinkPoliticaDePrivacidade).then( (response) => {
-       if(response.data && response.data.content){
- 
+       if(response.data && response.data.content){ 
         setTextoPoliticaDePrivacidade(response.data.content.rendered)
        }
     })
@@ -236,19 +273,7 @@ import axios from 'axios';
 
    //* UPLOAD RESIDENCIA - FIM
 
-    useEffect(()=>{
-      formRef.current.setFieldValue("datanasc",ContratarStoreRead.datanasc)
-    },[ContratarStoreRead.datanasc])
-
-    useEffect(()=>{
-      formRef.current.setFieldValue("cpf",ContratarStoreRead.cpf)
-    },[ContratarStoreRead.cpf])
-
-    useEffect(()=>{
-      formRef.current.setFieldValue("nome",ContratarStoreRead.nome)
-      formRef.current.setFieldValue("celular",ContratarStoreRead.tel)
-      formRef.current.setFieldValue("email",ContratarStoreRead.email)
-    },[ContratarStoreRead.nome])
+   
 
     useEffect(()=>{ 
       formRef.current.setFieldValue('cidade', ContratarStoreRead.endereco.cidade);
@@ -282,6 +307,7 @@ import axios from 'axios';
             celular: Yup.string().required('*É necessário preechimento'),
             //datanasc: Yup.string().required('*É necessário preechimento'),
             datanasc: Yup.string().test("len", "Data de Nascimento Inválida.", (val) => {
+              return true
               return checkAge(val);
             }),
             cpf: Yup.string().test("len", "CPF Inválido.", (val) => {
@@ -316,10 +342,31 @@ import axios from 'axios';
 
 
           await ContratarStore.update(s=> 
-            {
+
+            { s.datanasc = data.datanasc
+              s.cpf = data.cpf
+              s.email = data.email
+              s.estadocivil = data.estadocivil
+              s.genero = data.genero
+              s.endereco.cep = data.cep
+              s.endereco.rua = data.rua
+              s.endereco.numero = data.numero
+              s.endereco.complemento = data.complemento
+              s.endereco.bairro = data.bairro
+              s.endereco.cidade = data.cidade
+              s.endereco.ibge = data.ibge
+              s.endereco.codmunicipio = data.codmunicipio
+              s.endereco.estado = data.estado
+              //s.fileNameUploadIdentificacao = data.anexo1
+              //s.fileNameUploadResidencia = data.anexo2
+              s.MerchantOrderId = data.MerchantOrderId
+              s.id = data.id
               
              
             });
+
+            localStorage.setItem('Intermedicina@ContratarStore', JSON.stringify(ContratarStoreRead)) 
+        
           
           var dados = {
             datanasc: data.datanasc,
@@ -375,7 +422,7 @@ import axios from 'axios';
           </div>
         </div> 
 
-        <Form className="p-2 -mt-5 w-full flex flex-col" ref={formRef} onSubmit={handleSubmit}>  
+        <Form className="p-2 -mt-5 w-full flex flex-col" autoComplete="off" aria-autocomplete="none" ref={formRef} onSubmit={handleSubmit}>  
       
         <div className="w-full h-0.5 bg-gray-200 border-white"></div>
 
@@ -383,17 +430,26 @@ import axios from 'axios';
 
          <Input name="nome" legend="NOME COMPLETO"  small disabled />
           
-          <div className="flex gap-2">
-            <Input className="w-1/3" name="celular"  legend="CELULAR" small disabled  />
-            <Input className="w-2/3" name="email"  legend="EMAIL" small disabled   /> 
+          <div className="flex  ">
+            <div className="w-1/3 mr-1">
+            <Input  name="celular"  legend="CELULAR" small disabled  />
+            </div>
+            <div className="w-2/3 ml-1">
+            <Input   name="email"  legend="EMAIL" small disabled   /> 
+            </div>
           </div> 
 
-           <div className="flex gap-2">     
-              <Input mask="99/99/9999" maskplaceholder="_"  name="datanasc" legend="DATA DE NASCIMENTO" small />
-              <Input mask="999.999.999-99" maskplaceholder="_"  name="cpf"  legend="CPF"   small   />
+           <div className="flex "> 
+           <div className="w-full mr-1">
+              <InputMask mask="99/99/9999" maskplaceholder="_"  name="datanasc" legend="DATA DE NASCIMENTO" small />
+          </div>  
+          <div className="w-full ml-1">
+              <InputMask mask="999.999.999-99" maskplaceholder="_"  name="cpf"  legend="CPF"   small   />
+              </div>
             </div>
               
             <div className="flex gap-2">   
+            <div className="w-full mr-1">
                   <Select name="estadocivil" defaultValue="" legend="ESTADO CIVIL" small>
                   <option value="" disabled>Selecione</option>
                   <option value="Solteiro">Solteiro</option>
@@ -402,12 +458,14 @@ import axios from 'axios';
                   <option value="Separado">Separado</option>
                   <option value="Viúvo">Viúvo</option>
                   </Select>
-             
+                  </div>
+                  <div className="w-full ml-1">
                   <Select name="genero" defaultValue="" legend="GÊNERO" small> 
                   <option value="" disabled>Selecione</option>
                   <option value="M">Masculino</option>
                   <option value="F">Feminino</option>
                   </Select>
+                  </div>
 
             </div> 
                 <div className="text-xs text-cinza montserrat-regular my-2">
@@ -444,25 +502,37 @@ import axios from 'axios';
  
                 
                <span className="text-xs mt-3 montserrat-bold text-center w-full justify-center text-cinza"><strong>ENDEREÇO</strong></span>
-               <Input mask="99999-999" maskplaceholder="_" name="cep" onChange={OnChangeCEP} legend="CEP" small />
+               <InputMask mask="99999-999" maskplaceholder="_" name="cep" onChange={OnChangeCEP} legend="CEP" small />
 
                <Input name="rua"  legend="RUA" small   />
  
-                <div className="flex gap-2">
+                <div className="flex ">
+                  
+                <div className="w-full ml-1">
                 <Input name="numero"  legend="NÚMERO" small   />
+                </div>
+                <div className="w-full ml-1 mr-1">
                 <Input name="complemento"  legend="COMPLEMENTO" small   /> 
-                <Select name="bairro"  legend="BAIRRO" small> 
+                </div>
+                <div className="w-full ml-1">
+                  <Select name="bairro"  legend="BAIRRO" small>   
                 {ContratarStoreRead.bairros.map(bairro=>
                    <option key={bairro.codigo} value={bairro.codigo}>{bairro.nome}</option> 
                   )}
                  
                   </Select>
+                  </div>
 
                 </div> 
                 
-                <div className="flex gap-2"> 
+                <div className="flex"> 
+                
+                <div className="w-full ml-1">
                   <Input name="cidade"  legend="CIDADE" small /> 
+                  </div>
+                  <div className="w-full ml-1">
                   <Input name="estado"  legend="ESTADO" small   /> 
+                  </div>
                 </div>
 
  
@@ -503,9 +573,9 @@ import axios from 'axios';
                 <br/>Como você prefere receber o código?
               </span> 
 
-              <div className="flex w-full mt-3 justify-center gap-2 text-white text-xs montserrat-regular">
-                <a className="bg-azul rounded-md flex py-1 px-4 cursor-pointer" onClick={HandleOnSendSMS}><span>POR <strong> SMS</strong></span></a>
-                <a className="bg-azul rounded-md flex py-1 px-4 cursor-pointer" onClick={HandleOnSendEmail} ><span>POR <strong> E-MAIL</strong></span></a>
+              <div className="flex w-full mt-3 justify-center  text-white text-xs montserrat-regular">
+                <a className="bg-azul rounded-md flex py-1 px-4 mr-1 cursor-pointer" onClick={HandleOnSendSMS}><span>POR <strong> SMS</strong></span></a>
+                <a className="bg-azul rounded-md flex py-1 px-4 ml-1 cursor-pointer" onClick={HandleOnSendEmail} ><span>POR <strong> E-MAIL</strong></span></a>
               </div> 
 
                <div className="flex flex-col items-center">

@@ -43,12 +43,12 @@ const Select: React.FC<Props> = ({ name, small=false, disabled=false, legend, ch
   }, [fieldName, registerField]);
 
   return (
-    <div className="flex flex-col w-full mt-4 montserrat-regular text-sm">
-    <fieldset className={` flex justify-between ${small ? 'p-2' : 'p-4'} bg-white border rounded-md border-azul ${!!error && 'border-vermelho'}  ${disabled && 'border-cinza-claro'} ${isFilled && 'border-azul'} ${isFocused && 'border-azul'}`} >
+    <div className="flex flex-col w-full mt-2 montserrat-regular text-sm">
+    <fieldset className={` flex justify-between ${small ? 'px-2 py-1.5' : 'px-2 p-4'} bg-white border rounded-md border-azul ${!!error && 'border-vermelho'}  ${disabled && 'border-cinza-claro'} ${isFilled && 'border-azul'} ${isFocused && 'border-azul'}`} >
     
       {!!legend && <legend className={`px-1 text-xxs text-azul  ${disabled && 'text-cinza-claro'} ${!!error && 'text-vermelho'}  ${isFilled && ' text-azul'} ${isFocused && ' text-azul'}`}>{legend}</legend> }
       <select
-        className={`w-full placeholder-azul text-azul  ${disabled && 'text-cinza-claro'} ${!!error && 'placeholder-vermelho text-vermelho'}  ${isFilled && 'placeholder-azul text-azul'} ${isFocused && 'placeholder-azul text-azul'}`}
+        className={`w-full text-input md:text-xs  bg-white placeholder-azul text-azul  ${disabled && 'text-cinza-claro'} ${!!error && 'placeholder-vermelho text-vermelho'}  ${isFilled && 'placeholder-azul text-azul'} ${isFocused && 'placeholder-azul text-azul'}`}
         onFocus={clearError}
         onBlur={handleInputBlur}
         defaultValue={defaultValue}

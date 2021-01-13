@@ -1,6 +1,6 @@
  
 
-module.exports = {
+module.exports = {  
   purge: [],
   darkMode: false, // or 'media' or 'class'
   theme: {
@@ -18,6 +18,7 @@ module.exports = {
       },
       fontSize:{
         xxs: ['10px', '12px'],
+        input:['16px', '16px']
       }
     }, 
   },

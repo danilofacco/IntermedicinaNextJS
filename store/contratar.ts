@@ -11,8 +11,12 @@ interface iContratar {
   cv:number;
   metodo:string;
 
- meses:Array<any>;
- anos:Array<any>;
+  MerchantOrderId:string;
+  id:string;
+
+
+  meses:Array<any>;
+  anos:Array<any>;
   
   fileNameUploadIdentificacao:Array<any>;
   fileNameUploadResidencia:Array<any>;
@@ -23,6 +27,9 @@ interface iContratar {
   datanasc:string;
   tel:string;
   email:string;
+  estadocivil:string;
+  genero:string;
+
 
   cartao:{
     bandeira:string;
@@ -62,6 +69,10 @@ export const ContratarStore = new Store<iContratar>({
     datanasc:"",
     tel:"",
     email:"",
+    estadocivil:"",
+    genero:"",
+    MerchantOrderId:"",
+    id:"",
     cartao:{
       bandeira:"",
       numero: 0,
@@ -85,6 +96,9 @@ export const ContratarStore = new Store<iContratar>({
     fileNameUploadIdentificacao:[],
     fileNameUploadResidencia:[],
     fileNameUploadTalao:[],
+
+    
+
     metodo:"cartao",
 
     meses:["01","02","03","04","05","06","06","07","08","09","10","11","12"],

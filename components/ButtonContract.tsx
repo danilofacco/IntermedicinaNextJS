@@ -1,4 +1,4 @@
-import React from 'react'; 
+import React, { useEffect } from 'react'; 
 import { useRouter } from 'next/router'
 import Image from "next/image"
 import {ContratarStore} from '../store/contratar'
@@ -17,17 +17,24 @@ interface ButtonProps{
 
 const ButtonContract: React.FC<ButtonProps> = ({ code,id,title,subtitle,price,oldPrice,link,description,featured=false, children , ...rest }) => {
   const router = useRouter() 
+  const ContratarStoreRead = ContratarStore.useState(s => s)
 
-  function SelecionarContrato(id,title,price,code,link){
+  useEffect(()=>{ 
+    localStorage.setItem('Intermedicina@ContratarStore', JSON.stringify(ContratarStoreRead));
+  },[ContratarStoreRead])
 
-    ContratarStore.update(s => {
+
+
+  async function  SelecionarContrato(id,title,price,code,link){
+    await ContratarStore.update(s => {
       s.contratoSelecionado = id;
       s.CodigoTipoContrato = code;
       s.LinkPoliticaDePrivacidade = link;
       s.contratoSelecionadoTitulo = title;
       s.precoContrato = price;
     })
- 
+  
+   
 
     router.push('/contratar/inicio')
  }
