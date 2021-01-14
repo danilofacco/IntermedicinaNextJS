@@ -5,6 +5,10 @@ import HeaderVoltarAzul from '../../components/HeaderVoltarAzul'
 import Image from 'next/image'  
 
 
+import CryptoAES from 'crypto-js/aes';
+import CryptoENC from 'crypto-js/enc-utf8';
+
+
 import { ImWhatsapp as Whatsapp } from 'react-icons/im';
 
 import {ContratarStore} from '../../store/contratar'

@@ -13,6 +13,10 @@ import getValidationErrors from '../../../utils/getValidationErrors';
 import { useRouter } from 'next/router';
 
 
+import CryptoAES from 'crypto-js/aes';
+import CryptoENC from 'crypto-js/enc-utf8';
+
+
 const Pagamento : React.FC = () => {
 
   const formRef = useRef(null);

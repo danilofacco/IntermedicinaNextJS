@@ -8,6 +8,9 @@ import { SpinnerCircularFixed } from 'spinners-react';
 import { ImWhatsapp as Whatsapp } from 'react-icons/im';
 
 import {ContratarStore} from '../../store/contratar'
+
+import CryptoAES from 'crypto-js/aes';
+import CryptoENC from 'crypto-js/enc-utf8';
  
  
 const ConcluidoPicPay: React.FC = () => {

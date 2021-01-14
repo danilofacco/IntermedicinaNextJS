@@ -10,8 +10,13 @@ import Input from '../../../components/Input';
 import {ContratarStore} from '../../../store/contratar' 
 import getValidationErrors from '../../../utils/getValidationErrors'; 
 import Select from '../../../components/Select';
+
+
+import CryptoAES from 'crypto-js/aes';
+import CryptoENC from 'crypto-js/enc-utf8';
  
 import { useRouter } from 'next/router';
+import InputMask from '../../../components/InputMask';
 
 
 const Pagamento : React.FC = () => {
@@ -22,7 +27,10 @@ const Pagamento : React.FC = () => {
   const ContratarStoreRead = ContratarStore.useState(s => s)
 
   useEffect(()=>{
-    var Store = JSON.parse(localStorage.getItem('Intermedicina@ContratarStore'))
+       //faz leitura dos dados uma vez ao ser executada a pagina, descriptografa e faz a leitura
+       var temp = localStorage.getItem('Intermedicina@ContratarStore') 
+       var bytes = CryptoAES.decrypt(temp, 'Intermedicina@2020')
+       var Store = JSON.parse(bytes.toString(CryptoENC)) 
     Store ? ContratarStore.update(s => Store) : null
   },[])
 
@@ -170,7 +178,7 @@ const Pagamento : React.FC = () => {
        
 
               <Input name="nome" legend="NOME IMPRESSO NO CARTÃO" />
-              <Input mask="9999 9999 9999 9999" maskplaceholder="_"  name="numeroDoCartao"   legend="NÚMERO DO CARTÃO" /> 
+              <InputMask mask="9999 9999 9999 9999" maskplaceholder="_"  name="numeroDoCartao"   legend="NÚMERO DO CARTÃO" /> 
 
               <div className="flex justify-between mt-4 text-xxs text-cinza montserrat-medium w-full"> 
                  <span className="w-1/3 ml-1 text-left">DATA DE VALIDADE DO CARTÃO</span>

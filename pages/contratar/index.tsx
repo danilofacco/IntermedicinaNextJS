@@ -8,6 +8,8 @@ import Image from 'next/image'
 
 import Carousel from 'react-elastic-carousel'
 import { ContratarStore } from '../../store/contratar'
+import CryptoAES from 'crypto-js/aes';
+import CryptoENC from 'crypto-js/enc-utf8';
 
 const Index: React.FC = () => {
 
@@ -20,7 +22,11 @@ const Index: React.FC = () => {
   };
 
   useEffect(()=>{
-    var Store = JSON.parse(localStorage.getItem('Intermedicina@ContratarStore'))
+    //carregar e descriptografar
+    var temp = localStorage.getItem('Intermedicina@ContratarStore') 
+    var bytes = CryptoAES.decrypt(temp, 'Intermedicina@2020')
+    var Store = JSON.parse(bytes.toString(CryptoENC))
+
     Store ? ContratarStore.update(s => Store) : null
   },[])
 
@@ -37,7 +43,7 @@ const Index: React.FC = () => {
               consultas com especialistas, exames e
               <br/>procedimentos com valores acessíveis!</span><br/>
               <a href="#">Seja Intermedicina!</a>
-         </div>
+         </div> 
 
          <div>
               <span>Intermedicina é: <strong>Uso imediato!</strong><br/>

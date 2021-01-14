@@ -6,6 +6,7 @@ import { FiArrowRight } from 'react-icons/fi';
 import SliderItemMedico from '../components/SliderItemMedico'
 
 import Carousel from 'react-elastic-carousel'
+import SliderItemLocal from '../components/SliderItemLocal';
 
 export default function Home() {
   return (
@@ -19,11 +20,23 @@ export default function Home() {
            atuacao="ULTRASSONOGRAFIA"
            cidades={["Santa Teresa","Santa Maria de Jetibá"]}
            imagem="/assets/medicos/barbara.png"/> 
-               <SliderItemMedico 
-           nome="Dra. BÁRBARA C. COLNAGO"
-           atuacao="ULTRASSONOGRAFIA"
+
+          <SliderItemLocal
+           titulo="MERIDIONAL EM CARIACICA"
+           descricao="Consultas e Exames com Especialistas" 
+           imagem="/assets/locais/meridional-cariacica.png"/> 
+
+          <SliderItemMedico 
+           nome="Dr. romulo t. santos"
+           atuacao="UROLOGISTA"
            cidades={["Santa Teresa","Santa Maria de Jetibá"]}
-           imagem="/assets/medicos/barbara.png"/> 
+           imagem="/assets/medicos/romulo.png"/>  
+            
+          <SliderItemMedico 
+           nome="DrA. RAISSA TOTOLA RUDIO"
+           atuacao="ORTODONTIA"
+           cidades={["Santa Teresa","Itarana"]}
+           imagem="/assets/medicos/raissa.png"/> 
            </Carousel>
       </div>
         <div className="w-full h-0.5 bg-gray-200  mt-3 mx-4" />

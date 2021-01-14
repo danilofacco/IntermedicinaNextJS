@@ -24,7 +24,7 @@ const SliderItemMedico: React.FC<ButtonProps> = ({ imagem,cidades,nome,atuacao, 
         
             
             {cidades.map(c =>
-              <span className=" relative text-xs montserrat-bold text-cinza uppercase">{c}</span>
+              <span key={c} className=" relative text-xs montserrat-bold text-cinza uppercase">{c}</span>
             )} 
             
         </div>

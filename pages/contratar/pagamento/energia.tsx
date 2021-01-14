@@ -9,6 +9,10 @@ import { Form } from '@unform/web';
 import Input from '../../../components/Input';
 import {ContratarStore} from '../../../store/contratar' 
 
+
+import CryptoAES from 'crypto-js/aes';
+import CryptoENC from 'crypto-js/enc-utf8';
+
 import File from '../../../components/FileInput' 
 
 import getValidationErrors from '../../../utils/getValidationErrors'; 
@@ -19,6 +23,7 @@ import { removeFile } from '../../../utils/removeFile';
 import { uploadFile } from '../../../utils/uploadFile';
 import { SpinnerCircularFixed } from 'spinners-react';
 import { useRouter } from 'next/router';
+import InputMask from '../../../components/InputMask';
 
 
 const Pagamento : React.FC = () => {
@@ -213,7 +218,7 @@ const Pagamento : React.FC = () => {
        <div className="mx-2">
           <Input name="nomeTitularEnergia" legend="TITULAR DA CONTA DE ENERGIA"    />
       
-          <Input mask="999.999.999-99" maskplaceholder="_" name="cpfTitularEnergia"  legend="CPF DO TITULAR DA CONTA DE ENERGIA" onBlur={onChangeCPF}   />
+          <InputMask mask="999.999.999-99" maskplaceholder="_" name="cpfTitularEnergia"  legend="CPF DO TITULAR DA CONTA DE ENERGIA" onBlur={onChangeCPF}   />
        
           <Input type="number" name="numeroInstalacaoEnergia" legend="INSTALAÇÃO OU IDENTIFICAÇÃO DO TALÃO"   />  
          

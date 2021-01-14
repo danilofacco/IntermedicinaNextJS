@@ -7,6 +7,8 @@ import Image from 'next/image'
 import { ImWhatsapp as Whatsapp } from 'react-icons/im'
 import { ContratarStore } from '../../store/contratar'
 
+import CryptoAES from 'crypto-js/aes';
+import CryptoENC from 'crypto-js/enc-utf8';
 
  
 const Concluido: React.FC = () => {

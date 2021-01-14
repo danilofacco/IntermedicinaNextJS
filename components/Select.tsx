@@ -56,6 +56,8 @@ const Select: React.FC<Props> = ({ name, small=false, disabled=false, legend, ch
         ref={inputRef}
         {...rest}
       > {children} </select>
+
+<FiChevronDown className={`${disabled && 'text-cinza-claro'} ${!!error && ' text-vermelho'}  ${isFilled && ' text-azul'} ${isFocused &&  'text-azul'}`} size={16}/>
      
     </fieldset> 
     {!!error && <span className={`${!!error && 'flex mt-1 text-left text-xxs text-vermelho'}`}>{error }</span>}

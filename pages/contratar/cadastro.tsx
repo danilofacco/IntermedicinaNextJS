@@ -32,6 +32,10 @@ import { dadosCadastro } from '../../utils/dadosCadastro';
 import axios from 'axios';
 
 
+import CryptoAES from 'crypto-js/aes';
+import CryptoENC from 'crypto-js/enc-utf8';
+
+
   interface SignInFormData {
     email: string;
     nome: string;
@@ -74,8 +78,12 @@ import axios from 'axios';
     const [textoPoliticaDePrivacidade, setTextoPoliticaDePrivacidade] = useState("Carregando ...")
  
 
-    useEffect(()=>{
-      var Store = JSON.parse(localStorage.getItem('Intermedicina@ContratarStore'))
+    useEffect(()=>{ 
+      //carregar e descriptografar
+    var temp = localStorage.getItem('Intermedicina@ContratarStore') 
+    var bytes = CryptoAES.decrypt(temp, 'Intermedicina@2020')
+    var Store = JSON.parse(bytes.toString(CryptoENC)) 
+
       Store && ContratarStore.update(s=> Store) 
 
          formRef.current.setFieldValue("nome", Store.nome) 
@@ -280,7 +288,7 @@ import axios from 'axios';
       formRef.current.setFieldValue('rua', ContratarStoreRead.endereco.rua);
       formRef.current.setFieldValue('estado', ContratarStoreRead.endereco.estado);
       
-      if(ContratarStoreRead.endereco.ibge.length > 4){
+      if(ContratarStoreRead.endereco.ibge != undefined && ContratarStoreRead.endereco.ibge.length > 4){
         getBairrosByIBGE(ContratarStoreRead.endereco.ibge)
         }
     },[ContratarStoreRead.endereco.cep])
@@ -304,12 +312,11 @@ import axios from 'axios';
               .required('*É necessário preechimento')
               .email('*Digite  um e-mail válido'),
             nome: Yup.string().required('*É necessário preechimento'),
-            celular: Yup.string().required('*É necessário preechimento'),
-            //datanasc: Yup.string().required('*É necessário preechimento'),
+            celular: Yup.string().required('*É necessário preechimento'), 
             datanasc: Yup.string().test("len", "Data de Nascimento Inválida.", (val) => {
               return true
               return checkAge(val);
-            }),
+            }).required('*É necessário preechimento'),
             cpf: Yup.string().test("len", "CPF Inválido.", (val) => {
               return CPFValidation(val);
             })
@@ -320,29 +327,22 @@ import axios from 'axios';
             rua: Yup.string().required('*É necessário preechimento'),
             numero: Yup.string().required('*É necessário preechimento'),
             bairro: Yup.string().required('*É necessário preechimento'),
-            cidade: Yup.string().required('*É necessário preechimento'),
-
-            estado: Yup.string().required('*É necessário preechimento'),
-
+            cidade: Yup.string().required('*É necessário preechimento'), 
+            estado: Yup.string().required('*É necessário preechimento'), 
             cv: Yup.string().test("len", "Código de verificação inválido.", (val) => {
               console.log("val:"+ cvRandom)
               return Number(val) == cvRandom;
-            })
-              .required('*É necessário preechimento'),
+            }) .required('*É necessário preechimento'),
  
-            politicaprivacidade: Yup.string().required('*É necessário aceitar os termos de uso e política de privacidade'),
-
+            politicaprivacidade: Yup.string().required('*É necessário aceitar os termos de uso e política de privacidade'), 
             anexoResidencia: Yup.string().required("*É necessário anexar ao menos um arquivo."),
             anexoIdentificacao: Yup.string().required("*É necessário anexar ao menos um arquivo.")
           });
-  
-          await schema.validate(data, {
-            abortEarly: false,
-          });
+
+          console.log(data.cep)
 
 
-          await ContratarStore.update(s=> 
-
+          ContratarStore.update(s=>  
             { s.datanasc = data.datanasc
               s.cpf = data.cpf
               s.email = data.email
@@ -360,12 +360,17 @@ import axios from 'axios';
               //s.fileNameUploadIdentificacao = data.anexo1
               //s.fileNameUploadResidencia = data.anexo2
               s.MerchantOrderId = data.MerchantOrderId
-              s.id = data.id
-              
-             
+              s.id = data.id  
             });
 
-            localStorage.setItem('Intermedicina@ContratarStore', JSON.stringify(ContratarStoreRead)) 
+               //criptografar e salvar sempre que o Storage for alterado
+              var temp = CryptoAES.encrypt(JSON.stringify(ContratarStoreRead), 'Intermedicina@2020');
+              console.log(ContratarStoreRead)
+              localStorage.setItem('Intermedicina@ContratarStore', temp.toString());
+  
+          await schema.validate(data, {
+            abortEarly: false,
+          }); 
         
           
           var dados = {

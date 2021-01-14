@@ -5,6 +5,10 @@ import Footer from '../../components/Footer'
 import HeaderVoltarAzul from '../../components/HeaderVoltarAzul'  
 import Image from 'next/image'  
 
+
+import CryptoAES from 'crypto-js/aes';
+import CryptoENC from 'crypto-js/enc-utf8';
+
 const NaoAutorizado: React.FC = () => {
     return (
       <>

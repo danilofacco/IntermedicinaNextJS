@@ -16,6 +16,9 @@ import getValidationErrors from '../../utils/getValidationErrors';
 import { useRouter } from 'next/router';
 import { inicioCadastro } from '../../utils/inicioCadastro';
 
+import CryptoAES from 'crypto-js/aes';
+import CryptoENC from 'crypto-js/enc-utf8';
+
 interface SignInFormData {
   nome: string;
   celular: string;
@@ -29,15 +32,21 @@ const Inicio: React.FC = () => {
   const ContratarStoreRead = ContratarStore.useState(s => s);
 
   useEffect(()=>{
-     var Store = JSON.parse(localStorage.getItem('Intermedicina@ContratarStore'))
+    //faz leitura dos dados uma vez ao ser executada a pagina, descriptografa e faz a leitura
+    var temp = localStorage.getItem('Intermedicina@ContratarStore') 
+    var bytes = CryptoAES.decrypt(temp, 'Intermedicina@2020')
+    var Store = JSON.parse(bytes.toString(CryptoENC)) 
+
      Store && ContratarStore.update(s=> Store) 
-        formRef.current.setFieldValue("nome", ContratarStoreRead.nome) 
-        formRef.current.setFieldValue("email", ContratarStoreRead.email) 
-        formRef.current.setFieldValue("celular", ContratarStoreRead.tel)
+        formRef.current.setFieldValue("nome", Store.nome) 
+        formRef.current.setFieldValue("email", Store.email) 
+        formRef.current.setFieldValue("celular", Store.tel)
      },[formRef])
 
   useEffect(()=>{ 
-    localStorage.setItem('Intermedicina@ContratarStore', JSON.stringify(ContratarStoreRead));
+    //criptografar e salvar sempre que o Storage for alterado
+    var temp =  CryptoAES.encrypt(JSON.stringify(ContratarStoreRead), 'Intermedicina@2020');
+    localStorage.setItem('Intermedicina@ContratarStore', temp.toString());
   },[ContratarStoreRead])
 
 
@@ -104,7 +113,7 @@ const Inicio: React.FC = () => {
     <HeaderContratar page={1}/>
 
     <div className="flex mt-4 flex-col w-full items-center px-4 "> 
-    
+     
      
       <span className="text-xs mb-2 montserrat-medium text-center text-cinza">ASSINATURA SELECIONADA:</span>
 

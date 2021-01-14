@@ -3,6 +3,9 @@ import { useRouter } from 'next/router'
 import Image from "next/image"
 import {ContratarStore} from '../store/contratar'
 
+import CryptoAES from 'crypto-js/aes';
+import CryptoENC from 'crypto-js/enc-utf8';
+
 interface ButtonProps{
   title:string;
   subtitle:string;
@@ -19,8 +22,10 @@ const ButtonContract: React.FC<ButtonProps> = ({ code,id,title,subtitle,price,ol
   const router = useRouter() 
   const ContratarStoreRead = ContratarStore.useState(s => s)
 
-  useEffect(()=>{ 
-    localStorage.setItem('Intermedicina@ContratarStore', JSON.stringify(ContratarStoreRead));
+  useEffect(()=>{
+    //criptografar e salvar 
+    var temp =  CryptoAES.encrypt(JSON.stringify(ContratarStoreRead), 'Intermedicina@2020');
+    localStorage.setItem('Intermedicina@ContratarStore', temp.toString());
   },[ContratarStoreRead])
 
 
