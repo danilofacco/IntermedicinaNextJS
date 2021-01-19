@@ -507,11 +507,12 @@ import { uploadFilePost } from '../../utils/uploadFilePost';
                 <Input name="complemento"  legend="COMPLEMENTO" small   /> 
                 </div>
                 <div className="w-full ml-1">
-                  <Select name="bairro"  legend="BAIRRO" small>   
+                  <Select name="bairro"  legend="BAIRRO" small>
+                  <option key="selecione" value="0">Selecione</option>
                 {ContratarStoreRead.bairros.map(bairro=>
                    <option key={bairro.codigo} value={bairro.codigo}>{bairro.nome}</option> 
                   )}
-                 
+                  <option key="outro" value="outro">Outro</option>  
                   </Select>
                   </div> 
                 </div> 
