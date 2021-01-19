@@ -10,13 +10,15 @@ interface ButtonProps{
 
 const SliderItemMedico: React.FC<ButtonProps> = ({ imagem,cidades,nome,atuacao, children , ...rest }) => { 
   return (
-    <div className="flex flex-col w-full relative" {...rest}> 
-       <Image  src={imagem}   alt={nome}   width={600} height={600} />
-       
-       <div className="flex bottom-0 justify-between w-full px-4 absolute ">
-        <div className="flex flex-col text-left ">
-            <span className="text-xs text-azul montserrat-bold  uppercase">{nome}</span>
-            <span className="text-xs montserrat-bold text-cinza">{atuacao}</span>
+    <div className="flex flex-col -mb-2  w-full relative" {...rest}> 
+     
+      <Image  src={imagem}   alt={nome}  width={500} height={500} layout="responsive"/> 
+     
+      
+       <div className="flex bottom-0 justify-between w-full px-4  absolute ">
+        <div className="flex flex-col text-left "> 
+            <span className="text-xxs text-azul montserrat-bold  uppercase">{nome}</span>
+            <span className="text-xxs montserrat-bold text-cinza">{atuacao}</span>
         </div>
 
         <div className="flex flex-col relative -top-6 items-start text-left">
@@ -24,7 +26,7 @@ const SliderItemMedico: React.FC<ButtonProps> = ({ imagem,cidades,nome,atuacao, 
         
             
             {cidades.map(c =>
-              <span key={c} className=" relative text-xs montserrat-bold text-cinza uppercase">{c}</span>
+              <span key={c} className=" relative text-xxs montserrat-bold text-cinza uppercase">{c}</span>
             )} 
             
         </div>

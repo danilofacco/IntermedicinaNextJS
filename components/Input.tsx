@@ -7,8 +7,8 @@ import React, {
 } from 'react';
 import { IconBaseProps } from 'react-icons';  
 
-import { useField } from '@unform/core';
-import InputMask from "react-input-mask"; 
+import { useField } from '@unform/core'; 
+import {isIOS} from "react-device-detect"
 interface Props extends InputHTMLAttributes<HTMLInputElement> {
   small?:boolean; 
   name: string;
@@ -49,7 +49,7 @@ const Input: React.FC<Props> = ({ name, small=false, disabled=false, legend,icon
       {Icon && <Icon size={20} />}      
       {!!legend && <legend className={`px-1 text-xxs text-azul  ${disabled && 'text-cinza-claro'} ${!!error && 'text-vermelho'}  ${isFilled && ' text-azul'} ${isFocused && ' text-azul'}`}>{legend}</legend> }
       <input
-          className={`w-full  text-input md:text-xs   bg-white placeholder-azul text-azul  ${!!error && 'placeholder-vermelho text-vermelho'} ${isFilled && 'placeholder-azul text-azul'} ${isFocused && 'placeholder-azul text-azul'} ${disabled && 'text-cinza-claro '}`}
+          className={`w-full ${isIOS ? 'text-input': 'text-xs'} bg-white placeholder-azul text-azul  ${!!error ? 'placeholder-vermelho text-vermelho':''} ${isFilled ? 'placeholder-azul text-azul':''} ${isFocused ? 'placeholder-azul text-azul':''} ${disabled ? 'text-cinza-claro ':''}`}
           onFocus={clearError}
           onBlur={handleInputBlur}
           defaultValue={defaultValue}

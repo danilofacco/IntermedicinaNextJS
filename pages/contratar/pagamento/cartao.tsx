@@ -186,21 +186,28 @@ const Pagamento : React.FC = () => {
               </div>
           
               <div className="flex gap-2 -mt-2 justify-between w-full"> 
-                
+
+              <div className="w-full  mr-1"> 
                 <Select  name="mes"  legend="" >
                   <option>MÊS</option>
                   {ContratarStoreRead.meses.map(mes=>{
                     <option value={mes} key={mes}>{mes}</option>
                   })}  
                 </Select> 
+                </div>
 
-                <Select   name="mes"  legend="" > 
+                <div className="w-full  mr-1 ml-1">
+                <Select   name="mes"  legend=""> 
                   <option>ANO</option>
                   {ContratarStoreRead.anos.map(ano=>{
                     <option value={ano} key={ano}>{ano}</option>
                   })}  
-                </Select> 
-                  <Input name="cvv"  placeholder="CVV"     />  
+                </Select>
+                
+                </div>
+                <div className="w-full  ml-1">
+                  <Input name="cvv"  placeholder="CVV"     />
+                  </div>  
                 </div>
 
               <button  className="mt-4 mb-2 montserrat-regular text-sm bg-verde justify-between flex items-center w-full text-white  rounded-md p-4"  type="submit"><span><strong>Iniciar</strong> Assinatura</span> <Image src="/assets/arrowRight.svg" width={19} height={13}/></button> 

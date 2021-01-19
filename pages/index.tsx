@@ -58,11 +58,11 @@ export default function Home() {
             </div>
           </Link>
 
-          <Link href="/login"> 
+          <a onClick={()=> window.open("https://app.intermedicina.com.br")} href="#"> 
             <div className="rounded-md border-azul border p-4 text-center  ">
               <span className="text-azul text-sm   montserrat-regular">Sou Intermedicina </span>
             </div>
-          </Link>
+          </a>
         
         </div>  
       </div>

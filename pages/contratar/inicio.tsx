@@ -138,7 +138,7 @@ const Inicio: React.FC = () => {
               <Input name="nome" placeholder="Nome" />
               <InputMask mask="(99)99999-9999" maskplaceholder="_"  name="celular" placeholder="Celular" />
               <Input name="email" placeholder="E-mail" />  
-              <button className="bg-verde rounded-md mt-2 mb-2 flex justify-between items-center text-white w-full p-4" type="submit">Continuar<Image src="/assets/arrowRight.svg" width={19} height={13}/></button> 
+              <button className="bg-verde rounded-md mt-2 mb-2 flex justify-between items-center text-xs  text-white w-full p-4" type="submit">Continuar<Image src="/assets/arrowRight.svg" width={19} height={13}/></button> 
 
         </Form>
 

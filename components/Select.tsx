@@ -8,6 +8,7 @@ import React, {
 import { IconBaseProps } from 'react-icons';
 import { FiChevronDown } from 'react-icons/fi';
 import { useField } from '@unform/core'; 
+import { isIOS } from 'react-device-detect';
 
 interface Props extends SelectHTMLAttributes<HTMLSelectElement> {
   small?:boolean;
@@ -48,7 +49,7 @@ const Select: React.FC<Props> = ({ name, small=false, disabled=false, legend, ch
     
       {!!legend && <legend className={`px-1 text-xxs text-azul  ${disabled && 'text-cinza-claro'} ${!!error && 'text-vermelho'}  ${isFilled && ' text-azul'} ${isFocused && ' text-azul'}`}>{legend}</legend> }
       <select
-        className={`w-full text-input md:text-xs  bg-white placeholder-azul text-azul  ${disabled && 'text-cinza-claro'} ${!!error && 'placeholder-vermelho text-vermelho'}  ${isFilled && 'placeholder-azul text-azul'} ${isFocused && 'placeholder-azul text-azul'}`}
+        className={`w-full text-xs ${isIOS && 'text-input'} bg-white placeholder-azul text-azul  ${disabled && 'text-cinza-claro'} ${!!error && 'placeholder-vermelho text-vermelho'}  ${isFilled && 'placeholder-azul text-azul'} ${isFocused && 'placeholder-azul text-azul'}`}
         onFocus={clearError}
         onBlur={handleInputBlur}
         defaultValue={defaultValue}
@@ -57,7 +58,7 @@ const Select: React.FC<Props> = ({ name, small=false, disabled=false, legend, ch
         {...rest}
       > {children} </select>
 
-<FiChevronDown className={`${disabled && 'text-cinza-claro'} ${!!error && ' text-vermelho'}  ${isFilled && ' text-azul'} ${isFocused &&  'text-azul'}`} size={16}/>
+    <FiChevronDown className={`${disabled && 'text-cinza-claro'} ${!!error && ' text-vermelho'}  ${isFilled && ' text-azul'} ${isFocused &&  'text-azul'}`}  color="#138FCE" size={20}/>
      
     </fieldset> 
     {!!error && <span className={`${!!error && 'flex mt-1 text-left text-xxs text-vermelho'}`}>{error }</span>}

@@ -34,6 +34,7 @@ import axios from 'axios';
 
 import CryptoAES from 'crypto-js/aes';
 import CryptoENC from 'crypto-js/enc-utf8';
+import { uploadFilePost } from '../../utils/uploadFilePost';
 
 
   interface SignInFormData {
@@ -63,6 +64,8 @@ import CryptoENC from 'crypto-js/enc-utf8';
 
   const  Cadastro: React.FC = () => {
     const formRef = useRef<FormHandles>(null);
+    const uploadIdentificacaoRef = useRef<FormHandles>(null);
+    const uploadResidenciaRef = useRef<FormHandles>(null);
     const router = useRouter()
 
     var ContratarStoreRead = ContratarStore.useState(s => s)
@@ -170,117 +173,104 @@ import CryptoENC from 'crypto-js/enc-utf8';
       }
     }
    
-    //* UPLOAD IDENTIFICACAO - INICIO
-    function handleClickIdentificacao(){
-      const uploadButton = formRef.current.getFieldRef("uploadIdentificacao")//*
+ 
+
+    function handleClickUpload(type){
+      var uploadButton = null
+      switch (type) {
+        case "identificacao":   uploadButton = uploadIdentificacaoRef.current.getFieldRef("file"); break;
+        case "residencia":   uploadButton = uploadResidenciaRef.current.getFieldRef("file"); break;
+        //case "energia":   uploadButton = uploadEnergiaRef.current.getFieldRef("file"); break; 
+      }
+      
       uploadButton.click()
-    }
+    } 
 
-    function removeFileIdentificacao(filename){
+
+    function setLoadingUpload(value,type){
+      var uploadButton = null
+      switch (type) {
+        case "identificacao":   setLoadingUploadIdentificacao(value); break;
+        case "residencia":   setLoadingUploadResidencia(value); break;
+        //case "energia":   setLoadingUploadEnergia(value); break; 
+      }  
+    } 
+
+    function removeFileStore(filename,type){
       var newArr=[]
-      ContratarStoreRead.fileNameUploadIdentificacao.map(s => {
-        if ( s != filename) { 
-          newArr.push(s) 
-        }
-      })
-    
-      ContratarStore.update(s => {
-        s.fileNameUploadIdentificacao = newArr
-      })
+      switch (type) {
+        case "identificacao":   
+        ContratarStoreRead.fileNameUploadIdentificacao.map(s => { s != filename &&  newArr.push(s) })
+        ContratarStore.update(s => { s.fileNameUploadIdentificacao = newArr })
+        formRef.current.setFieldValue("anexoIdentificacao",String(newArr))
+        
+        break;
+        case "residencia":   
+        ContratarStoreRead.fileNameUploadResidencia.map(s => { s != filename &&  newArr.push(s) })
+        ContratarStore.update(s => { s.fileNameUploadResidencia = newArr })
+        formRef.current.setFieldValue("anexoResidencia",String(newArr))
+        break;
 
-      formRef.current.setFieldValue("anexoIdentificacao",String(newArr))
+        case "energia":   
+        //ContratarStoreRead.fileNameUploadEnergia.map(s => { s != filename &&  newArr.push(s) })
+        //ContratarStore.update(s => { s.fileNameUploadEnergia = newArr })
+        //formRef.current.setFieldValue("anexoEnergia",String(newArr))
+
+        break; 
+      }
+      
       removeFile(filename) 
     }
+ 
+ 
 
-    const handleUploadIdentificacao = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-      const file = e.target.files?.[0];
-      if (!file) {}
-      else{
-        setLoadingUploadIdentificacao(true) //*
-        uploadFile(e).then(result => {
-          setLoadingUploadIdentificacao(false) //*
-            var newArr=[]
+    const handleUploadIdentificacao = useCallback((e: ChangeEvent<HTMLInputElement>) => { 
+      const files = uploadIdentificacaoRef.current.getFieldRef("file").files
+      if(files.length > 0 ){
+        setLoadingUpload(true,'identificacao') //*
+        var filename = e.file  
+        var formData = new FormData()
+        formData.append("file", files[0])
+        uploadFilePost(formData,filename).then(result =>{
+          setLoadingUpload(false,'identificacao')
+          var newArr=[]
             ContratarStoreRead.fileNameUploadIdentificacao.map(s => newArr.push(s))
             if(result != undefined && result != "" ){
-              newArr.push(result)
+              newArr.push(result) 
             }
             ContratarStore.update(s => {
               s.fileNameUploadIdentificacao = newArr
             })
             formRef.current.setFieldValue("anexoIdentificacao",String(newArr))
-
-          checkIfFileExists(result).then(result => {
-              if (result == false){
-                ContratarStore.update(s => {
-                  s.fileNameUploadIdentificacao = []
-                })
-
-                formRef.current.setFieldValue("anexoIdentificacao","")
-                alert("Erro ao fazer envio do arquivo, tente novamente.")
-              }
-          })
-        })
+        }
+        )
       }
     }, [ContratarStoreRead.fileNameUploadIdentificacao]);
+ 
 
-   //* UPLOAD IDENTIFICACAO - FIM
-
-
-
-    //* UPLOAD RESIDENCIA - INICIO
-    function handleClickResidencia(){
-      const uploadButton = formRef.current.getFieldRef("uploadResidencia")//*
-      uploadButton.click()
-    }
-
-    function removeFileResidencia(filename){
-      var newArr=[]
-      ContratarStoreRead.fileNameUploadResidencia.map(s => {
-        if ( s != filename) { 
-          newArr.push(s) 
-        }
-      })
-    
-      ContratarStore.update(s => {
-        s.fileNameUploadResidencia= newArr
-      })
-      formRef.current.setFieldValue("anexoResidencia",String(newArr))
-      removeFile(filename) 
-    }
-
-    const handleUploadResidencia = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-      const file = e.target.files?.[0];
-      if (!file) {}
-      else{
-        setLoadingUploadResidencia(true) //*
-        uploadFile(e).then(result => {
-          setLoadingUploadResidencia(false) //*
-            var newArr=[]
+ 
+    const handleUploadResidencia = useCallback((e: ChangeEvent<HTMLInputElement>) => { 
+      const files = uploadResidenciaRef.current.getFieldRef("file").files
+      if(files.length > 0 ){
+        setLoadingUpload(true,'residencia') //*
+        var filename = e.file  
+        var formData = new FormData()
+        formData.append("file", files[0])
+        uploadFilePost(formData,filename).then(result =>{
+          setLoadingUpload(false,'residencia')
+          var newArr=[]
             ContratarStoreRead.fileNameUploadResidencia.map(s => newArr.push(s))
             if(result != undefined && result != "" ){
-              newArr.push(result)
+              newArr.push(result) 
             }
             ContratarStore.update(s => {
               s.fileNameUploadResidencia = newArr
             })
             formRef.current.setFieldValue("anexoResidencia",String(newArr))
-
-          checkIfFileExists(result).then(result => {
-              if (result == false){
-                ContratarStore.update(s => {
-                  s.fileNameUploadResidencia= []
-                })
-
-                formRef.current.setFieldValue("anexoResidencia","")
-                alert("Erro ao fazer envio do arquivo, tente novamente.")
-              }
-          })
-        })
+        }
+        )
       }
     }, [ContratarStoreRead.fileNameUploadResidencia]);
-
-   //* UPLOAD RESIDENCIA - FIM
-
    
 
     useEffect(()=>{ 
@@ -454,7 +444,7 @@ import CryptoENC from 'crypto-js/enc-utf8';
             </div>
               
             <div className="flex gap-2">   
-            <div className="w-full mr-1">
+            <div className="w-full  mr-1">
                   <Select name="estadocivil" defaultValue="" legend="ESTADO CIVIL" small>
                   <option value="" disabled>Selecione</option>
                   <option value="Solteiro">Solteiro</option>
@@ -479,9 +469,9 @@ import CryptoENC from 'crypto-js/enc-utf8';
                </div> 
                
  
-              <File name="uploadIdentificacao" onInput={handleUploadIdentificacao}/>
+              {/*<File name="uploadIdentificacao" onInput={handleUploadIdentificacao}/> */}
 
-              <a className="bg-laranja rounded-md text-xxs  w-2/4 text-white montserrat-bold px-1.5 py-2 flex items-center text-center" onClick={handleClickIdentificacao}>
+              <a className="bg-laranja rounded-md text-xxs  w-2/4 text-white montserrat-bold px-1.5 py-2 flex items-center text-center" onClick={()=> handleClickUpload("identificacao")}>
                 { !loadingUploadIdentificacao
               ? <>
                   <Image className="pr-1 w-3 h-3"  src="/assets/file.svg" width={12} height={12}/>
@@ -496,7 +486,7 @@ import CryptoENC from 'crypto-js/enc-utf8';
                 </a> 
 
                 { ContratarStoreRead.fileNameUploadIdentificacao && ContratarStoreRead.fileNameUploadIdentificacao.map( filename => 
-                  <a  className="bg-cinza bg-opacity-20 rounded-md flex justify-between w-full montserrat-regular text-cinza items-center p-2 mt-2 text-xs" key={filename}> <span>{reduceName(filename)}</span> <Image onClick={()=>{removeFileIdentificacao(filename)}} src="/assets/remove.svg" width={12} height={12}/></a> 
+                  <a  className="bg-cinza bg-opacity-20 rounded-md flex justify-between w-full montserrat-regular text-cinza items-center p-2 mt-2 text-xs" key={filename}> <span>{reduceName(filename)}</span> <Image onClick={()=>{removeFileStore(filename,'identificacao')}} src="/assets/remove.svg" width={12} height={12}/></a> 
                 )} 
                
 
@@ -544,12 +534,9 @@ import CryptoENC from 'crypto-js/enc-utf8';
               <div className="text-xs text-cinza montserrat-regular my-2">
                   Cópia do seu <strong>comprovante de residência</strong>,<br/>
                   luz, água, telefone, banco ou similares.
-               </div>  
+               </div>   
 
-               
-              <File name="uploadResidencia" onInput={handleUploadResidencia}/>
-
-              <a className="bg-laranja rounded-md text-xxs  w-2/4 text-white montserrat-bold px-1.5 py-2 flex items-center text-center" onClick={handleClickResidencia}>
+              <a className="bg-laranja rounded-md text-xxs  w-2/4 text-white montserrat-bold px-1.5 py-2 flex items-center text-center" onClick={()=> handleClickUpload("residencia")}>
                 { !loadingUploadResidencia
               ? <>
                   <Image className="pr-1 w-3 h-3"  src="/assets/file.svg" width={12} height={12}/>
@@ -564,7 +551,7 @@ import CryptoENC from 'crypto-js/enc-utf8';
                 </a> 
 
                 { ContratarStoreRead.fileNameUploadResidencia && ContratarStoreRead.fileNameUploadResidencia.map( filename => 
-                  <a  className="bg-cinza bg-opacity-20 rounded-md flex justify-between w-full montserrat-regular text-cinza items-center p-2 mt-2 text-xs" key={filename}> <span>{reduceName(filename)}</span> <Image onClick={()=>{removeFileResidencia(filename)}} src="/assets/remove.svg" width={12} height={12}/></a> 
+                  <a  className="bg-cinza bg-opacity-20 rounded-md flex justify-between w-full montserrat-regular text-cinza items-center p-2 mt-2 text-xs" key={filename}> <span>{reduceName(filename)}</span> <Image onClick={()=>{removeFileStore(filename,'residencia')}} src="/assets/remove.svg" width={12} height={12}/></a> 
                 )}    
               <InvisibleCheck  name="anexoResidencia"></InvisibleCheck> 
 
@@ -612,6 +599,14 @@ import CryptoENC from 'crypto-js/enc-utf8';
               <InvisibleCheck  name="politicaprivacidade"></InvisibleCheck> 
           <button className="mt-2 mb-2 montserrat-regular text-sm bg-verde justify-between flex items-center w-full text-white  rounded-md p-4" type="submit">Continuar<Image src="/assets/arrowRight.svg" width={19} height={13}/></button> 
           
+        </Form>
+
+        <Form ref={uploadIdentificacaoRef} encType="multipart/form-data"  onSubmit={handleUploadIdentificacao}>  
+          <File name="file" onInput={()=> (uploadIdentificacaoRef.current.submitForm())}/>
+        </Form>
+
+        <Form ref={uploadResidenciaRef} encType="multipart/form-data"  onSubmit={handleUploadResidencia}>  
+          <File name="file" onInput={()=> (uploadResidenciaRef.current.submitForm())}/>
         </Form>
 
       </div> 
