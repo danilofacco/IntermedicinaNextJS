@@ -172,23 +172,19 @@ import { uploadFilePost } from '../../utils/uploadFilePost';
         return `${varString}` 
       }
     }
-   
- 
-
+     
     function handleClickUpload(type){
       var uploadButton = null
       switch (type) {
         case "identificacao":   uploadButton = uploadIdentificacaoRef.current.getFieldRef("file"); break;
         case "residencia":   uploadButton = uploadResidenciaRef.current.getFieldRef("file"); break;
         //case "energia":   uploadButton = uploadEnergiaRef.current.getFieldRef("file"); break; 
-      }
-      
+      } 
       uploadButton.click()
     } 
 
 
-    function setLoadingUpload(value,type){
-      var uploadButton = null
+    function setLoadingUpload(value,type){ 
       switch (type) {
         case "identificacao":   setLoadingUploadIdentificacao(value); break;
         case "residencia":   setLoadingUploadResidencia(value); break;
@@ -217,8 +213,7 @@ import { uploadFilePost } from '../../utils/uploadFilePost';
         //formRef.current.setFieldValue("anexoEnergia",String(newArr))
 
         break; 
-      }
-      
+      } 
       removeFile(filename) 
     }
  
@@ -505,7 +500,7 @@ import { uploadFilePost } from '../../utils/uploadFilePost';
  
                 <div className="flex ">
                   
-                <div className="w-full ml-1">
+                <div className="w-full mr-1">
                 <Input name="numero"  legend="NÚMERO" small   />
                 </div>
                 <div className="w-full ml-1 mr-1">
@@ -524,7 +519,7 @@ import { uploadFilePost } from '../../utils/uploadFilePost';
                 
                 <div className="flex"> 
                 
-                <div className="w-full ml-1">
+                <div className="w-full mr-1">
                   <Input name="cidade"  legend="CIDADE" small /> 
                   </div>
                   <div className="w-full ml-1">

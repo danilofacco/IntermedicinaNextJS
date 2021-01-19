@@ -24,19 +24,22 @@ import { uploadFile } from '../../../utils/uploadFile';
 import { SpinnerCircularFixed } from 'spinners-react';
 import { useRouter } from 'next/router';
 import InputMask from '../../../components/InputMask';
+import { uploadFilePost } from '../../../utils/uploadFilePost';
 
 
 const Pagamento : React.FC = () => {
 
-  const formRef = useRef(null);
+  const formRef = useRef(null); 
+  const uploadTalaoRef = useRef(null);
 
   const router = useRouter()
   const [metodo,setMetodo] = useState("cartao");
   const ContratarStoreRead = ContratarStore.useState(s => s)
+  const [simOuNao , setSimOuNao] = useState(null)
 
   useEffect(()=>{
-    var Store = JSON.parse(localStorage.getItem('Intermedicina@ContratarStore'))
-    Store ? ContratarStore.update(s => Store) : null
+    //var Store = JSON.parse(localStorage.getItem('Intermedicina@ContratarStore'))
+    //Store ? ContratarStore.update(s => Store) : null
   },[])
   
 
@@ -58,6 +61,7 @@ const Pagamento : React.FC = () => {
   }
   
   function mesmoTitular(resposta){
+    setSimOuNao(resposta)
     resposta ?  formRef.current.setFieldValue("nomeTitularEnergia",ContratarStoreRead.nome): formRef.current.setFieldValue("nomeTitularEnergia","")
     resposta ?  formRef.current.setFieldValue("cpfTitularEnergia",ContratarStoreRead.cpf): formRef.current.setFieldValue("cpfTitularEnergia","")    
   }
@@ -75,55 +79,77 @@ const Pagamento : React.FC = () => {
     const [loadingUploadTalao,setLoadingUploadTalao] = useState(false)
     const [fileNameUploadTalao, setFileNameUploadTalao] = useState([])
 
-    function handleClickTalao(){
-      const uploadButton = formRef.current.getFieldRef("uploadTalao")//*
+    function handleClickUpload(type){
+      var uploadButton = null
+      switch (type) {
+        //case "identificacao":   uploadButton = uploadIdentificacaoRef.current.getFieldRef("file"); break;
+        //case "residencia":   uploadButton = uploadResidenciaRef.current.getFieldRef("file"); break;
+        case "talao":   uploadButton = uploadTalaoRef.current.getFieldRef("file"); break; 
+      } 
       uploadButton.click()
-    }
+    } 
 
-    function removeFileTalao(filename){
+
+    function setLoadingUpload(value,type){ 
+      switch (type) {
+        //case "identificacao":   setLoadingUploadIdentificacao(value); break;
+        //case "residencia":   setLoadingUploadResidencia(value); break;
+         case "talao":   setLoadingUploadTalao(value); break; 
+      }  
+    } 
+
+    function removeFileStore(filename,type){
       var newArr=[]
-      ContratarStoreRead.fileNameUploadTalao.map(s => {
-        if ( s != filename) { 
-          newArr.push(s) 
-        }
-      })
-    
-      ContratarStore.update(s => {
-        s.fileNameUploadTalao= newArr
-      })
+      switch (type) {
+        case "identificacao":   
+        ContratarStoreRead.fileNameUploadIdentificacao.map(s => { s != filename &&  newArr.push(s) })
+        ContratarStore.update(s => { s.fileNameUploadIdentificacao = newArr })
+        formRef.current.setFieldValue("anexoIdentificacao",String(newArr))
+        
+        break;
+        case "residencia":   
+        ContratarStoreRead.fileNameUploadResidencia.map(s => { s != filename &&  newArr.push(s) })
+        ContratarStore.update(s => { s.fileNameUploadResidencia = newArr })
+        formRef.current.setFieldValue("anexoResidencia",String(newArr))
+        break;
+
+        case "talao":   
+        //ContratarStoreRead.fileNameUploadEnergia.map(s => { s != filename &&  newArr.push(s) })
+        //ContratarStore.update(s => { s.fileNameUploadEnergia = newArr })
+        //formRef.current.setFieldValue("anexoEnergia",String(newArr))
+
+        break; 
+      } 
       removeFile(filename) 
     }
+ 
+ 
 
-    const handleUploadTalao = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-      const file = e.target.files?.[0];
-      if (!file) {}
-      else{
-        setLoadingUploadTalao(true) //*
-        uploadFile(e).then(result => {
-          setLoadingUploadTalao(false) //*
-            var newArr=[]
-            ContratarStoreRead.fileNameUploadTalao.map(s => newArr.push(s))
+    const handleUploadTalao = useCallback((e: ChangeEvent<HTMLInputElement>) => { 
+      const files = uploadTalaoRef.current.getFieldRef("file").files
+      if(files.length > 0 ){
+        setLoadingUpload(true,'talao') //*
+        //@ts-ignore
+        var filename = e.file  
+        var formData = new FormData()
+        formData.append("file", files[0])
+        uploadFilePost(formData,filename).then(result =>{
+          setLoadingUpload(false,'talao')
+          var newArr=[]
+            ContratarStoreRead.fileNameUploadIdentificacao.map(s => newArr.push(s))
             if(result != undefined && result != "" ){
-              newArr.push(result)
+              newArr.push(result) 
             }
             ContratarStore.update(s => {
-              s.fileNameUploadTalao = newArr
+              s.fileNameUploadIdentificacao = newArr
             })
-
-          checkIfFileExists(result).then(result => {
-              if (result == false){
-                ContratarStore.update(s => {
-                  s.fileNameUploadTalao= []
-                })
-                alert("Erro ao fazer envio do arquivo, tente novamente.")
-              }
-          })
-        })
+            formRef.current.setFieldValue("anexoTalao",String(newArr))
+        }
+        )
       }
-    }, [ContratarStoreRead.fileNameUploadTalao]);
+    }, [ContratarStoreRead.fileNameUploadIdentificacao]);
 
-   //* UPLOAD TALÃO - FIM
-
+    
   interface SignInFormData {
     email: string;
     nome: string;
@@ -210,8 +236,8 @@ const Pagamento : React.FC = () => {
       </span>
 
       <div className="flex w-full justify-center gap-2 text-white text-xs montserrat-regular"> 
-          <a className="bg-azul rounded-md flex py-1 px-4" onClick={()=>mesmoTitular(true)}><span></span><strong> SIM </strong></a>
-          <a className="bg-azul rounded-md flex py-1 px-4"  onClick={()=>mesmoTitular(false)}><span></span><strong> NÃO </strong></a>
+          <a className={`${  (simOuNao && simOuNao != null) ? "bg-azul" : "bg-cinza"} rounded-md flex py-1 px-4 mr-1`} onClick={()=>mesmoTitular(true)}><span></span><strong> SIM </strong></a>
+          <a className={`${ (!simOuNao && simOuNao != null) ? "bg-azul" : "bg-cinza"} rounded-md flex py-1 px-4 ml-1`} onClick={()=>mesmoTitular(false)}><span></span><strong> NÃO </strong></a>
        
        </div>
 
@@ -220,16 +246,11 @@ const Pagamento : React.FC = () => {
       
           <InputMask mask="999.999.999-99" maskplaceholder="_" name="cpfTitularEnergia"  legend="CPF DO TITULAR DA CONTA DE ENERGIA" onBlur={onChangeCPF}   />
        
-          <Input type="number" name="numeroInstalacaoEnergia" legend="INSTALAÇÃO OU IDENTIFICAÇÃO DO TALÃO"   />  
+          <Input  name="numeroInstalacaoEnergia" legend="INSTALAÇÃO OU IDENTIFICAÇÃO DO TALÃO"   />  
          
-          <span className="text-xs montserrat-regular text-cinza  ">Cópia do <strong>talão de energia.</strong></span>
+          <span className="text-xs montserrat-regular text-cinza">Cópia do <strong>talão de energia.</strong></span>
              
-             
-                
-
-              <File name="uploadTalao" onInput={handleUploadTalao}/>
-            
-                <a className="bg-laranja rounded-md text-xxs  w-2/4 text-white montserrat-bold px-1.5 py-2 flex items-center text-center" onClick={handleClickTalao}>
+                <a className="bg-laranja rounded-md text-xxs  w-2/4 text-white montserrat-bold px-1.5 py-2 flex items-center text-center" onClick={()=>handleClickUpload("talao")}>
                 { !loadingUploadTalao
               ? <>
                   <Image className="pr-1 w-3 h-3"  src="/assets/file.svg" width={12} height={12}/>
@@ -265,6 +286,10 @@ const Pagamento : React.FC = () => {
  
 
       </Form>
+      
+      <Form ref={uploadTalaoRef} encType="multipart/form-data"  onSubmit={handleUploadTalao}>  
+          <File name="file" onInput={()=> (uploadTalaoRef.current.submitForm())}/>
+        </Form>
 
 
       <div className="text-xxs montserrat-regular p-2 leading-3 text-gray-500 uppercase">

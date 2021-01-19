@@ -26,8 +26,8 @@ const Pagamento : React.FC = () => {
   const ContratarStoreRead = ContratarStore.useState(s => s)
 
   useEffect(()=>{
-    var Store = JSON.parse(localStorage.getItem('Intermedicina@ContratarStore'))
-    Store ? ContratarStore.update(s => Store) : null
+    //var Store = JSON.parse(localStorage.getItem('Intermedicina@ContratarStore'))
+    //Store ? ContratarStore.update(s => Store) : null
   },[])
 
 
