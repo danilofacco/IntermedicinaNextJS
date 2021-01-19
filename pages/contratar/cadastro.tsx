@@ -424,7 +424,7 @@ import { uploadFilePost } from '../../utils/uploadFilePost';
           
           <div className="flex  ">
             <div className="w-1/3 mr-1">
-            <Input  name="celular"  legend="CELULAR" small disabled  />
+            <Input  name="celular"  inputMode="numeric"   legend="CELULAR" small disabled  />
             </div>
             <div className="w-2/3 ml-1">
             <Input   name="email"  legend="EMAIL" small disabled   /> 
@@ -433,10 +433,10 @@ import { uploadFilePost } from '../../utils/uploadFilePost';
 
            <div className="flex "> 
            <div className="w-full mr-1">
-              <InputMask mask="99/99/9999" maskplaceholder="_"  name="datanasc" legend="DATA DE NASCIMENTO" small />
+              <InputMask mask="99/99/9999" inputMode="numeric"   maskplaceholder="_"  name="datanasc" legend="DATA DE NASCIMENTO" small />
           </div>  
           <div className="w-full ml-1">
-              <InputMask mask="999.999.999-99" maskplaceholder="_"  name="cpf"  legend="CPF"   small   />
+              <InputMask mask="999.999.999-99"  inputMode="numeric"   maskplaceholder="_"  name="cpf"  legend="CPF"   small   />
               </div>
             </div>
               
@@ -494,7 +494,7 @@ import { uploadFilePost } from '../../utils/uploadFilePost';
  
                 
                <span className="text-xs mt-3 montserrat-bold text-center w-full justify-center text-cinza"><strong>ENDEREÇO</strong></span>
-               <InputMask mask="99999-999" maskplaceholder="_" name="cep" onChange={OnChangeCEP} legend="CEP" small />
+               <InputMask inputMode="numeric"  mask="99999-999" maskplaceholder="_" name="cep" onChange={OnChangeCEP} legend="CEP" small />
 
                <Input name="rua"  legend="RUA" small   />
  
