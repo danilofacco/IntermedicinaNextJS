@@ -228,6 +228,7 @@ import { uploadFilePost } from '../../utils/uploadFilePost';
       const files = uploadIdentificacaoRef.current.getFieldRef("file").files
       if(files.length > 0 ){
         setLoadingUpload(true,'identificacao') //*
+        //@ts-ignore
         var filename = e.file  
         var formData = new FormData()
         formData.append("file", files[0])
@@ -253,6 +254,7 @@ import { uploadFilePost } from '../../utils/uploadFilePost';
       const files = uploadResidenciaRef.current.getFieldRef("file").files
       if(files.length > 0 ){
         setLoadingUpload(true,'residencia') //*
+        //@ts-ignore
         var filename = e.file  
         var formData = new FormData()
         formData.append("file", files[0])
