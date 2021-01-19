@@ -513,8 +513,7 @@ import { uploadFilePost } from '../../utils/uploadFilePost';
                   )}
                  
                   </Select>
-                  </div>
-
+                  </div> 
                 </div> 
                 
                 <div className="flex"> 
