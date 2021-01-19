@@ -57,11 +57,11 @@ const Select: React.FC<Props> = ({ name, small=false, disabled=false, legend, ch
         ref={inputRef}
         {...rest}
       > {children} </select>
-
-    <FiChevronDown className={`${disabled && 'text-cinza-claro'} ${!!error && ' text-vermelho'}  ${isFilled && ' text-azul'} ${isFocused &&  'text-azul'}`}  color="#138FCE" size={20}/>
-     
+      
+      <FiChevronDown color={`${disabled && '#C8CDD1'} ${!!error && '#E2202C'}  ${isFilled && '#138FCE'} ${isFocused &&  '#138FCE'} `} size={20}/>
+      
     </fieldset> 
-    {!!error && <span className={`${!!error && 'flex mt-1 text-left text-xxs text-vermelho'}`}>{error }</span>}
+    {!!error && <span className={`${!!error && 'flex mt-1 text-left text-xxs text-vermelho'}`}>{error}</span>}
    </div>
   );
 };
