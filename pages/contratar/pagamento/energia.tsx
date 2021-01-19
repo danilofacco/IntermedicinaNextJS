@@ -8,19 +8,13 @@ import Image from 'next/image'
 import { Form } from '@unform/web';
 import Input from '../../../components/Input';
 import {ContratarStore} from '../../../store/contratar' 
-
-
-import CryptoAES from 'crypto-js/aes';
-import CryptoENC from 'crypto-js/enc-utf8';
-
+   
 import File from '../../../components/FileInput' 
 
 import getValidationErrors from '../../../utils/getValidationErrors'; 
 import Select from '../../../components/Select';
 import { CPFValidation } from '../../../utils/CPFValidation';
-import { checkIfFileExists } from '../../../utils/checkIfFileExists';
 import { removeFile } from '../../../utils/removeFile';
-import { uploadFile } from '../../../utils/uploadFile';
 import { SpinnerCircularFixed } from 'spinners-react';
 import { useRouter } from 'next/router';
 import InputMask from '../../../components/InputMask';
