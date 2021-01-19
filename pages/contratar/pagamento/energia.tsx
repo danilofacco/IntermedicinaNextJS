@@ -267,7 +267,7 @@ const Pagamento : React.FC = () => {
                 
 
                 { ContratarStoreRead.fileNameUploadTalao && ContratarStoreRead.fileNameUploadTalao.map( filename => 
-                  <a  className="bg-cinza bg-opacity-20 rounded-md flex justify-between w-full montserrat-regular text-cinza items-center p-2 mt-2 text-xs" key={filename}> <span>{reduceName(filename)}</span> <Image onClick={()=>{removeFileTalao(filename)}} src="/assets/remove.svg" width={12} height={12}/></a> 
+                  <a  className="bg-cinza bg-opacity-20 rounded-md flex justify-between w-full montserrat-regular text-cinza items-center p-2 mt-2 text-xs" key={filename}> <span>{reduceName(filename)}</span> <Image onClick={()=>{removeFileStore(filename,'talao')}} src="/assets/remove.svg" width={12} height={12}/></a> 
                 )}
                   
 
