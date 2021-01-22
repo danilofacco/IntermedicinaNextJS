@@ -1,4 +1,3 @@
- 
 import React, { useCallback, ChangeEvent, useEffect, useRef ,useState} from 'react';
 import * as Yup from 'yup';
 import HeaderContratar from '../../components/HeaderContratar'
@@ -23,25 +22,20 @@ import {checkAge} from '../../utils/checkAge'
 import {CPFValidation} from '../../utils/CPFValidation'
 import {sendSMS} from '../../utils/sendSMS'
 import {sendEmailCV} from '../../utils/sendEmailCV'
-import { uploadFile } from '../../utils/uploadFile'
-import { checkIfFileExists } from '../../utils/checkIfFileExists' 
 import { removeFile } from '../../utils/removeFile'
 import { SpinnerCircularFixed } from 'spinners-react';
-import InvisibleCheck from '../../components/InvisibleCheck';
-import { dadosCadastro } from '../../utils/dadosCadastro';
+import InvisibleCheck from '../../components/InvisibleCheck'; 
 import axios from 'axios';
 
-
-import CryptoAES from 'crypto-js/aes';
-import CryptoENC from 'crypto-js/enc-utf8';
 import { uploadFilePost } from '../../utils/uploadFilePost';
+import { CarregarDados, SalvarDados } from '../../utils/LocalStorage';
+import { dadosCadastro } from '../../utils/dadosCadastro';
 
-
-  interface SignInFormData {
+interface SignInFormData {
+    cv: number;
     email: string;
     nome: string;
     celular: string;
-
     datanasc: string;
     cpf: string;
     estadocivil: string;
@@ -55,9 +49,8 @@ import { uploadFilePost } from '../../utils/uploadFilePost';
     ibge: string;
     codmunicipio: string;
     estado: string;
-    anexo1: string;
-    anexo2: string;   
-    MerchantOrderId: string;   
+    anexoIdentificacao: string;
+    anexoResidencia: string;    
     id: string;   
   } 
 
@@ -67,67 +60,56 @@ import { uploadFilePost } from '../../utils/uploadFilePost';
     const uploadIdentificacaoRef = useRef<FormHandles>(null);
     const uploadResidenciaRef = useRef<FormHandles>(null);
     const router = useRouter()
+    
 
-    var ContratarStoreRead = ContratarStore.useState(s => s)
+    const [refresh,setRefresh] = useState(Math.random())
+    const ContratarStoreRead = ContratarStore.useState(s => s)
     const [sendMessage, setSendMessage] = useState("")
     const [sendMessageStrong,setSendMessageStrong] = useState("")
     const [loadingUploadIdentificacao,setLoadingUploadIdentificacao] = useState(false)
     const [loadingUploadResidencia,setLoadingUploadResidencia] = useState(false)
-    const [fileNameUploadIdentificacao, setFileNameUploadIdentificacao] = useState([])
-    const [fileNameUploadResidencia, setFileNameUploadResidencia] = useState([])
     const [cvRandom, setCvRandom] = useState(Math.floor(Math.random() * (99999 - 10000 + 1) + 10000))
     const [checkIcon, setCheckIcon] = useState("/assets/check.svg")
     const [checkedPoliticaPrivacidade, setCheckedPoliticaPrivacidade] = useState(false)
     const [textoPoliticaDePrivacidade, setTextoPoliticaDePrivacidade] = useState("Carregando ...")
- 
+  
+    useEffect(()=>{
+      ContratarStore.update(s=> CarregarDados())  
+      
+      setRefresh(Math.random())
+    },[])
+  
+    useEffect(()=>{ 
+      SalvarDados(ContratarStoreRead)  
+    },[ContratarStoreRead])
+  
 
     useEffect(()=>{ 
-      //carregar e descriptografar
-    var temp = localStorage.getItem('Intermedicina@ContratarStore') 
-    var bytes = CryptoAES.decrypt(temp, 'Intermedicina@2020')
-    var Store = JSON.parse(bytes.toString(CryptoENC)) 
+      formRef.current.setFieldValue("nome", ContratarStoreRead.nome) 
+      formRef.current.setFieldValue("email", ContratarStoreRead.email) 
+      formRef.current.setFieldValue("celular", ContratarStoreRead.tel)
+      formRef.current.setFieldValue("cpf", ContratarStoreRead.cpf)
+      formRef.current.setFieldValue("datanasc", ContratarStoreRead.datanasc)
+      formRef.current.setFieldValue("estadocivil", ContratarStoreRead.estadocivil)
+      formRef.current.setFieldValue("genero", ContratarStoreRead.genero)
+      formRef.current.setFieldValue("cep", ContratarStoreRead.endereco.cep)
+      formRef.current.setFieldValue("rua", ContratarStoreRead.endereco.rua)
+      formRef.current.setFieldValue("numero", ContratarStoreRead.endereco.numero)
+      formRef.current.setFieldValue("complemento", ContratarStoreRead.endereco.complemento)
+      formRef.current.setFieldValue("bairro", ContratarStoreRead.endereco.bairro)
+      formRef.current.setFieldValue("cidade", ContratarStoreRead.endereco.cidade)
+      formRef.current.setFieldValue("ibge", ContratarStoreRead.endereco.ibge)
+      formRef.current.setFieldValue("codmunicipio", ContratarStoreRead.endereco.codmunicipio)
+      formRef.current.setFieldValue("estado", ContratarStoreRead.endereco.estado)
+      formRef.current.setFieldValue("anexoIdentificacao",  ContratarStoreRead.fileNameUploadIdentificacao && String(ContratarStoreRead.fileNameUploadIdentificacao))
+      formRef.current.setFieldValue("anexoResidencia", ContratarStoreRead.fileNameUploadResidencia && String(ContratarStoreRead.fileNameUploadResidencia))
 
-      Store && ContratarStore.update(s=> Store) 
-
-         formRef.current.setFieldValue("nome", Store.nome) 
-         formRef.current.setFieldValue("email", Store.email) 
-         formRef.current.setFieldValue("celular", Store.tel) 
-         formRef.current.setFieldValue("datanasc", Store.datanasc)
-         formRef.current.setFieldValue("estadocivil", Store.estadocivil)
-         formRef.current.setFieldValue("genero", Store.genero)
-         formRef.current.setFieldValue("cep", Store.endereco.cep)
-         formRef.current.setFieldValue("rua", Store.endereco.rua)
-         formRef.current.setFieldValue("numero", Store.endereco.numero)
-         formRef.current.setFieldValue("complemento", Store.endereco.complemento)
-         formRef.current.setFieldValue("bairro", Store.endereco.bairro)
-         formRef.current.setFieldValue("cidade", Store.endereco.cidade)
-         formRef.current.setFieldValue("ibge", Store.endereco.ibge)
-         formRef.current.setFieldValue("codmunicipio", Store.endereco.codmunicipio)
-         formRef.current.setFieldValue("estado", Store.endereco.estado)
-         formRef.current.setFieldValue("anexo1", Store.anexo1)
-         formRef.current.setFieldValue("anexo2", Store.anexo2)
-         formRef.current.setFieldValue("MerchantOrderId", Store.MerchantOrderId)
-         formRef.current.setFieldValue("id", Store.id) 
- 
-         axios.get(Store.LinkPoliticaDePrivacidade).then( (response) => {
+         axios.get(ContratarStoreRead.LinkPoliticaDePrivacidade).then( (response) => {
           if(response.data && response.data.content){ 
            setTextoPoliticaDePrivacidade(response.data.content.rendered)
           }
-       })
-
-  
-
-
-      },[formRef])
- 
-    //Load Politica de Privacidade
-    useEffect(()=>{ 
-     axios.get(ContratarStoreRead.LinkPoliticaDePrivacidade).then( (response) => {
-       if(response.data && response.data.content){ 
-        setTextoPoliticaDePrivacidade(response.data.content.rendered)
-       }
-    })
-    } ,[textoPoliticaDePrivacidade]) 
+       })   
+      },[refresh])
 
 
     useEffect(()=>{ 
@@ -154,16 +136,7 @@ import { uploadFilePost } from '../../utils/uploadFilePost';
       sendEmailCV(ContratarStoreRead.email,cvRandom,ContratarStoreRead.nome)
       setSendMessage("Código enviado por e-mail para:")
       setSendMessageStrong(ContratarStoreRead.email)
-   }
-
-    function onChangeDateNasc(){
-      checkAge(formRef.current.getFieldValue("datanasc"))
-    }
-
-    function onChangeCPF(){
-      CPFValidation(formRef.current.getFieldValue("cpf"))
-    }
-
+   } 
     function reduceName(varString){
       if (varString.length > 26){
         return `${varString.substr(0,22)}...`
@@ -240,7 +213,9 @@ import { uploadFilePost } from '../../utils/uploadFilePost';
             formRef.current.setFieldValue("anexoIdentificacao",String(newArr))
         }
         )
-      }
+      } 
+ 
+
     }, [ContratarStoreRead.fileNameUploadIdentificacao]);
  
 
@@ -248,7 +223,7 @@ import { uploadFilePost } from '../../utils/uploadFilePost';
     const handleUploadResidencia = useCallback((e: ChangeEvent<HTMLInputElement>) => { 
       const files = uploadResidenciaRef.current.getFieldRef("file").files
       if(files.length > 0 ){
-        setLoadingUpload(true,'residencia') //*
+        setLoadingUpload(true,'residencia') 
         //@ts-ignore
         var filename = e.file  
         var formData = new FormData()
@@ -264,9 +239,9 @@ import { uploadFilePost } from '../../utils/uploadFilePost';
               s.fileNameUploadResidencia = newArr
             })
             formRef.current.setFieldValue("anexoResidencia",String(newArr))
-        }
-        )
+        })
       }
+      setRefresh(Math.random())
     }, [ContratarStoreRead.fileNameUploadResidencia]);
    
 
@@ -274,10 +249,12 @@ import { uploadFilePost } from '../../utils/uploadFilePost';
       formRef.current.setFieldValue('cidade', ContratarStoreRead.endereco.cidade);
       formRef.current.setFieldValue('rua', ContratarStoreRead.endereco.rua);
       formRef.current.setFieldValue('estado', ContratarStoreRead.endereco.estado);
+      formRef.current.setFieldValue('ibge', ContratarStoreRead.endereco.ibge);
+      formRef.current.setFieldValue('codmunicipio', ContratarStoreRead.endereco.codmunicipio);
       
       if(ContratarStoreRead.endereco.ibge != undefined && ContratarStoreRead.endereco.ibge.length > 4){
         getBairrosByIBGE(ContratarStoreRead.endereco.ibge)
-        }
+        } 
     },[ContratarStoreRead.endereco.cep])
 
     
@@ -297,11 +274,11 @@ import { uploadFilePost } from '../../utils/uploadFilePost';
           const schema = Yup.object().shape({
             email: Yup.string()
               .required('*É necessário preechimento')
-              .email('*Digite  um e-mail válido'),
-            nome: Yup.string().required('*É necessário preechimento'),
+              .email('*Digite  um e-mail válido'), 
+             nome: Yup.string().required('*É necessário preechimento'),
             celular: Yup.string().required('*É necessário preechimento'), 
             datanasc: Yup.string().test("len", "Data de Nascimento Inválida.", (val) => {
-              return true
+              //return true
               return checkAge(val);
             }).required('*É necessário preechimento'),
             cpf: Yup.string().test("len", "CPF Inválido.", (val) => {
@@ -319,47 +296,34 @@ import { uploadFilePost } from '../../utils/uploadFilePost';
             cv: Yup.string().test("len", "Código de verificação inválido.", (val) => {
               console.log("val:"+ cvRandom)
               return Number(val) == cvRandom;
-            }) .required('*É necessário preechimento'),
- 
+            }).required('*É necessário preechimento'), 
             politicaprivacidade: Yup.string().required('*É necessário aceitar os termos de uso e política de privacidade'), 
             anexoResidencia: Yup.string().required("*É necessário anexar ao menos um arquivo."),
-            anexoIdentificacao: Yup.string().required("*É necessário anexar ao menos um arquivo.")
-          });
-
-          console.log(data.cep)
+            anexoIdentificacao: Yup.string().required("*É necessário anexar ao menos um arquivo.")  
+         });
 
 
-          ContratarStore.update(s=>  
-            { s.datanasc = data.datanasc
-              s.cpf = data.cpf
-              s.email = data.email
-              s.estadocivil = data.estadocivil
-              s.genero = data.genero
-              s.endereco.cep = data.cep
-              s.endereco.rua = data.rua
-              s.endereco.numero = data.numero
-              s.endereco.complemento = data.complemento
-              s.endereco.bairro = data.bairro
-              s.endereco.cidade = data.cidade
-              s.endereco.ibge = data.ibge
-              s.endereco.codmunicipio = data.codmunicipio
-              s.endereco.estado = data.estado
-              //s.fileNameUploadIdentificacao = data.anexo1
-              //s.fileNameUploadResidencia = data.anexo2
-              s.MerchantOrderId = data.MerchantOrderId
-              s.id = data.id  
-            });
+         ContratarStore.update(s=>  
+          { s.datanasc = data.datanasc
+            s.cpf = data.cpf
+            s.email = data.email
+            s.estadocivil = data.estadocivil
+            s.genero = data.genero
+            s.endereco.cep = data.cep
+            s.endereco.rua = data.rua
+            s.endereco.numero = data.numero
+            s.endereco.complemento = data.complemento
+            s.endereco.bairro = data.bairro
+            s.endereco.cidade = data.cidade  
+            s.endereco.estado = data.estado
+            s.cv = data.cv
+          });  
 
-               //criptografar e salvar sempre que o Storage for alterado
-              var temp = CryptoAES.encrypt(JSON.stringify(ContratarStoreRead), 'Intermedicina@2020');
-              console.log(ContratarStoreRead)
-              localStorage.setItem('Intermedicina@ContratarStore', temp.toString());
-  
           await schema.validate(data, {
             abortEarly: false,
           }); 
         
-          
+           
           var dados = {
             datanasc: data.datanasc,
             cpf: data.cpf,
@@ -372,22 +336,17 @@ import { uploadFilePost } from '../../utils/uploadFilePost';
             bairro: data.bairro,
             cidade: data.cidade, 
             ibge: data.ibge,
-            codmunicipio: data.codmunicipio,
+            codmunicipio: ContratarStoreRead.endereco.codmunicipio,
             estado: data.estado,
-            anexo1: data.anexo1,
-            anexo2: data.anexo2,
-            MerchantOrderId: data.MerchantOrderId,   
-            id: data.id,
-          }
-           
-          dadosCadastro(dados).then(result => {
-             ContratarStore.update(s => 
-              { s.idCadastro = Number(result) 
-              });
-          })
+            anexo1: data.anexoIdentificacao,
+            anexo2: data.anexoResidencia,  
+            id: String(ContratarStoreRead.idCadastro)
+          } 
+         
+          dadosCadastro(dados).then(result => { 
+            router.push('/contratar/pagamento');
+          }) 
 
-          router.push('/contratar/pagamento');
-  
         } catch (err) {
           if (err instanceof Yup.ValidationError) {
             const errors = getValidationErrors(err);
@@ -397,17 +356,14 @@ import { uploadFilePost } from '../../utils/uploadFilePost';
         }
       },
       [ ],
-    );
-  
-
+    ); 
     return (
       <>
     <HeaderVoltarAzul voltar="/contratar/inicio"/> 
     <HeaderContratar page={2}/>
     <div className="p-4"> 
     <div className="flex flex-col w-full bg-cinza bg-opacity-5 border border-cinza border-opacity-10 rounded-md">
-
-        <div className="flex flex-col w-full p-4"> 
+      <div className="flex flex-col w-full p-4"> 
           <div className="flex flex-col w-full">  
             <span className="text-xs montserrat-medium text-cinza pb-1">ASSINATURA SELECIONADA:</span>
             <span className="text-sm montserrat-regular text-azul pb-2">Intermedicina <strong className="montserrat-bold">{ContratarStoreRead.contratoSelecionadoTitulo}</strong> <Image src="/assets/checkverde.svg" width={15} height={15}/> </span> 
@@ -420,11 +376,11 @@ import { uploadFilePost } from '../../utils/uploadFilePost';
 
         <span className="text-xs mt-3 montserrat-bold text-center w-full justify-center text-cinza"><strong>DADOS PESSOAIS</strong></span>
 
-         <Input name="nome" legend="NOME COMPLETO"  small disabled />
+         <Input name="nome" legend="NOME COMPLETO" small disabled />
           
           <div className="flex  ">
             <div className="w-1/3 mr-1">
-            <Input  name="celular"  inputMode="numeric"   legend="CELULAR" small disabled  />
+            <Input  name="celular"  inputMode="numeric" legend="CELULAR" small disabled  />
             </div>
             <div className="w-2/3 ml-1">
             <Input   name="email"  legend="EMAIL" small disabled   /> 
@@ -433,14 +389,14 @@ import { uploadFilePost } from '../../utils/uploadFilePost';
 
            <div className="flex "> 
            <div className="w-full mr-1">
-              <InputMask mask="99/99/9999" inputMode="numeric"   maskplaceholder="_"  name="datanasc" legend="DATA DE NASCIMENTO" small />
+              <InputMask mask="99/99/9999" inputMode="numeric"  maskplaceholder="_"  name="datanasc" legend="DATA DE NASCIMENTO" small />
           </div>  
           <div className="w-full ml-1">
-              <InputMask mask="999.999.999-99"  inputMode="numeric"   maskplaceholder="_"  name="cpf"  legend="CPF"   small   />
+              <InputMask mask="999.999.999-99"  inputMode="numeric" maskplaceholder="_"  name="cpf"  legend="CPF" small />
               </div>
             </div>
               
-            <div className="flex gap-2">   
+            <div className="flex  ">   
             <div className="w-full  mr-1">
                   <Select name="estadocivil" defaultValue="" legend="ESTADO CIVIL" small>
                   <option value="" disabled>Selecione</option>
@@ -495,7 +451,8 @@ import { uploadFilePost } from '../../utils/uploadFilePost';
                 
                <span className="text-xs mt-3 montserrat-bold text-center w-full justify-center text-cinza"><strong>ENDEREÇO</strong></span>
                <InputMask inputMode="numeric"  mask="99999-999" maskplaceholder="_" name="cep" onChange={OnChangeCEP} legend="CEP" small />
-
+               <InvisibleCheck  name="ibge"></InvisibleCheck> 
+               <InvisibleCheck  name="codmunicipio"></InvisibleCheck> 
                <Input name="rua"  legend="RUA" small   />
  
                 <div className="flex ">

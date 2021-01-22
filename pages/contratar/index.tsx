@@ -1,5 +1,5 @@
   
-import React, { useEffect } from 'react' 
+import React from 'react' 
 import ButtonContract from '../../components/ButtonContract'
 import Footer from '../../components/Footer'
 import HeaderVoltarAzul from '../../components/HeaderVoltarAzul'
@@ -7,29 +7,8 @@ import TitleWithLogo from '../../components/TitleWithLogo'
 import Image from 'next/image'
 
 import Carousel from 'react-elastic-carousel'
-import { ContratarStore } from '../../store/contratar'
-import CryptoAES from 'crypto-js/aes';
-import CryptoENC from 'crypto-js/enc-utf8';
 
-const Index: React.FC = () => {
-
-  const settings = {
-    dots: true,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-  };
-
-  useEffect(()=>{
-    //carregar e descriptografar
-    var temp = localStorage.getItem('Intermedicina@ContratarStore') 
-    var bytes = CryptoAES.decrypt(temp, 'Intermedicina@2020')
-    var Store = JSON.parse(bytes.toString(CryptoENC))
-
-    Store ? ContratarStore.update(s => Store) : null
-  },[])
-
+const Index: React.FC = () => { 
   return (
     <>
     <HeaderVoltarAzul voltar="/"/>
@@ -38,39 +17,36 @@ const Index: React.FC = () => {
       <div className="flex flex-col max-w-120">  
          <div className="carousel w-full p-0 m-0">
          <Carousel className="w-full p-0 m-0 text-xs text-center text-cinza" itemsToShow={1} showArrows={false}>
-           <div>
+            <div>
               <span>Vamos <strong>Acompanhar, Intermediar e Facilitar</strong><br/>
               consultas com especialistas, exames e
               <br/>procedimentos com valores acessíveis!</span><br/>
               <a href="#">Seja Intermedicina!</a>
-         </div> 
+            </div> 
 
-         <div>
+            <div>
               <span>Intermedicina é: <strong>Uso imediato!</strong><br/>
               Você já pode marcar a sua consulta com especialista.</span> 
               <br/>
               <a href="#">Seja Intermedicina!</a>
-         </div>
+            </div>
 
-         <div>
+            <div>
               <span>Intermedicina é: <strong>Sem carência!</strong><br/>
               Não precisa esperar para marcar as suas consultas e exames.</span> 
               <br/>
               <a href="#">Seja Intermedicina!</a>
-         </div>
+            </div>
 
-         <div>
+            <div>
               <span>Intermedicina é: <strong>Sem fidelização!</strong><br/>
               Cancele quando quiser, queremos você aqui feliz conosco!</span> 
               <br/>
               <a href="#">Seja Intermedicina!</a>
-         </div>
+            </div>
          </Carousel>
-         </div>
-         
+         </div> 
 
-      
- 
           <ButtonContract
           id="familia"
           code={4}

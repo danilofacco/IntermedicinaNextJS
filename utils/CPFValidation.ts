@@ -1,5 +1,4 @@
-import {ContratarStore} from '../store/contratar'
-import {ConfigStore} from '../store/config'
+import {ContratarStore} from '../store/contratar' 
 import axios from 'axios'
 
 export function CPFValidation(cpf) {
@@ -22,7 +21,7 @@ export function CPFValidation(cpf) {
 
     axios.request({
       method: "POST",
-      url: `${process.env.NEXT_PUBLIC_API_URL}contratar/checkCPF.php`,
+      url: `${process.env.NEXT_PUBLIC_API_URL}/contratar/checkCPF.php`,
       data:JSON.parse(JSON.stringify({"cpf":cpf}))
     })
 

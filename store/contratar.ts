@@ -12,8 +12,7 @@ interface iContratar {
   metodo:string;
 
   MerchantOrderId:string;
-  id:string;
-
+  id:string; 
 
   meses:Array<any>;
   anos:Array<any>;
@@ -28,17 +27,24 @@ interface iContratar {
   tel:string;
   email:string;
   estadocivil:string;
-  genero:string;
-
+  genero:string; 
 
   cartao:{
     bandeira:string;
+    nome: string; 
     numero: number;
-    nome: string;
     mes: number;
     ano: number;
     cvv: number;
   }
+
+  energia:{
+    nome:string;
+    cpf:string;
+    instalacao:string;
+    anexo:string;
+  }
+
   endereco:{
     rua: string;
     numero:string;
@@ -92,12 +98,16 @@ export const ContratarStore = new Store<iContratar>({
       ibge:'',
       codmunicipio:'',
     },
+    energia:{
+      nome:'',
+      cpf:'',
+      instalacao:'',
+      anexo:'',
+    },
     bairros:[],
     fileNameUploadIdentificacao:[],
     fileNameUploadResidencia:[],
-    fileNameUploadTalao:[],
-
-    
+    fileNameUploadTalao:[], 
 
     metodo:"cartao",
 

@@ -5,24 +5,23 @@ import HeaderContratar from '../../components/HeaderContratar'
 import HeaderVoltarAzul from '../../components/HeaderVoltarAzul' 
 import { SpinnerCircularFixed } from 'spinners-react'; 
 
+
+import { useRouter } from 'next/router';
+
 import { ImWhatsapp as Whatsapp } from 'react-icons/im';
 
-import {ContratarStore} from '../../store/contratar'
-
-import CryptoAES from 'crypto-js/aes';
-import CryptoENC from 'crypto-js/enc-utf8';
- 
+import {ContratarStore} from '../../store/contratar' 
  
 const ConcluidoPicPay: React.FC = () => {
-
-  const {contratoSelecionadoTitulo} = ContratarStore.useState(s => s);
-  
-  useEffect(()=>{
-    var Store = JSON.parse(localStorage.getItem('Intermedicina@ContratarStore'))
-    Store ? ContratarStore.update(s => Store) : null
+ 
+  useEffect(()=>{ 
+    window.open('https://picpay.me/intermedicina')
+    document.body.scrollTop = 0; // For Safari
+    document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
   },[])
-
-    return (
+ 
+ 
+  return (
       <>
     <HeaderVoltarAzul voltar="/contratar/pagamento"/> 
     <HeaderContratar page={4} cor="azul"/>
@@ -34,7 +33,7 @@ const ConcluidoPicPay: React.FC = () => {
       <span className="text-xs my-6  mx-8 text-center">AGUARDANDO <br/>CONFIRMAÇÃO DO PICPAY</span>
 
       <a className="text-xs mb-2 text-center" href="tel:08007226967"><strong>DÚVIDAS? </strong>LIGUE 0800 722 6967</a>
-      <a href="https://bit.ly/359nBXw" target="_blank"><Whatsapp size={18}/></a>
+      <a href="#"  target="_blank"><Whatsapp size={18}/></a>
       
 
     </div> 

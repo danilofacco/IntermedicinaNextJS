@@ -15,9 +15,8 @@ import {FormHandles} from '@unform/core'
 import getValidationErrors from '../../utils/getValidationErrors'; 
 import { useRouter } from 'next/router';
 import { inicioCadastro } from '../../utils/inicioCadastro';
-
-import CryptoAES from 'crypto-js/aes';
-import CryptoENC from 'crypto-js/enc-utf8';
+ 
+import { CarregarDados, SalvarDados } from '../../utils/LocalStorage';
 
 interface SignInFormData {
   nome: string;
@@ -25,29 +24,34 @@ interface SignInFormData {
   email:string;
 }
 
+interface iResult {
+  id: number ;
+  MerchantOrderId: string; 
+}
+
 const Inicio: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
-  const router = useRouter()
+  const router = useRouter() 
 
   const ContratarStoreRead = ContratarStore.useState(s => s);
 
-  useEffect(()=>{
-    //faz leitura dos dados uma vez ao ser executada a pagina, descriptografa e faz a leitura
-    var temp = localStorage.getItem('Intermedicina@ContratarStore') 
-    var bytes = CryptoAES.decrypt(temp, 'Intermedicina@2020')
-    var Store = JSON.parse(bytes.toString(CryptoENC)) 
+    useEffect(()=>{
+      ContratarStore.update(s=> CarregarDados())
+     
+    },[])
 
-     Store && ContratarStore.update(s=> Store) 
-        formRef.current.setFieldValue("nome", Store.nome) 
-        formRef.current.setFieldValue("email", Store.email) 
-        formRef.current.setFieldValue("celular", Store.tel)
+    useEffect(()=>{ 
+      SalvarDados(ContratarStoreRead)  
+    },[ContratarStoreRead]) 
+
+    useEffect(()=>{ 
+      formRef.current.setFieldValue("nome", ContratarStoreRead.nome) 
+      formRef.current.setFieldValue("email", ContratarStoreRead.email) 
+      formRef.current.setFieldValue("celular", ContratarStoreRead.tel)
+
+     
+
      },[formRef])
-
-  useEffect(()=>{ 
-    //criptografar e salvar sempre que o Storage for alterado
-    var temp =  CryptoAES.encrypt(JSON.stringify(ContratarStoreRead), 'Intermedicina@2020');
-    localStorage.setItem('Intermedicina@ContratarStore', temp.toString());
-  },[ContratarStoreRead])
 
 
   const handleSubmit = useCallback(
@@ -64,17 +68,15 @@ const Inicio: React.FC = () => {
               const val_length_without_dashes = val.replace(/-|_/g, "").length;
               return val_length_without_dashes === 13;
             })
-            .required('*É necessário preechimento')
-          ,
-
-        });
+            .required('*É necessário preechimento'),
+         });
 
         await schema.validate(data, {
           abortEarly: false,
         });
 
-        await ContratarStore.update(s=> 
-          { s.nome = data.nome
+        ContratarStore.update( s => {
+            s.nome = data.nome
             s.tel = data.celular
             s.email = data.email
           });
@@ -87,11 +89,14 @@ const Inicio: React.FC = () => {
           pplink: ContratarStoreRead.LinkPoliticaDePrivacidade
         }
          
-        inicioCadastro(dados).then(result => {
-           ContratarStore.update(s => 
-            { s.idCadastro = Number(result) 
-            });
-        })
+        inicioCadastro(dados).then(result=> {
+            ContratarStore.update(s => {
+                //@ts-ignore
+                s.idCadastro = Number(result.id)
+                //@ts-ignore
+                s.MerchantOrderId =  result.MerchantOrderId 
+              })  
+            })
 
         router.push('/contratar/cadastro');
 

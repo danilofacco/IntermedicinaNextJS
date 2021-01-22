@@ -13,8 +13,7 @@ import getValidationErrors from '../../../utils/getValidationErrors';
 import { useRouter } from 'next/router';
 
 
-import CryptoAES from 'crypto-js/aes';
-import CryptoENC from 'crypto-js/enc-utf8';
+import { CarregarDados, SalvarDados } from '../../../utils/LocalStorage';
 
 
 const Pagamento : React.FC = () => {
@@ -24,11 +23,17 @@ const Pagamento : React.FC = () => {
   const router = useRouter()
   const [metodo,setMetodo] = useState("cartao");
   const ContratarStoreRead = ContratarStore.useState(s => s)
+  const [refresh,setRefresh] = useState(Math.random())  
+
 
   useEffect(()=>{
-    //var Store = JSON.parse(localStorage.getItem('Intermedicina@ContratarStore'))
-    //Store ? ContratarStore.update(s => Store) : null
+    ContratarStore.update(s=> CarregarDados()) 
+    setRefresh(Math.random()) 
   },[])
+
+  useEffect(()=>{ 
+    SalvarDados(ContratarStoreRead)    
+  },[ContratarStoreRead])  
 
 
   useEffect(()=>{
@@ -44,6 +49,10 @@ const Pagamento : React.FC = () => {
     router.push(`/contratar/pagamento/${m}`)
   }
 
+  function handleClickPicpay(){
+    router.push('/contratar/concluido-picpay')  
+  }
+  
 
   interface SignInFormData {
     email: string;
@@ -113,7 +122,7 @@ const Pagamento : React.FC = () => {
 
         
 
-        <Form ref={formRef} onSubmit={handleSubmit}>  
+        <Form ref={formRef} onSubmit={handleClickPicpay}>  
 
         <div className="px-14"> 
           <Select name="metodo" className="text-cinza" defaultValue="picpay" onChange={ChangeMetodo}   legend="" small> 
@@ -133,13 +142,13 @@ const Pagamento : React.FC = () => {
           </div>
         </div>
         <div className="mx-2">
-        <button  className="mt-4 mb-2 montserrat-regular text-sm bg-verde justify-between flex items-center w-full text-white  rounded-md p-4"  type="button"><span><strong>Abrir</strong> Picpay</span> <Image src="/assets/arrowRight.svg" width={19} height={13}/></button> 
+        <button  className="mt-4 mb-2 montserrat-regular text-sm bg-verde justify-between flex items-center w-full text-white  rounded-md p-4"  type="submit"><span><strong>Abrir</strong> Picpay</span> <Image src="/assets/arrowRight.svg" width={19} height={13}/></button> 
         </div>
       </Form>
 
       <div className="text-xxs montserrat-regular p-4 leading-3 text-gray-500 uppercase">
         • Ao concluir sua ASSINATURA no aplicativo picpay, você concorda com os "Termos de Uso e Política de Privacidade" e confirma ter mais de 18 anos.<br/>
-        • A Intermedicina renovará automaticamente sua assinatura e cobrará o preço da assinatura (atualmente R$ 49,00/mês) da sua forma de pagamento mensalmente, até você cancelar.<br/>
+        • A Intermedicina renovará automaticamente sua assinatura e cobrará o preço da assinatura (atualmente R$ {ContratarStoreRead.precoContrato},00/mês) da sua forma de pagamento mensalmente, até você cancelar.<br/>
         • Para cancelar acesse a seção "Minha Conta" no Portal do Cliente pelo site ou aplicativo da Intermedicina.<br/>
         • Não emitimos reembolsos nem créditos por meses parciais.<br/>
         </div>

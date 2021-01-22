@@ -1,15 +1,17 @@
  
-import React from 'react'
+import React, { useEffect } from 'react'
 import HeaderContratar from '../../components/HeaderContratar'
 import Footer from '../../components/Footer'
 import HeaderVoltarAzul from '../../components/HeaderVoltarAzul'  
-import Image from 'next/image'  
-
-
-import CryptoAES from 'crypto-js/aes';
-import CryptoENC from 'crypto-js/enc-utf8';
+import Image from 'next/image'   
 
 const NaoAutorizado: React.FC = () => {
+
+  useEffect(()=>{
+    document.body.scrollTop = 0; // For Safari
+    document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+  },[]) 
+  
     return (
       <>
     <HeaderVoltarAzul/> 

@@ -10,47 +10,59 @@ import Input from '../../../components/Input';
 import {ContratarStore} from '../../../store/contratar' 
 import getValidationErrors from '../../../utils/getValidationErrors'; 
 import Select from '../../../components/Select';
+ 
 
-
-import CryptoAES from 'crypto-js/aes';
-import CryptoENC from 'crypto-js/enc-utf8';
+import { CarregarDados, SalvarDados } from '../../../utils/LocalStorage';
  
 import { useRouter } from 'next/router';
 import InputMask from '../../../components/InputMask';
+import InvisibleCheck from '../../../components/InvisibleCheck';
+import { FormHandles } from '@unform/core'; 
+import OptionsAnos from '../../../components/OptionsAnos';
+import OptionsMeses from '../../../components/OptionsMeses';
 
 
-const Pagamento : React.FC = () => {
+const Pagamento: React.FC = () => {
 
-  const formRef = useRef(null)
+  const formRef = useRef<FormHandles>(null);
   const router = useRouter()
   const [metodo,setMetodo] = useState("cartao")
-  const ContratarStoreRead = ContratarStore.useState(s => s)
+  const ContratarStoreRead = ContratarStore.useState(s => s)  
+  const [refresh,setRefresh] = useState(Math.random())  
+
 
   useEffect(()=>{
-       //faz leitura dos dados uma vez ao ser executada a pagina, descriptografa e faz a leitura
-       var temp = localStorage.getItem('Intermedicina@ContratarStore') 
-       var bytes = CryptoAES.decrypt(temp, 'Intermedicina@2020')
-       var Store = JSON.parse(bytes.toString(CryptoENC)) 
-    Store ? ContratarStore.update(s => Store) : null
+    ContratarStore.update(s=> CarregarDados()) 
+    setRefresh(Math.random()) 
   },[])
 
-  const [anos,setAnos] = useState([])
-  const [meses,setMeses] = useState()
+  useEffect(()=>{ 
+    SalvarDados(ContratarStoreRead)    
+  },[ContratarStoreRead])  
 
-  function gerarAnos(){
-    var newAnos = []
-    //cria um array com os proximos 10 anos para usar como data de expiração
-    for (let i = new Date().getFullYear(); i < new Date().getFullYear()+10; i++) {
-      newAnos.push(i)
-    }
-    setAnos(newAnos)
-  } 
+    
    
   useEffect(()=>{
-    ContratarStore.update(s=>{
-      s.metodo = metodo
-    }) 
+    metodo &&  
+      ContratarStore.update(s=>{
+        s.metodo = metodo
+      })   
   },[metodo])
+
+  useEffect(()=>{
+    var mesAtual = ""
+    ContratarStoreRead.cartao.mes < 10 ?
+    mesAtual = "0" + ContratarStoreRead.cartao.mes :
+    mesAtual = String(ContratarStoreRead.cartao.mes)
+
+    formRef.current.setFieldValue("nome", ContratarStoreRead.cartao.nome) 
+    formRef.current.setFieldValue("numero", ContratarStoreRead.cartao.numero != 0 ? String(ContratarStoreRead.cartao.numero) :"") 
+    formRef.current.setFieldValue("mes", ContratarStoreRead.cartao.mes != 0 ? mesAtual :"") 
+    formRef.current.setFieldValue("ano", ContratarStoreRead.cartao.ano != 0 ? String(ContratarStoreRead.cartao.ano) :"") 
+    formRef.current.setFieldValue("bandeira", ContratarStoreRead.cartao.bandeira)
+    formRef.current.setFieldValue("cvv", ContratarStoreRead.cartao.cvv != 0 ? String(ContratarStoreRead.cartao.cvv) : null)
+    
+  },[refresh])  
 
   function Flag(opcao){ 
    if (ContratarStoreRead.cartao.bandeira == opcao || ContratarStoreRead.cartao.bandeira == "" ){
@@ -71,50 +83,73 @@ const Pagamento : React.FC = () => {
   function SelectFlag(opcao){
     ContratarStore.update(s =>{
       s.cartao.bandeira=opcao;
-    })
-
+    }) 
+    formRef.current.setFieldValue("bandeira", opcao) 
   }
 
   
   interface SignInFormData {
-    email: string;
     nome: string;
-    celular: string;
+    numero: string;
+    mes: string;
+    ano: string; 
+    cvv: string;
+    bandeira: string;
   }
 
-  async function handleSubmit(data) {
+  const handleSubmit = useCallback(
     async (data: SignInFormData) => {
       try {
         formRef.current?.setErrors({});
 
         const schema = Yup.object().shape({
           nome: Yup.string().required('Nome Obrigatório'),
-          email: Yup.string().required('E-mail obrigatório').email('Digite um e-mail válido'),
-          celular: Yup.string().required('Celular Obrigatório'),
+          numero: Yup.string().required('Número do Cartao obrigatório'),
+          mes: Yup.string().required('Mês de Validade Obrigatório'), 
+          ano: Yup.string().required('Ano de Validade Obrigatório'), 
+          cvv: Yup.string().required('Código de Segurança Obrigatório'),
+          bandeira: Yup.string().required('Selecione a Bandeira do Cartão'),
         });
+
+        ContratarStore.update(s=>  
+          { s.cartao.nome = data.nome
+            s.cartao.numero =   Number(data.numero.replace(' ','').replace(' ','').replace(' ','').replace(' ',''))
+            s.cartao.mes =  Number(data.mes)
+            s.cartao.ano = Number(data.ano)
+            s.cartao.cvv =  Number(data.cvv)
+            s.cartao.bandeira = data.bandeira
+          }); 
 
         await schema.validate(data, {
           abortEarly: false,
         }); 
-        //await signIn({ email: data.email, password: data.password }); 
+        
+        
+        var dados = {
+          Name: ContratarStoreRead.nome, //
+          Holder:data.nome,  
+          Amount:ContratarStoreRead.precoContrato, //
+          CardNumber: Number(data.numero.replace(' ','').replace(' ','').replace(' ','').replace(' ','')),
+          Brand: data.bandeira,
+          ExpirationDate: data.mes +"/"+ data.ano, 
+          SecurityCode: data.cvv
+        }
+ 
+
+        
+
         //history.push('/dashboard'); 
        
       } catch (err) {
         if (err instanceof Yup.ValidationError) {
           const errors = getValidationErrors(err);
-
           formRef.current?.setErrors(errors);
-
-          // error
-
           return;
         }
-
-        
       }
-  }
-}
-
+    },
+    [ ],
+  ); 
 
     return (
       <>
@@ -174,11 +209,11 @@ const Pagamento : React.FC = () => {
           <Image onClick={()=>SelectFlag("amex")} height={35} width={57} src={`/assets/buttons/${Flag('amex')}`}/>
 
         </div>
-
-       
+        <InvisibleCheck name="bandeira" />
+ 
 
               <Input name="nome" legend="NOME IMPRESSO NO CARTÃO" />
-              <InputMask mask="9999 9999 9999 9999" maskplaceholder="_"  name="numeroDoCartao"   legend="NÚMERO DO CARTÃO" /> 
+              <InputMask mask="9999 9999 9999 9999" maskplaceholder="_"  name="numero"  legend="NÚMERO DO CARTÃO" /> 
 
               <div className="flex justify-between mt-4 text-xxs text-cinza montserrat-medium w-full"> 
                  <span className="w-1/3 ml-1 text-left">DATA DE VALIDADE DO CARTÃO</span>
@@ -187,21 +222,17 @@ const Pagamento : React.FC = () => {
           
               <div className="flex gap-2 -mt-2 justify-between w-full"> 
 
+            
+
               <div className="w-full  mr-1"> 
-                <Select  name="mes"  legend="" >
-                  <option>MÊS</option>
-                  {ContratarStoreRead.meses.map(mes=>{
-                    <option value={mes} key={mes}>{mes}</option>
-                  })}  
+                <Select  defaultValue=""   name="mes"  legend="" > 
+                  <OptionsMeses/> 
                 </Select> 
                 </div>
 
                 <div className="w-full  mr-1 ml-1">
-                <Select   name="mes"  legend=""> 
-                  <option>ANO</option>
-                  {ContratarStoreRead.anos.map(ano=>{
-                    <option value={ano} key={ano}>{ano}</option>
-                  })}  
+                <Select   defaultValue=""  name="ano"  legend="">  
+                  <OptionsAnos/> 
                 </Select>
                 
                 </div>
@@ -210,15 +241,15 @@ const Pagamento : React.FC = () => {
                   </div>  
                 </div>
 
-              <button  className="mt-4 mb-2 montserrat-regular text-sm bg-verde justify-between flex items-center w-full text-white  rounded-md p-4"  type="submit"><span><strong>Iniciar</strong> Assinatura</span> <Image src="/assets/arrowRight.svg" width={19} height={13}/></button> 
+              <button className="mt-4 mb-2 montserrat-regular text-sm bg-verde justify-between flex items-center w-full text-white  rounded-md p-4"  type="submit"><span><strong>Iniciar</strong> Assinatura</span> <Image src="/assets/arrowRight.svg" width={19} height={13}/></button> 
          </div>
       </Form>
 
       <div className="text-xxs montserrat-regular p-4 leading-3 text-gray-500 uppercase">
-        • Ao concluir sua ASSINATURA no aplicativo picpay, você concorda com os "Termos de Uso e Política de Privacidade" e confirma ter mais de 18 anos.
-        • A Intermedicina renovará automaticamente sua assinatura e cobrará o preço da assinatura (atualmente R$ 49,00/mês) da sua forma de pagamento mensalmente, até você cancelar.
-        • Para cancelar acesse a seção "Minha Conta" no Portal do Cliente pelo site ou aplicativo da Intermedicina.
-        • Não emitimos reembolsos nem créditos por meses parciais.
+        • Ao concluir sua ASSINATURA no aplicativo picpay, você concorda com os "Termos de Uso e Política de Privacidade" e confirma ter mais de 18 anos.<br/>
+        • A Intermedicina renovará automaticamente sua assinatura e cobrará o preço da assinatura (atualmente R$ {ContratarStoreRead.precoContrato},00/mês) da sua forma de pagamento mensalmente, até você cancelar.<br/>
+        • Para cancelar acesse a seção "Minha Conta" no Portal do Cliente pelo site ou aplicativo da Intermedicina.<br/>
+        • Não emitimos reembolsos nem créditos por meses parciais.<br/>
         </div>
 
       </div> 

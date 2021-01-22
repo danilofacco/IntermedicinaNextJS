@@ -18,30 +18,45 @@ import { removeFile } from '../../../utils/removeFile';
 import { SpinnerCircularFixed } from 'spinners-react';
 import { useRouter } from 'next/router';
 import InputMask from '../../../components/InputMask';
-import { uploadFilePost } from '../../../utils/uploadFilePost';
+import { uploadFilePost } from '../../../utils/uploadFilePost'; 
 
+import { CarregarDados, SalvarDados } from '../../../utils/LocalStorage';  
+import { FormHandles } from '@unform/core';
+import InvisibleCheck from '../../../components/InvisibleCheck';
+import { pagamentoEnergia } from '../../../utils/pagamentoEnergia';
 
-const Pagamento : React.FC = () => {
+const Energia: React.FC = () => {
 
-  const formRef = useRef(null); 
-  const uploadTalaoRef = useRef(null);
-
+  const formRef = useRef<FormHandles>(null);
+  const uploadTalaoRef = useRef<FormHandles>(null);
   const router = useRouter()
   const [metodo,setMetodo] = useState("cartao");
   const ContratarStoreRead = ContratarStore.useState(s => s)
   const [simOuNao , setSimOuNao] = useState(null)
+  const [refresh,setRefresh] = useState(Math.random())  
 
   useEffect(()=>{
-    //var Store = JSON.parse(localStorage.getItem('Intermedicina@ContratarStore'))
-    //Store ? ContratarStore.update(s => Store) : null
+    ContratarStore.update(s=> CarregarDados()) 
+    setRefresh(Math.random()) 
   },[])
-  
+
+  useEffect(()=>{ 
+    SalvarDados(ContratarStoreRead)    
+  },[ContratarStoreRead])  
 
   useEffect(()=>{
     ContratarStore.update(s=>{
       s.metodo = metodo
     }) 
-  },[metodo])
+  },[metodo]) 
+
+
+  useEffect(()=>{ 
+    formRef.current.setFieldValue("nome_energia", ContratarStoreRead.energia.nome) 
+    formRef.current.setFieldValue("cpf_energia", ContratarStoreRead.energia.cpf) 
+    formRef.current.setFieldValue("instalacao_energia", ContratarStoreRead.energia.instalacao) 
+    formRef.current.setFieldValue("anexo_energia", ContratarStoreRead.fileNameUploadTalao && String(ContratarStoreRead.fileNameUploadTalao))
+  },[refresh])
 
 
   function ChangeMetodo(){
@@ -51,13 +66,13 @@ const Pagamento : React.FC = () => {
   }
 
   function onChangeCPF(){
-    !CPFValidation(formRef.current.getFieldValue("cpfTitularEnergia")) ? formRef.current.clearField("cpfTitularEnergia") : null
+    !CPFValidation(formRef.current.getFieldValue("cpf_energia")) ? formRef.current.clearField("cpf_energia") : null
   }
   
   function mesmoTitular(resposta){
     setSimOuNao(resposta)
-    resposta ?  formRef.current.setFieldValue("nomeTitularEnergia",ContratarStoreRead.nome): formRef.current.setFieldValue("nomeTitularEnergia","")
-    resposta ?  formRef.current.setFieldValue("cpfTitularEnergia",ContratarStoreRead.cpf): formRef.current.setFieldValue("cpfTitularEnergia","")    
+    resposta ?  formRef.current.setFieldValue("nome_energia",ContratarStoreRead.nome): formRef.current.setFieldValue("nome_energia","")
+    resposta ?  formRef.current.setFieldValue("cpf_energia",ContratarStoreRead.cpf): formRef.current.setFieldValue("cpf_energia","")    
   }
 
 
@@ -68,10 +83,9 @@ const Pagamento : React.FC = () => {
     else{
       return `${varString}` 
     }
-  }
-    //* UPLOAD TALÃO - INICIO
-    const [loadingUploadTalao,setLoadingUploadTalao] = useState(false)
-    const [fileNameUploadTalao, setFileNameUploadTalao] = useState([])
+  } 
+
+    const [loadingUploadTalao,setLoadingUploadTalao] = useState(false) 
 
     function handleClickUpload(type){
       var uploadButton = null
@@ -96,21 +110,21 @@ const Pagamento : React.FC = () => {
       var newArr=[]
       switch (type) {
         case "identificacao":   
-        ContratarStoreRead.fileNameUploadIdentificacao.map(s => { s != filename &&  newArr.push(s) })
-        ContratarStore.update(s => { s.fileNameUploadIdentificacao = newArr })
-        formRef.current.setFieldValue("anexoIdentificacao",String(newArr))
+        //ContratarStoreRead.fileNameUploadIdentificacao.map(s => { s != filename &&  newArr.push(s) })
+        //ContratarStore.update(s => { s.fileNameUploadIdentificacao = newArr })
+        //formRef.current.setFieldValue("anexoIdentificacao",String(newArr))
         
         break;
         case "residencia":   
-        ContratarStoreRead.fileNameUploadResidencia.map(s => { s != filename &&  newArr.push(s) })
-        ContratarStore.update(s => { s.fileNameUploadResidencia = newArr })
-        formRef.current.setFieldValue("anexoResidencia",String(newArr))
+        //ContratarStoreRead.fileNameUploadResidencia.map(s => { s != filename &&  newArr.push(s) })
+        //ContratarStore.update(s => { s.fileNameUploadResidencia = newArr })
+        //formRef.current.setFieldValue("anexoResidencia",String(newArr))
         break;
 
         case "talao":   
-        //ContratarStoreRead.fileNameUploadEnergia.map(s => { s != filename &&  newArr.push(s) })
-        //ContratarStore.update(s => { s.fileNameUploadEnergia = newArr })
-        //formRef.current.setFieldValue("anexoEnergia",String(newArr))
+        ContratarStoreRead.fileNameUploadTalao.map(s => { s != filename &&  newArr.push(s) })
+        ContratarStore.update(s => { s.fileNameUploadTalao = newArr })
+        formRef.current.setFieldValue("anexo_energia",String(newArr))
 
         break; 
       } 
@@ -122,7 +136,7 @@ const Pagamento : React.FC = () => {
     const handleUploadTalao = useCallback((e: ChangeEvent<HTMLInputElement>) => { 
       const files = uploadTalaoRef.current.getFieldRef("file").files
       if(files.length > 0 ){
-        setLoadingUpload(true,'talao') //*
+        setLoadingUpload(true,'talao') 
         //@ts-ignore
         var filename = e.file  
         var formData = new FormData()
@@ -130,58 +144,76 @@ const Pagamento : React.FC = () => {
         uploadFilePost(formData,filename).then(result =>{
           setLoadingUpload(false,'talao')
           var newArr=[]
-            ContratarStoreRead.fileNameUploadIdentificacao.map(s => newArr.push(s))
+            ContratarStoreRead.fileNameUploadTalao.map(s => newArr.push(s))
             if(result != undefined && result != "" ){
               newArr.push(result) 
             }
             ContratarStore.update(s => {
-              s.fileNameUploadIdentificacao = newArr
-            })
-            formRef.current.setFieldValue("anexoTalao",String(newArr))
-        }
-        )
+              s.fileNameUploadTalao = newArr
+            }) 
+            formRef.current.setFieldValue("anexo_energia",String(newArr))
+        })
       }
-    }, [ContratarStoreRead.fileNameUploadIdentificacao]);
+      setRefresh(Math.random())
+    }, [ContratarStoreRead.fileNameUploadTalao]);
 
     
-  interface SignInFormData {
-    email: string;
-    nome: string;
-    celular: string;
+  interface PagamentoEnergiaData {
+    nome_energia: string;
+    cpf_energia: string;
+    instalacao_energia: string; 
+    anexo_energia: string;
   }
 
-  async function handleSubmit(data) {
-    async (data: SignInFormData) => {
+  const handleSubmit = useCallback(
+    async (data: PagamentoEnergiaData) => {
       try {
         formRef.current?.setErrors({});
 
         const schema = Yup.object().shape({
-          nome: Yup.string().required('Nome Obrigatório'),
-          email: Yup.string().required('E-mail obrigatório').email('Digite um e-mail válido'),
-          celular: Yup.string().required('Celular Obrigatório'),
+          nome_energia: Yup.string().required('Nome Obrigatório'),
+          cpf_energia: Yup.string().required('CPF Obrigatório'),
+          instalacao_energia: Yup.string().required('Número de Instalação Obrigatório'),
+          anexo_energia: Yup.string().required('É Necessario anexar ao menos um arquivo'),
         });
+
+
+        ContratarStore.update(s=>  
+          { s.energia.nome = data.nome_energia
+            s.energia.cpf = data.cpf_energia
+            s.energia.instalacao = data.instalacao_energia
+            s.energia.anexo = data.anexo_energia  
+          });  
 
         await schema.validate(data, {
           abortEarly: false,
         }); 
-        //await signIn({ email: data.email, password: data.password }); 
-        //history.push('/dashboard'); 
+         
+        var dados = {
+          nome_energia: data.nome_energia,
+          cpf_energia: data.cpf_energia,
+          instalacao_energia: data.instalacao_energia,
+          anexo_energia: data.anexo_energia,
+          metodo: ContratarStoreRead.metodo,
+          id: ContratarStoreRead.idCadastro,
+          valorcontrato:String(ContratarStoreRead.precoContrato)
+        } 
+       
+        pagamentoEnergia(dados).then(result => { 
+          router.push('/contratar/concluido-energia');
+        }) 
+
        
       } catch (err) {
         if (err instanceof Yup.ValidationError) {
           const errors = getValidationErrors(err);
-
           formRef.current?.setErrors(errors);
-
-          // error
-
           return;
         }
-
-        
       }
-  }
-}
+    },
+    [ ],
+  ); 
 
 
     return (
@@ -216,7 +248,7 @@ const Pagamento : React.FC = () => {
         <Form ref={formRef} onSubmit={handleSubmit}>  
 
         <div className="px-14"> 
-          <Select name="metodo" className="text-cinza" defaultValue="energia" onChange={ChangeMetodo}   legend="" small> 
+          <Select name="metodo" className="text-cinza" defaultValue="energia" onChange={ChangeMetodo} legend="" small> 
                     <option value="cartao">CARTAO DE CRÉDITO</option>
                     <option value="picpay">PICPAY</option>
                     <option value="energia">CONTA DE ENERGIA</option>
@@ -230,17 +262,17 @@ const Pagamento : React.FC = () => {
       </span>
 
       <div className="flex w-full justify-center gap-2 text-white text-xs montserrat-regular"> 
-          <a className={`${  (simOuNao && simOuNao != null) ? "bg-azul" : "bg-cinza"} rounded-md flex py-1 px-4 mr-1`} onClick={()=>mesmoTitular(true)}><span></span><strong> SIM </strong></a>
-          <a className={`${ (!simOuNao && simOuNao != null) ? "bg-azul" : "bg-cinza"} rounded-md flex py-1 px-4 ml-1`} onClick={()=>mesmoTitular(false)}><span></span><strong> NÃO </strong></a>
+          <a className={`${  (simOuNao && simOuNao != null) ? "bg-azul" : "bg-cinza"} cursor-pointer rounded-md flex py-1 px-4 mr-1`} onClick={()=>mesmoTitular(true)}><span></span><strong> SIM </strong></a>
+          <a className={`${ (!simOuNao && simOuNao != null) ? "bg-azul" : "bg-cinza"} cursor-pointer rounded-md flex py-1 px-4 ml-1`} onClick={()=>mesmoTitular(false)}><span></span><strong> NÃO </strong></a>
        
        </div>
 
        <div className="mx-2">
-          <Input name="nomeTitularEnergia" legend="TITULAR DA CONTA DE ENERGIA"    />
+          <Input name="nome_energia" legend="TITULAR DA CONTA DE ENERGIA"    />
       
-          <InputMask mask="999.999.999-99" maskplaceholder="_" name="cpfTitularEnergia"  legend="CPF DO TITULAR DA CONTA DE ENERGIA" onBlur={onChangeCPF}   />
+          <InputMask mask="999.999.999-99" maskplaceholder="_" name="cpf_energia"  legend="CPF DO TITULAR DA CONTA DE ENERGIA" onBlur={onChangeCPF}   />
        
-          <Input  name="numeroInstalacaoEnergia" legend="INSTALAÇÃO OU IDENTIFICAÇÃO DO TALÃO"   />  
+          <Input  name="instalacao_energia" legend="INSTALAÇÃO OU IDENTIFICAÇÃO DO TALÃO"   />  
          
           <span className="text-xs montserrat-regular text-cinza">Cópia do <strong>talão de energia.</strong></span>
              
@@ -263,7 +295,7 @@ const Pagamento : React.FC = () => {
                 { ContratarStoreRead.fileNameUploadTalao && ContratarStoreRead.fileNameUploadTalao.map( filename => 
                   <a  className="bg-cinza bg-opacity-20 rounded-md flex justify-between w-full montserrat-regular text-cinza items-center p-2 mt-2 text-xs" key={filename}> <span>{reduceName(filename)}</span> <Image onClick={()=>{removeFileStore(filename,'talao')}} src="/assets/remove.svg" width={12} height={12}/></a> 
                 )}
-                  
+                 <InvisibleCheck  name="anexo_energia"></InvisibleCheck>  
 
               
                   
@@ -288,7 +320,7 @@ const Pagamento : React.FC = () => {
 
       <div className="text-xxs montserrat-regular p-2 leading-3 text-gray-500 uppercase">
         • Ao concluir sua ASSINATURA no aplicativo picpay, você concorda com os "Termos de Uso e Política de Privacidade" e confirma ter mais de 18 anos.<br/>
-        • A Intermedicina renovará automaticamente sua assinatura e cobrará o preço da assinatura (atualmente R$ 49,00/mês) da sua forma de pagamento mensalmente, até você cancelar.<br/>
+        • A Intermedicina renovará automaticamente sua assinatura e cobrará o preço da assinatura (atualmente R$ {ContratarStoreRead.precoContrato},00/mês) da sua forma de pagamento mensalmente, até você cancelar.<br/>
         • Para cancelar acesse a seção "Minha Conta" no Portal do Cliente pelo site ou aplicativo da Intermedicina.<br/>
         • Não emitimos reembolsos nem créditos por meses parciais.<br/>
         </div>
@@ -302,4 +334,4 @@ const Pagamento : React.FC = () => {
     
     }
 
-    export default Pagamento
+    export default Energia
