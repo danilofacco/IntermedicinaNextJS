@@ -1,12 +1,10 @@
-import {ContratarStore} from '../store/contratar'
 import moment from 'moment'
  
 export function checkAge(datanasc){ 
     var today = moment();
     if ( datanasc != null &&  datanasc != undefined &&  datanasc.length == 10){
       var birthDate = moment (datanasc,"DD-MM-YYYY")  
-      if(!birthDate.isValid()){ 
-        alert("Data de nascimento inválida!")   
+      if(!birthDate.isValid()){  
         return false
       }
       var age = today.year() - birthDate.year()

@@ -22,7 +22,7 @@ const ConcluidoEnergia: React.FC = () => {
 
     return (
       <>
-    <HeaderVoltarAzul voltar="/contratar/pagamento"/> 
+    <HeaderVoltarAzul voltar="/contratar/pagamento/energia"/> 
     <HeaderContratar page={4} cor="azul"/>
     <div className="bg-azul flex w-full h-screen text-white montserrat-regular flex-col pt-8 items-center text-center">
       <Image src="/assets/check_branco_azul.svg" width={32} height={32}/>

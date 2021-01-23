@@ -23,7 +23,7 @@ const ConcluidoPicPay: React.FC = () => {
  
   return (
       <>
-    <HeaderVoltarAzul voltar="/contratar/pagamento"/> 
+    <HeaderVoltarAzul voltar="/contratar/pagamento/picpay"/> 
     <HeaderContratar page={4} cor="azul"/>
     <div className="bg-azul flex w-full h-screen text-white montserrat-regular flex-col pt-8 items-center text-center">
     <SpinnerCircularFixed size={32} thickness={140} speed={150} color="#fff" secondaryColor="rgba(255, 255, 255, 0.15)" />

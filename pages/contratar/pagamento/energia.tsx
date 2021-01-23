@@ -34,6 +34,7 @@ const Energia: React.FC = () => {
   const ContratarStoreRead = ContratarStore.useState(s => s)
   const [simOuNao , setSimOuNao] = useState(null)
   const [refresh,setRefresh] = useState(Math.random())  
+  const [loadingPage, setLoadingPage] = useState(false)
 
   useEffect(()=>{
     ContratarStore.update(s=> CarregarDados()) 
@@ -152,9 +153,9 @@ const Energia: React.FC = () => {
               s.fileNameUploadTalao = newArr
             }) 
             formRef.current.setFieldValue("anexo_energia",String(newArr))
+            formRef.current.setFieldError("anexo_energia","")
         })
-      }
-      setRefresh(Math.random())
+      } 
     }, [ContratarStoreRead.fileNameUploadTalao]);
 
     
@@ -171,10 +172,13 @@ const Energia: React.FC = () => {
         formRef.current?.setErrors({});
 
         const schema = Yup.object().shape({
-          nome_energia: Yup.string().required('Nome Obrigatório'),
-          cpf_energia: Yup.string().required('CPF Obrigatório'),
-          instalacao_energia: Yup.string().required('Número de Instalação Obrigatório'),
-          anexo_energia: Yup.string().required('É Necessario anexar ao menos um arquivo'),
+          nome_energia: Yup.string().required('*É necessário preechimento'),
+          cpf_energia: Yup.string().test("len", "CPF Inválido.", (val) => {
+            return CPFValidation(val);
+          })
+            .required('*É necessário preechimento'),
+          instalacao_energia: Yup.string().required('*É necessário preechimento'),
+          anexo_energia: Yup.string().required('*É Necessario anexar ao menos um arquivo'),
         });
 
 
@@ -188,7 +192,7 @@ const Energia: React.FC = () => {
         await schema.validate(data, {
           abortEarly: false,
         }); 
-         
+        setLoadingPage(true)
         var dados = {
           nome_energia: data.nome_energia,
           cpf_energia: data.cpf_energia,
@@ -200,6 +204,7 @@ const Energia: React.FC = () => {
         } 
        
         pagamentoEnergia(dados).then(result => { 
+          setLoadingPage(false)
           router.push('/contratar/concluido-energia');
         }) 
 
@@ -306,7 +311,11 @@ const Energia: React.FC = () => {
                 Ao iniciar assinatura, a central de atendimento da Intermedicina entrará em contato por telefone, para formalizar a <strong>AUTORIZAÇÃO DE DÉBITO</strong> em seu talão de energia, conforme exigência das concessionárias elétricas.
               </div>
 
-              <button  className="mt-4 mb-2 montserrat-regular text-sm bg-verde justify-between flex items-center w-full text-white  rounded-md p-4"  type="submit"><span><strong>Iniciar</strong> Assinatura</span> <Image src="/assets/arrowRight.svg" width={19} height={13}/></button> 
+              <button  className="mt-4 mb-2 montserrat-regular text-sm bg-verde justify-between flex items-center w-full text-white  rounded-md p-4"  type="submit"><span><strong>Iniciar</strong> Assinatura</span>
+                {loadingPage ? <SpinnerCircularFixed className="pr-1" size={19} thickness={140} speed={150} color="#FFF" secondaryColor="rgba(255, 255, 255, 0.15)" />
+                : <Image src="/assets/arrowRight.svg" width={19} height={13}/>
+                }
+           </button> 
        
               </div>
  

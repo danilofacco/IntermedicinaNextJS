@@ -52,15 +52,14 @@ interface SignInFormData {
     anexoIdentificacao: string;
     anexoResidencia: string;    
     id: string;   
-  } 
+  }  
 
-
-  const  Cadastro: React.FC = () => {
+    const  Cadastro: React.FC = () => {
     const formRef = useRef<FormHandles>(null);
     const uploadIdentificacaoRef = useRef<FormHandles>(null);
     const uploadResidenciaRef = useRef<FormHandles>(null);
     const router = useRouter()
-    
+    const [loadingPage, setLoadingPage] = useState(false) 
 
     const [refresh,setRefresh] = useState(Math.random())
     const ContratarStoreRead = ContratarStore.useState(s => s)
@@ -68,7 +67,7 @@ interface SignInFormData {
     const [sendMessageStrong,setSendMessageStrong] = useState("")
     const [loadingUploadIdentificacao,setLoadingUploadIdentificacao] = useState(false)
     const [loadingUploadResidencia,setLoadingUploadResidencia] = useState(false)
-    const [cvRandom, setCvRandom] = useState(Math.floor(Math.random() * (99999 - 10000 + 1) + 10000))
+    const [cvRandom, setCvRaandom] = useState(Math.floor(Math.random() * (99999 - 10000 + 1) + 10000))
     const [checkIcon, setCheckIcon] = useState("/assets/check.svg")
     const [checkedPoliticaPrivacidade, setCheckedPoliticaPrivacidade] = useState(false)
     const [textoPoliticaDePrivacidade, setTextoPoliticaDePrivacidade] = useState("Carregando ...")
@@ -115,7 +114,8 @@ interface SignInFormData {
     useEffect(()=>{ 
       if(checkedPoliticaPrivacidade){
        setCheckIcon("/assets/check_icon_fill.svg")
-      } 
+       formRef.current.setFieldError("politicaprivacidade","")
+      }   
       else{
         setCheckIcon("/assets/check_icon_empty.svg") 
       }   
@@ -188,9 +188,7 @@ interface SignInFormData {
         break; 
       } 
       removeFile(filename) 
-    }
- 
- 
+    }  
 
     const handleUploadIdentificacao = useCallback((e: ChangeEvent<HTMLInputElement>) => { 
       const files = uploadIdentificacaoRef.current.getFieldRef("file").files
@@ -211,15 +209,14 @@ interface SignInFormData {
               s.fileNameUploadIdentificacao = newArr
             })
             formRef.current.setFieldValue("anexoIdentificacao",String(newArr))
+            formRef.current.setFieldError("anexoIdentificacao","")
         }
         )
       } 
  
 
-    }, [ContratarStoreRead.fileNameUploadIdentificacao]);
- 
+    }, [ContratarStoreRead.fileNameUploadIdentificacao]); 
 
- 
     const handleUploadResidencia = useCallback((e: ChangeEvent<HTMLInputElement>) => { 
       const files = uploadResidenciaRef.current.getFieldRef("file").files
       if(files.length > 0 ){
@@ -239,9 +236,9 @@ interface SignInFormData {
               s.fileNameUploadResidencia = newArr
             })
             formRef.current.setFieldValue("anexoResidencia",String(newArr))
+            formRef.current.setFieldError("anexoResidencia","")
         })
-      }
-      setRefresh(Math.random())
+      } 
     }, [ContratarStoreRead.fileNameUploadResidencia]);
    
 
@@ -323,7 +320,7 @@ interface SignInFormData {
             abortEarly: false,
           }); 
         
-           
+          setLoadingPage(true)
           var dados = {
             datanasc: data.datanasc,
             cpf: data.cpf,
@@ -343,7 +340,8 @@ interface SignInFormData {
             id: String(ContratarStoreRead.idCadastro)
           } 
          
-          dadosCadastro(dados).then(result => { 
+          dadosCadastro(dados).then(result => {  
+            setLoadingPage(false)
             router.push('/contratar/pagamento');
           }) 
 
@@ -551,7 +549,12 @@ interface SignInFormData {
                     </div>  
                 
               <InvisibleCheck  name="politicaprivacidade"></InvisibleCheck> 
-          <button className="mt-2 mb-2 montserrat-regular text-sm bg-verde justify-between flex items-center w-full text-white  rounded-md p-4" type="submit">Continuar<Image src="/assets/arrowRight.svg" width={19} height={13}/></button> 
+          <button className="mt-2 mb-2 montserrat-regular text-sm bg-verde justify-between flex items-center w-full text-white  rounded-md p-4" type="submit">Continuar
+          
+          {loadingPage ? <SpinnerCircularFixed className="pr-1" size={19} thickness={140} speed={150} color="#FFF" secondaryColor="rgba(255, 255, 255, 0.15)" />
+           : <Image src="/assets/arrowRight.svg" width={19} height={13}/>
+           }
+                </button> 
           
         </Form>
 

@@ -20,6 +20,8 @@ import InvisibleCheck from '../../../components/InvisibleCheck';
 import { FormHandles } from '@unform/core'; 
 import OptionsAnos from '../../../components/OptionsAnos';
 import OptionsMeses from '../../../components/OptionsMeses';
+import { pagamentoCartao } from '../../../utils/pagamentoCartao';
+import { SpinnerCircularFixed } from 'spinners-react';
 
 
 const Pagamento: React.FC = () => {
@@ -28,7 +30,8 @@ const Pagamento: React.FC = () => {
   const router = useRouter()
   const [metodo,setMetodo] = useState("cartao")
   const ContratarStoreRead = ContratarStore.useState(s => s)  
-  const [refresh,setRefresh] = useState(Math.random())  
+  const [refresh,setRefresh] = useState(Math.random()) 
+  const [loadingPage, setLoadingPage] = useState(false) 
 
 
   useEffect(()=>{
@@ -39,8 +42,7 @@ const Pagamento: React.FC = () => {
   useEffect(()=>{ 
     SalvarDados(ContratarStoreRead)    
   },[ContratarStoreRead])  
-
-    
+ 
    
   useEffect(()=>{
     metodo &&  
@@ -84,7 +86,8 @@ const Pagamento: React.FC = () => {
     ContratarStore.update(s =>{
       s.cartao.bandeira=opcao;
     }) 
-    formRef.current.setFieldValue("bandeira", opcao) 
+    formRef.current.setFieldValue("bandeira", opcao)
+    formRef.current.setFieldError("bandeira","")
   }
 
   
@@ -124,16 +127,24 @@ const Pagamento: React.FC = () => {
           abortEarly: false,
         }); 
         
-        
+        setLoadingPage(true)
         var dados = {
-          Name: ContratarStoreRead.nome, //
-          Holder:data.nome,  
-          Amount:ContratarStoreRead.precoContrato, //
-          CardNumber: Number(data.numero.replace(' ','').replace(' ','').replace(' ','').replace(' ','')),
-          Brand: data.bandeira,
-          ExpirationDate: data.mes +"/"+ data.ano, 
-          SecurityCode: data.cvv
+          Name: String(ContratarStoreRead.nome), //
+          Holder:String(data.nome),  
+          Amount:String(ContratarStoreRead.precoContrato), //
+          CardNumber: String(data.numero.replace(' ','').replace(' ','').replace(' ','').replace(' ','')),
+          Brand: String(data.bandeira),
+          ExpirationDate: String(data.mes +"/"+ data.ano), 
+          SecurityCode: String(data.cvv),
+          MerchantOrderID: String(ContratarStoreRead.MerchantOrderId)
         }
+
+        pagamentoCartao(dados).then(result => {
+          setLoadingPage(true)
+          //@ts-ignore
+          result.success == true ? router.push('/contratar/concluido') : router.push('/contratar/nao-autorizado');
+           
+        }) 
  
 
         
@@ -186,7 +197,7 @@ const Pagamento: React.FC = () => {
         <div className="px-2">
 
         <div className="px-14"> 
-        <Select name="metodo" className="text-cinza-escuro w-full" defaultValue="cartao" onChange={ChangeMetodo}   legend="" small> 
+        <Select name="metodo" className="text-cinza-escuro text-center w-full" defaultValue="cartao" onChange={ChangeMetodo}   legend="" small> 
                   <option value="cartao">CARTAO DE CRÉDITO</option>
                   <option value="picpay">PICPAY</option>
                   <option value="energia">CONTA DE ENERGIA</option>
@@ -220,9 +231,7 @@ const Pagamento: React.FC = () => {
                 <span className="w-1/3 pl-2 text-left">CÓDIGO DE SEGURANÇA</span>
               </div>
           
-              <div className="flex gap-2 -mt-2 justify-between w-full"> 
-
-            
+              <div className="flex gap-2 -mt-2 justify-between w-full">  
 
               <div className="w-full  mr-1"> 
                 <Select  defaultValue=""   name="mes"  legend="" > 
@@ -241,7 +250,11 @@ const Pagamento: React.FC = () => {
                   </div>  
                 </div>
 
-              <button className="mt-4 mb-2 montserrat-regular text-sm bg-verde justify-between flex items-center w-full text-white  rounded-md p-4"  type="submit"><span><strong>Iniciar</strong> Assinatura</span> <Image src="/assets/arrowRight.svg" width={19} height={13}/></button> 
+              <button className="mt-4 mb-2 montserrat-regular text-sm bg-verde justify-between flex items-center w-full text-white  rounded-md p-4"  type="submit"><span><strong>Iniciar</strong> Assinatura</span> 
+              {loadingPage ? <SpinnerCircularFixed className="pr-1" size={19} thickness={140} speed={150} color="#FFF" secondaryColor="rgba(255, 255, 255, 0.15)" />
+                : <Image src="/assets/arrowRight.svg" width={19} height={13}/>
+                }
+              </button> 
          </div>
       </Form>
 

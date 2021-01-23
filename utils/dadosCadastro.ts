@@ -25,7 +25,7 @@ return new Promise((resolve, reject) => {
 
     axios.request({
         method: "POST",
-        url: `${process.env.NEXT_PUBLIC_API_URL}/contratar/dados.php`, 
+        url: `${process.env.NEXT_PUBLIC_API_URL}/contratar/cadastro.php`, 
         data:JSON.parse(JSON.stringify(dados))
       }).then( response=> { 
               resolve(response.data)
