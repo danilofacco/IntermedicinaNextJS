@@ -1,14 +1,9 @@
-import {ContratarStore} from '../store/contratar'
-import {ConfigStore} from '../store/config'
 import axios from 'axios'
 
 export function CPFValidation(cpf) {
     if (cpf != ""  && cpf != null &&  cpf != undefined){
       var strCPF = cpf.replace(".","").replace("-","")
-      if(!checkIsValid(strCPF)){
-        ContratarStore.update(s=>{
-            s.cpf = ""
-        })
+      if(!checkIsValid(strCPF)){ 
         alert("CPF Inválido")
         return false
       }else {
@@ -22,16 +17,14 @@ export function CPFValidation(cpf) {
 
     axios.request({
       method: "POST",
-      url: `${process.env.NEXT_PUBLIC_API_URL}contratar/checkCPF.php`,
+      url: `${process.env.NEXT_PUBLIC_API_URL}/contratar/checkCPF.php`,
       data:JSON.parse(JSON.stringify({"cpf":cpf}))
     })
 
     .then(function (response) {
       if (response.data == false){
         alert("O CPF já se encontra cadastrado em nossa base de dados, por favor entre em contato com nosso 0800 722 6967.")
-        ContratarStore.update(s=>{
-            s.cpf = ""
-        })
+      
       }
     })
   }

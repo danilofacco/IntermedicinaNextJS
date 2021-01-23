@@ -13,7 +13,7 @@ export default function Home() {
     <div>
       <div className="flex flex-col items-center" >
        
-      <div className="w-full">
+      <div className="w-full sm:hidden">
          <Carousel itemsToShow={1} showArrows={false}>
            <SliderItemMedico 
            nome="Dra. BÁRBARA C. COLNAGO"

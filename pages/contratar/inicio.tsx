@@ -1,5 +1,5 @@
  
-import React, { useRef, useCallback, useEffect } from 'react';
+import React, { useRef, useCallback, useEffect, useState } from 'react';
 import * as Yup from 'yup';
 import HeaderContratar from '../../components/HeaderContratar'
 import Footer from '../../components/Footer'
@@ -15,43 +15,42 @@ import {FormHandles} from '@unform/core'
 import getValidationErrors from '../../utils/getValidationErrors'; 
 import { useRouter } from 'next/router';
 import { inicioCadastro } from '../../utils/inicioCadastro';
-
-import CryptoAES from 'crypto-js/aes';
-import CryptoENC from 'crypto-js/enc-utf8';
+ 
+import { CarregarDados, SalvarDados } from '../../utils/LocalStorage';
+import { SpinnerCircularFixed } from 'spinners-react';
 
 interface SignInFormData {
   nome: string;
   celular: string;
   email:string;
 }
+ 
 
 const Inicio: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
-  const router = useRouter()
+  const router = useRouter() 
+  const [loadingPage, setLoadingPage] = useState(false)
 
   const ContratarStoreRead = ContratarStore.useState(s => s);
 
-  useEffect(()=>{
-    //faz leitura dos dados uma vez ao ser executada a pagina, descriptografa e faz a leitura
-    var temp = localStorage.getItem('Intermedicina@ContratarStore') 
-    var bytes = CryptoAES.decrypt(temp, 'Intermedicina@2020')
-    var Store = JSON.parse(bytes.toString(CryptoENC)) 
+    useEffect(()=>{
+      ContratarStore.update(s=> CarregarDados()) 
+    },[])
 
-     Store && ContratarStore.update(s=> Store) 
-        formRef.current.setFieldValue("nome", Store.nome) 
-        formRef.current.setFieldValue("email", Store.email) 
-        formRef.current.setFieldValue("celular", Store.tel)
+    useEffect(()=>{ 
+      SalvarDados(ContratarStoreRead)  
+    },[ContratarStoreRead]) 
+
+    useEffect(()=>{ 
+      formRef.current.setFieldValue("nome", ContratarStoreRead.nome) 
+      formRef.current.setFieldValue("email", ContratarStoreRead.email) 
+      formRef.current.setFieldValue("celular", ContratarStoreRead.tel)  
      },[formRef])
 
-  useEffect(()=>{ 
-    //criptografar e salvar sempre que o Storage for alterado
-    var temp =  CryptoAES.encrypt(JSON.stringify(ContratarStoreRead), 'Intermedicina@2020');
-    localStorage.setItem('Intermedicina@ContratarStore', temp.toString());
-  },[ContratarStoreRead])
 
-
-  const handleSubmit = useCallback(
+  const handleSubmit = useCallback(  
     async (data: SignInFormData) => {
+      
       try {
         formRef.current?.setErrors({});
         const schema = Yup.object().shape({
@@ -64,21 +63,22 @@ const Inicio: React.FC = () => {
               const val_length_without_dashes = val.replace(/-|_/g, "").length;
               return val_length_without_dashes === 13;
             })
-            .required('*É necessário preechimento')
-          ,
+            .required('*É necessário preechimento'),
+         });
 
+         ContratarStore.update( s => {
+          s.nome = data.nome
+          s.tel = data.celular
+          s.email = data.email
         });
 
-        await schema.validate(data, {
+
+
+        await schema.validate(data, { 
           abortEarly: false,
         });
 
-        await ContratarStore.update(s=> 
-          { s.nome = data.nome
-            s.tel = data.celular
-            s.email = data.email
-          });
-        
+        setLoadingPage(true)  
         var dados = {
           codtipo: ContratarStoreRead.CodigoTipoContrato,
           nome: data.nome,
@@ -87,13 +87,20 @@ const Inicio: React.FC = () => {
           pplink: ContratarStoreRead.LinkPoliticaDePrivacidade
         }
          
-        inicioCadastro(dados).then(result => {
-           ContratarStore.update(s => 
-            { s.idCadastro = Number(result) 
-            });
-        })
+        inicioCadastro(dados).then(result=> {
+            ContratarStore.update(s => {
+                //@ts-ignore
+                s.idCadastro = Number(result.id)
+                //@ts-ignore
+                s.MerchantOrderId =  result.MerchantOrderId 
+              })
 
-        router.push('/contratar/cadastro');
+              setLoadingPage(false)
+              router.push('/contratar/cadastro');
+
+            })
+        
+        
 
        
       } catch (err) {
@@ -112,8 +119,7 @@ const Inicio: React.FC = () => {
     <HeaderVoltarAzul voltar="/contratar"/> 
     <HeaderContratar page={1}/>
 
-    <div className="flex mt-4 flex-col w-full items-center px-4 "> 
-     
+    <div className="flex mt-4 flex-col w-full items-center px-4 ">  
      
       <span className="text-xs mb-2 montserrat-medium text-center text-cinza">ASSINATURA SELECIONADA:</span>
 
@@ -138,7 +144,11 @@ const Inicio: React.FC = () => {
               <Input name="nome" placeholder="Nome" />
               <InputMask inputMode="numeric"  mask="(99)99999-9999" maskplaceholder="_"  name="celular" placeholder="Celular" />
               <Input name="email" placeholder="E-mail" />  
-              <button className="bg-verde rounded-md mt-2 mb-2 flex justify-between items-center text-xs  text-white w-full p-4" type="submit">Continuar<Image src="/assets/arrowRight.svg" width={19} height={13}/></button> 
+              <button className="bg-verde rounded-md mt-2 mb-2 flex justify-between items-center text-xs  text-white w-full p-4" type="submit">Continuar 
+              {loadingPage ? <SpinnerCircularFixed className="pr-1" size={19} thickness={140} speed={150} color="#FFF" secondaryColor="rgba(255, 255, 255, 0.15)" />
+              : <Image src="/assets/arrowRight.svg" width={19} height={13}/>
+              }
+           </button> 
 
         </Form>
 

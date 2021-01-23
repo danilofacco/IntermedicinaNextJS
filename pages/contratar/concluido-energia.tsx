@@ -3,10 +3,7 @@ import React, {   useEffect } from 'react';
 import HeaderContratar from '../../components/HeaderContratar' 
 import HeaderVoltarAzul from '../../components/HeaderVoltarAzul'  
 import Image from 'next/image'  
-
-
-import CryptoAES from 'crypto-js/aes';
-import CryptoENC from 'crypto-js/enc-utf8';
+ 
 
 
 import { ImWhatsapp as Whatsapp } from 'react-icons/im';
@@ -18,14 +15,14 @@ const ConcluidoEnergia: React.FC = () => {
  
  
   useEffect(()=>{
-    var Store = JSON.parse(localStorage.getItem('Intermedicina@ContratarStore'))
-    Store ? ContratarStore.update(s => Store) : null
+    document.body.scrollTop = 0; // For Safari
+    document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
   },[])
 
 
     return (
       <>
-    <HeaderVoltarAzul voltar="/contratar/pagamento"/> 
+    <HeaderVoltarAzul voltar="/contratar/pagamento/energia"/> 
     <HeaderContratar page={4} cor="azul"/>
     <div className="bg-azul flex w-full h-screen text-white montserrat-regular flex-col pt-8 items-center text-center">
       <Image src="/assets/check_branco_azul.svg" width={32} height={32}/>

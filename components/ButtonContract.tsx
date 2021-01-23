@@ -2,9 +2,7 @@ import React, { useEffect } from 'react';
 import { useRouter } from 'next/router'
 import Image from "next/image"
 import {ContratarStore} from '../store/contratar'
-
-import CryptoAES from 'crypto-js/aes';
-import CryptoENC from 'crypto-js/enc-utf8';
+import { SalvarDados } from '../utils/LocalStorage';
 
 interface ButtonProps{
   title:string;
@@ -20,28 +18,26 @@ interface ButtonProps{
 
 const ButtonContract: React.FC<ButtonProps> = ({ code,id,title,subtitle,price,oldPrice,link,description,featured=false, children , ...rest }) => {
   const router = useRouter() 
-  const ContratarStoreRead = ContratarStore.useState(s => s)
+  const ContratarStoreRead = ContratarStore.useState(s => s)  
 
   useEffect(()=>{
-    //criptografar e salvar 
-    var temp =  CryptoAES.encrypt(JSON.stringify(ContratarStoreRead), 'Intermedicina@2020');
-    localStorage.setItem('Intermedicina@ContratarStore', temp.toString());
-  },[ContratarStoreRead])
+    SalvarDados(ContratarStoreRead)  
+    },[ContratarStoreRead])
 
+  
 
-
-  async function  SelecionarContrato(id,title,price,code,link){
-    await ContratarStore.update(s => {
+ function   SelecionarContrato(id,title,price,code,link){
+    ContratarStore.update(s => {
       s.contratoSelecionado = id;
       s.CodigoTipoContrato = code;
       s.LinkPoliticaDePrivacidade = link;
       s.contratoSelecionadoTitulo = title;
       s.precoContrato = price;
+      s.etapa = "inicio";
     })
-  
-   
 
-    router.push('/contratar/inicio')
+
+    router.push('/contratar/inicio') 
  }
  
   return (

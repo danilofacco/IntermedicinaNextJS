@@ -3,8 +3,7 @@ interface iFile{
     filename:string;
     imgurl: string| ArrayBuffer;
 }
-export async function uploadFilePost(formData,filename){ 
-  console.log(filename)
+export async function uploadFilePost(formData,filename){  
 
   const ext = filename.split('.').pop().toLowerCase()
   if (ext != "jpg" && ext != "jpeg" && ext != "png" && ext != "pdf"  && ext != "doc" && ext != "docx" && ext != "bmp"){

@@ -13,7 +13,7 @@ export async function getAddressByCEP(cep){
             s.endereco.cidade = response.data.localidade 
             s.endereco.estado = response.data.uf
             s.endereco.ibge = response.data.ibge
-            s.endereco.cep = response.data.cep
+            s.endereco.cep = response.data.cep 
         })
         
 

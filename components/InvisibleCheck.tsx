@@ -44,7 +44,7 @@ const InvisibleCheck: React.FC<Props> = ({ name, ...rest }) => {
     <div> 
       <input
         style={{display:"none"}}
-        type="text" 
+        type="hidden" 
         ref={inputRef}
         {...rest}
       /> 
