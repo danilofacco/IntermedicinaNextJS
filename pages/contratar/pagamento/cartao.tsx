@@ -145,9 +145,7 @@ const Pagamento: React.FC = () => {
     }) 
     formRef.current.setFieldValue("bandeira", opcao)
     formRef.current.setFieldError("bandeira","")
-  }
-
-  
+  } 
   
   interface SignInFormData {
     nome: string;
@@ -201,8 +199,8 @@ const Pagamento: React.FC = () => {
           ExpirationDate: String(data.mes +"/"+ data.ano), 
           SecurityCode: String(data.cvv),
           MerchantOrderId: String(ContratarStoreRead.MerchantOrderId)
-        }
-
+        } 
+        
         pagamentoCartao(dados).then(result => {
           setLoadingPage(true)
           //@ts-ignore
