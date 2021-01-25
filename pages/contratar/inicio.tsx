@@ -23,13 +23,11 @@ interface SignInFormData {
   nome: string;
   celular: string;
   email:string;
-}
- 
-
+}  
 const Inicio: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
   const router = useRouter() 
-  const [loadingPage, setLoadingPage] = useState(false)
+  const [loadingPage, setLoadingPage] = useState(false) 
 
   const ContratarStoreRead = ContratarStore.useState(s => s);
 
@@ -44,13 +42,14 @@ const Inicio: React.FC = () => {
     useEffect(()=>{ 
       formRef.current.setFieldValue("nome", ContratarStoreRead.nome) 
       formRef.current.setFieldValue("email", ContratarStoreRead.email) 
-      formRef.current.setFieldValue("celular", ContratarStoreRead.tel)  
+      formRef.current.setFieldValue("celular", ContratarStoreRead.tel) 
+
      },[formRef])
 
 
+
   const handleSubmit = useCallback(  
-    async (data: SignInFormData) => {
-      
+    async (data: SignInFormData) => { 
       try {
         formRef.current?.setErrors({});
         const schema = Yup.object().shape({

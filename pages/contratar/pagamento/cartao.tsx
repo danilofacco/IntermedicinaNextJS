@@ -33,6 +33,14 @@ const Pagamento: React.FC = () => {
   const [refresh,setRefresh] = useState(Math.random()) 
   const [loadingPage, setLoadingPage] = useState(false) 
 
+  const [maskCartao, setMaskCartao] = useState("9999 9999 9999 9999") 
+  const [maskCVV, setMaskCVV] = useState("999") 
+
+  useEffect(()=>{
+    InputMaskCartao()
+    InputMaskCVV()
+  },[ContratarStoreRead.cartao.bandeira])
+
 
   useEffect(()=>{
     ContratarStore.update(s=> CarregarDados()) 
@@ -62,9 +70,58 @@ const Pagamento: React.FC = () => {
     formRef.current.setFieldValue("mes", ContratarStoreRead.cartao.mes != 0 ? mesAtual :"") 
     formRef.current.setFieldValue("ano", ContratarStoreRead.cartao.ano != 0 ? String(ContratarStoreRead.cartao.ano) :"") 
     formRef.current.setFieldValue("bandeira", ContratarStoreRead.cartao.bandeira)
-    formRef.current.setFieldValue("cvv", ContratarStoreRead.cartao.cvv != 0 ? String(ContratarStoreRead.cartao.cvv) : null)
+    formRef.current.setFieldValue("cvv", ContratarStoreRead.cartao.cvv != 0 ? String(ContratarStoreRead.cartao.cvv) : "")
     
   },[refresh])  
+
+  function validateNumeroCartao(val){
+    var leng = 16
+    var r = false
+    //identifica a quantidade de digitos necessaria.
+    ContratarStoreRead.cartao.bandeira == "amex" ? leng = 15 : ""
+    ContratarStoreRead.cartao.bandeira == "diner" ? leng = 14 : ""
+    //remove toda mascara e testa se tem a quantidade correta de digitos.
+    
+    val && returnOnlyNumbers(val).length == leng ? r = true : ""
+    return r 
+  }
+
+  function validateCVV(val){
+    var leng = 3
+    var r = false
+    //identifica a quantidade de digitos necessaria.
+    ContratarStoreRead.cartao.bandeira == "amex" ? leng = 4 : ""
+    //remove toda mascara e testa se tem a quantidade correta de digitos.
+    val &&  returnOnlyNumbers(val).length == leng ? r = true : ""
+    return r 
+  }
+
+  function InputMaskCartao(){
+    var val = ""
+    ContratarStoreRead.cartao.bandeira ? val = ContratarStoreRead.cartao.bandeira : null
+    //Define o tipo de mascara a ser utilizado no Numero do Cartao
+    var v = "9999 9999 9999 9999" //padrao
+    val == 'diner'? v = "999 999999 99999" : ""
+    val == 'amex'? v = "999 999999 999999" : ""  
+    setMaskCartao(v)
+  }
+
+  function InputMaskCVV(){
+    var val = ""
+    ContratarStoreRead.cartao.bandeira ? val = ContratarStoreRead.cartao.bandeira : null
+    //Define o tipo de mascara a ser utilizado no CVV
+    var v = "999" //padrao
+    val == 'amex' ? v = "9999" : ""
+    setMaskCVV(v)
+  }
+
+  function returnOnlyNumbers(val){
+    //remove qualquer mascara e retorna somente numeros
+    var numberPattern = /\d+/g
+    return val.match(numberPattern).join('')
+  }
+
+
 
   function Flag(opcao){ 
    if (ContratarStoreRead.cartao.bandeira == opcao || ContratarStoreRead.cartao.bandeira == "" ){
@@ -91,6 +148,7 @@ const Pagamento: React.FC = () => {
   }
 
   
+  
   interface SignInFormData {
     nome: string;
     numero: string;
@@ -100,17 +158,23 @@ const Pagamento: React.FC = () => {
     bandeira: string;
   }
 
+
+
   const handleSubmit = useCallback(
     async (data: SignInFormData) => {
       try {
         formRef.current?.setErrors({});
 
         const schema = Yup.object().shape({
-          nome: Yup.string().required('Nome Obrigatório'),
-          numero: Yup.string().required('Número do Cartao obrigatório'),
+          nome: Yup.string().required('*É necessário preechimento'),
+          numero: Yup.string().test("len", "Número Inválido.", (val) => {
+            return validateNumeroCartao(val);
+          }) .required('*É necessário preechimento'),
           mes: Yup.string().required('Mês de Validade Obrigatório'), 
           ano: Yup.string().required('Ano de Validade Obrigatório'), 
-          cvv: Yup.string().required('Código de Segurança Obrigatório'),
+          cvv: Yup.string().test("len", "Número CVV Inválido.", (val) => {
+            return validateCVV(val);
+          }) .required('*É necessário preechimento'), 
           bandeira: Yup.string().required('Selecione a Bandeira do Cartão'),
         });
 
@@ -131,12 +195,12 @@ const Pagamento: React.FC = () => {
         var dados = {
           Name: String(ContratarStoreRead.nome), //
           Holder:String(data.nome),  
-          Amount:String(ContratarStoreRead.precoContrato), //
+          Amount:Number(ContratarStoreRead.precoContrato + "00"), //
           CardNumber: String(data.numero.replace(' ','').replace(' ','').replace(' ','').replace(' ','')),
           Brand: String(data.bandeira),
           ExpirationDate: String(data.mes +"/"+ data.ano), 
           SecurityCode: String(data.cvv),
-          MerchantOrderID: String(ContratarStoreRead.MerchantOrderId)
+          MerchantOrderId: String(ContratarStoreRead.MerchantOrderId)
         }
 
         pagamentoCartao(dados).then(result => {
@@ -144,9 +208,7 @@ const Pagamento: React.FC = () => {
           //@ts-ignore
           result.success == true ? router.push('/contratar/concluido') : router.push('/contratar/nao-autorizado');
            
-        }) 
- 
-
+        })  
         
 
         //history.push('/dashboard'); 
@@ -209,23 +271,24 @@ const Pagamento: React.FC = () => {
 
         <div className="flex justify-between w-full "> 
          
-          <Image onClick={()=>SelectFlag("visa")} height={35} width={57} src={`/assets/buttons/${Flag('visa')}`}/>
+          <Image onClick={()=>SelectFlag("Visa")} height={35} width={57} src={`/assets/buttons/${Flag('Visa')}`}/>
 
-          <Image onClick={()=>SelectFlag("master")}  height={35} width={57} src={`/assets/buttons/${Flag('master')}`}/>
+          <Image onClick={()=>SelectFlag("Master")}  height={35} width={57} src={`/assets/buttons/${Flag('Master')}`}/>
 
-          <Image onClick={()=>SelectFlag("elo")} height={35} width={57} src={`/assets/buttons/${Flag('elo')}`}/>
+          <Image onClick={()=>SelectFlag("Elo")} height={35} width={57} src={`/assets/buttons/${Flag('Elo')}`}/>
 
-          <Image onClick={()=>SelectFlag("diner")} height={35} width={57} src={`/assets/buttons/${Flag('diner')}`}/>
+          <Image onClick={()=>SelectFlag("Diners")} height={35} width={57} src={`/assets/buttons/${Flag('Diners')}`}/>
 
-          <Image onClick={()=>SelectFlag("amex")} height={35} width={57} src={`/assets/buttons/${Flag('amex')}`}/>
+          <Image onClick={()=>SelectFlag("Amex")} height={35} width={57} src={`/assets/buttons/${Flag('Amex')}`}/>
 
         </div>
         <InvisibleCheck name="bandeira" />
+
  
 
               <Input name="nome" legend="NOME IMPRESSO NO CARTÃO" />
-              <InputMask mask="9999 9999 9999 9999" maskplaceholder="_"  name="numero"  legend="NÚMERO DO CARTÃO" /> 
-
+              <InputMask mask={maskCartao} maskplaceholder="_"  name="numero"  legend="NÚMERO DO CARTÃO" />  
+              
               <div className="flex justify-between mt-4 text-xxs text-cinza montserrat-medium w-full"> 
                  <span className="w-1/3 ml-1 text-left">DATA DE VALIDADE DO CARTÃO</span>
                 <span className="w-1/3 pl-2 text-left">CÓDIGO DE SEGURANÇA</span>
@@ -246,7 +309,8 @@ const Pagamento: React.FC = () => {
                 
                 </div>
                 <div className="w-full  ml-1">
-                  <Input name="cvv"  placeholder="CVV"     />
+
+                <InputMask mask={maskCVV} maskplaceholder="_" name="cvv"  placeholder="CVV"     />
                   </div>  
                 </div>
 

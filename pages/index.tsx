@@ -10,8 +10,8 @@ import SliderItemLocal from '../components/SliderItemLocal';
 
 export default function Home() {
   return (
-    <div>
-      <div className="flex flex-col items-center" >
+    <div  >
+      <div className="flex flex-col items-center " >
        
       <div className="w-full sm:hidden">
          <Carousel itemsToShow={1} showArrows={false}>

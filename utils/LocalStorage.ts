@@ -4,9 +4,7 @@ import CryptoENC from 'crypto-js/enc-utf8';
 export function SalvarDados(Dados){
     //var temp =  CryptoAES.encrypt(JSON.stringify(Dados), 'Intermedicina@2020');
     //localStorage.setItem('Intermedicina@ContratarStore', temp.toString());
-    localStorage.setItem('Intermedicina@ContratarStore', JSON.stringify(Dados));
-    console.log 
-  
+     localStorage.setItem('Intermedicina@ContratarStore', JSON.stringify(Dados)); 
 }
 
 export  function CarregarDados(){

@@ -1,4 +1,3 @@
-  
 import React from 'react' 
 import ButtonContract from '../../components/ButtonContract'
 import Footer from '../../components/Footer'
@@ -7,8 +6,13 @@ import TitleWithLogo from '../../components/TitleWithLogo'
 import Image from 'next/image'
 
 import Carousel from 'react-elastic-carousel'
+import { useRouter } from 'next/router'
+
+
 
 const Index: React.FC = () => { 
+  const router = useRouter()
+  console.log(router)
   return (
     <>
     <HeaderVoltarAzul voltar="/"/>
@@ -80,6 +84,19 @@ const Index: React.FC = () => {
           subtitle="SOMENTE TITULAR"
           price="49"
           oldPrice="59,00"
+          link="https://www.intermedicina.com.br/wp-json/wp/v2/pages/51090"
+          description="São Médicos, Dentistas,
+          Exames, Cirurgias,
+          Laboratórios outros " 
+          > <Image src="/assets/odontomais.svg" width={16} height={16} /> </ButtonContract>
+
+          <ButtonContract
+          id="individual" 
+          code={5}
+          title="TESTES"
+          subtitle="CONTRATO DE TESTES"
+          price="1"
+          oldPrice="1,00"
           link="https://www.intermedicina.com.br/wp-json/wp/v2/pages/51090"
           description="São Médicos, Dentistas,
           Exames, Cirurgias,
