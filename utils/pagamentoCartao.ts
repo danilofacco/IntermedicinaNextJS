@@ -1,9 +1,9 @@
 import axios from 'axios'  
 
 interface iDados{
-    MerchantOrderID: string;
+    MerchantOrderId: string;
     Name: string;
-    Amount: string;
+    Amount: number;
     CardNumber: string;
     Holder: string;
     ExpirationDate : string;
